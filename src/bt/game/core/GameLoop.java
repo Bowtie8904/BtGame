@@ -9,15 +9,19 @@ import bt.utils.thread.Threads;
  * @author &#8904
  *
  */
-public abstract class GameLoop implements Runnable, Killable
+public class GameLoop implements Runnable, Killable
 {
     private boolean running;
     private int framesPerSecond = -1;
     private double ticksPerSecond = 60.0;
     private int frameCheckInterval = 200;
+    private Runnable tick;
+    private Runnable render;
 
-    public GameLoop()
+    public GameLoop(Runnable tick, Runnable render)
     {
+        this.tick = tick;
+        this.render = render;
         InstanceKiller.killOnShutdown(this, 1);
     }
 
@@ -72,11 +76,11 @@ public abstract class GameLoop implements Runnable, Killable
 
             while (delta >= 1)
             {
-                tick();
+                this.tick.run();
                 delta -- ;
             }
 
-            render();
+            this.render.run();
             frames ++ ;
 
             if (System.currentTimeMillis() - timer > this.frameCheckInterval)
@@ -108,8 +112,4 @@ public abstract class GameLoop implements Runnable, Killable
     {
         this.ticksPerSecond = ticks;
     }
-
-    public abstract void tick();
-
-    public abstract void render();
 }
