@@ -18,7 +18,7 @@ public abstract class GameLoop implements Runnable, Killable
 
     public GameLoop()
     {
-        InstanceKiller.closeOnShutdown(this, 1);
+        InstanceKiller.killOnShutdown(this, 1);
     }
 
     @Override
