@@ -1,4 +1,4 @@
-package bt.game.core;
+package bt.game.core.loop;
 
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
