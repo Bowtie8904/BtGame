@@ -93,6 +93,11 @@ public class GameLoop implements Runnable, Killable
         }
     }
 
+    /**
+     * Sets how many times the frames per second value (accessible via {@link #getFramesPerSecond()}) will be updated.
+     * 
+     * @param updatesPerSecond
+     */
     public void setFpsUpdateRate(int updatesPerSecond)
     {
         this.frameCheckInterval = 1000 / updatesPerSecond;
@@ -108,6 +113,11 @@ public class GameLoop implements Runnable, Killable
         return this.ticksPerSecond;
     }
 
+    /**
+     * Sets how many times per second the given tick method should be called.
+     * 
+     * @param ticks
+     */
     public void setTicksPerSecond(double ticks)
     {
         this.ticksPerSecond = ticks;
