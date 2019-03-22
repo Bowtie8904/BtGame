@@ -59,6 +59,11 @@ public class BaseResourceLoader implements ResourceLoader, Killable
     /**
      * Closes all resources loaded by or for this instance.
      * 
+     * <p>
+     * If an object resource implements {@link Closeable} its {@link Closeable#close() close} method is called. If an
+     * object resource implements {@link Killable} its {@link Killable#kill() kill} method is called.
+     * </p>
+     * 
      * @see bt.runtime.Killable#kill()
      */
     @Override
@@ -84,7 +89,8 @@ public class BaseResourceLoader implements ResourceLoader, Killable
                     Logger.global().print(e);
                 }
             }
-            else if (obj instanceof Killable)
+
+            if (obj instanceof Killable)
             {
                 ((Killable)obj).kill();
             }
