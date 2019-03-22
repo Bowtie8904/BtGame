@@ -4,6 +4,7 @@ import bt.game.core.scene.Scene;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
 import bt.runtime.InstanceKiller;
+import bt.utils.log.Logger;
 
 /**
  * @author &#8904
@@ -35,8 +36,13 @@ public abstract class BaseScene implements Scene
     @Override
     public void kill()
     {
-        this.resourceLoader.kill();
-        InstanceKiller.unregister(this.resourceLoader);
-        InstanceKiller.unregister(this);
+        Logger.global().print("Killing scene.");
+
+        if (!InstanceKiller.isActive())
+        {
+            this.resourceLoader.kill();
+            InstanceKiller.unregister(this.resourceLoader);
+            InstanceKiller.unregister(this);
+        }
     }
 }
