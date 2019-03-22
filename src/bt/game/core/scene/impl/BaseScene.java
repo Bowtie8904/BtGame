@@ -38,7 +38,9 @@ public abstract class BaseScene implements Scene
     {
         Logger.global().print("Killing scene.");
 
-        if (!InstanceKiller.isActive())
+        // kill resource loader if instance killer is not already doing it or if the loader is not registered for
+        // termination at all
+        if (!InstanceKiller.isActive() || !InstanceKiller.isRegistered(this.resourceLoader))
         {
             this.resourceLoader.kill();
             InstanceKiller.unregister(this.resourceLoader);
