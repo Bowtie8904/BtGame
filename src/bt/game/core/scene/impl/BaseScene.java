@@ -1,5 +1,6 @@
-package bt.game.core.scene;
+package bt.game.core.scene.impl;
 
+import bt.game.core.scene.Scene;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
 import bt.runtime.InstanceKiller;
