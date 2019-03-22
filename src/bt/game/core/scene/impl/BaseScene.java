@@ -19,6 +19,17 @@ public abstract class BaseScene implements Scene
     }
 
     /**
+     * @see bt.game.core.scene.Scene#load(java.lang.String)
+     */
+    @Override
+    public void load(String name)
+    {
+        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2); // higher priority than resource loaders to avoid
+                                                                    // killing them twice
+        this.resourceLoader.load(name);
+    }
+
+    /**
      * @see bt.runtime.Killable#kill()
      */
     @Override
