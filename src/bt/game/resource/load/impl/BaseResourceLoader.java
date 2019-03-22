@@ -33,7 +33,6 @@ public class BaseResourceLoader implements ResourceLoader
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
     private List<Loadable> loadables;
-    private boolean killed;
 
     /**
      * Creates a new instance and initializes its maps and lists.
@@ -70,44 +69,39 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public void kill()
     {
-        if (!this.killed)
+        Logger.global().print("Closing resources.");
+
+        for (BufferedImage image : this.images.values())
         {
-            Logger.global().print("Closing resources.");
-
-            for (BufferedImage image : this.images.values())
-            {
-                image.flush();
-            }
-
-            for (Object obj : this.objects.values())
-            {
-                if (obj instanceof Closeable)
-                {
-                    try
-                    {
-                        ((Closeable)obj).close();
-                    }
-                    catch (IOException e)
-                    {
-                        Logger.global().print(e);
-                    }
-                }
-
-                if (obj instanceof Killable)
-                {
-                    ((Killable)obj).kill();
-                }
-            }
-
-            this.images.clear();
-            this.sounds.clear();
-            this.files.clear();
-            this.fonts.clear();
-            this.objects.clear();
-            this.loadables.clear();
-
-            this.killed = true;
+            image.flush();
         }
+
+        for (Object obj : this.objects.values())
+        {
+            if (obj instanceof Closeable)
+            {
+                try
+                {
+                    ((Closeable)obj).close();
+                }
+                catch (IOException e)
+                {
+                    Logger.global().print(e);
+                }
+            }
+
+            if (obj instanceof Killable)
+            {
+                ((Killable)obj).kill();
+            }
+        }
+
+        this.images.clear();
+        this.sounds.clear();
+        this.files.clear();
+        this.fonts.clear();
+        this.objects.clear();
+        this.loadables.clear();
     }
 
     /**
