@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Map;
 
-import bt.game.resource.type.Sound;
+import bt.types.sound.Sound;
 
 /**
  * Interface to define a class that can load its own resources which can then be accessed by a {@link ResourceLoader}.
