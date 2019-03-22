@@ -25,7 +25,7 @@ import bt.utils.log.Logger;
  * 
  * @author &#8904
  */
-public class BaseResourceLoader implements ResourceLoader, Killable
+public class BaseResourceLoader implements ResourceLoader
 {
     private Map<String, BufferedImage> images;
     private Map<String, Sound> sounds;
@@ -33,6 +33,7 @@ public class BaseResourceLoader implements ResourceLoader, Killable
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
     private List<Loadable> loadables;
+    private boolean killed;
 
     /**
      * Creates a new instance and initializes its maps and lists.
@@ -69,39 +70,44 @@ public class BaseResourceLoader implements ResourceLoader, Killable
     @Override
     public void kill()
     {
-        Logger.global().print("Closing resources.");
-
-        for (BufferedImage image : this.images.values())
+        if (!this.killed)
         {
-            image.flush();
-        }
+            Logger.global().print("Closing resources.");
 
-        for (Object obj : this.objects.values())
-        {
-            if (obj instanceof Closeable)
+            for (BufferedImage image : this.images.values())
             {
-                try
+                image.flush();
+            }
+
+            for (Object obj : this.objects.values())
+            {
+                if (obj instanceof Closeable)
                 {
-                    ((Closeable)obj).close();
+                    try
+                    {
+                        ((Closeable)obj).close();
+                    }
+                    catch (IOException e)
+                    {
+                        Logger.global().print(e);
+                    }
                 }
-                catch (IOException e)
+
+                if (obj instanceof Killable)
                 {
-                    Logger.global().print(e);
+                    ((Killable)obj).kill();
                 }
             }
 
-            if (obj instanceof Killable)
-            {
-                ((Killable)obj).kill();
-            }
-        }
+            this.images.clear();
+            this.sounds.clear();
+            this.files.clear();
+            this.fonts.clear();
+            this.objects.clear();
+            this.loadables.clear();
 
-        this.images.clear();
-        this.sounds.clear();
-        this.files.clear();
-        this.fonts.clear();
-        this.objects.clear();
-        this.loadables.clear();
+            this.killed = true;
+        }
     }
 
     /**

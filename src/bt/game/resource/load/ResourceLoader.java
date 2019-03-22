@@ -6,13 +6,15 @@ import java.io.File;
 
 import javax.sound.sampled.Clip;
 
+import bt.runtime.Killable;
+
 /**
  * An interface definition for classes that should load, hold, distribute and close resources during their lifespan to
  * ensure centralized resource management.
  * 
  * @author &#8904
  */
-public interface ResourceLoader
+public interface ResourceLoader extends Killable
 {
     /**
      * Loads all resources for the given context name (i. e. unique scene name).
