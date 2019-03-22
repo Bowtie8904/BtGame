@@ -90,7 +90,8 @@ public class BaseResourceLoader implements ResourceLoader
                 }
             }
 
-            if (obj instanceof Killable)
+            if (obj instanceof Killable
+                    && (!InstanceKiller.isActive() || !InstanceKiller.isRegistered((Killable)obj)))
             {
                 ((Killable)obj).kill();
             }
