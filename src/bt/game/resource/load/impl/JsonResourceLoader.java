@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import bt.game.resource.load.Loadable;
 import bt.game.resource.load.ResourceLoader;
+import bt.runtime.InstanceKiller;
+import bt.runtime.Killable;
 import bt.types.sound.Sound;
 import bt.utils.files.FileUtils;
 import bt.utils.json.JSON;
@@ -79,6 +81,14 @@ public class JsonResourceLoader extends BaseResourceLoader
     /**
      * Creates a new instance and sets the directory that contains the json files for the {@link #load(String)}
      * implementation.
+     * 
+     * <p>
+     * This constructor will add the instance to the {@link InstanceKiller} via
+     * {@link InstanceKiller#killOnShutdown(Killable) killOnShutdown} to close resources on application shutdown. The
+     * one controlling this resource loader should however call {@link #kill()} and
+     * {@link InstanceKiller#unregister(Killable) unregister} the instance as soon as the resources are not needed
+     * anymore.
+     * </p>
      * 
      * @param resourceDir
      *            The directory which contains the json files that define additional resources to load. If the directory

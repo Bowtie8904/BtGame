@@ -36,6 +36,14 @@ public class BaseResourceLoader implements ResourceLoader, Killable
 
     /**
      * Creates a new instance and initializes its maps and lists.
+     * 
+     * <p>
+     * This constructor will add the instance to the {@link InstanceKiller} via
+     * {@link InstanceKiller#killOnShutdown(Killable) killOnShutdown} to close resources on application shutdown. The
+     * one controlling this resource loader should however call {@link #kill()} and
+     * {@link InstanceKiller#unregister(Killable) unregister} the instance as soon as the resources are not needed
+     * anymore.
+     * </p>
      */
     public BaseResourceLoader()
     {
