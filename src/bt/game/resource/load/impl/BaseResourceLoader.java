@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sound.sampled.Clip;
-
 import bt.game.resource.load.Loadable;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.render.Renderable;
@@ -73,6 +71,11 @@ public class BaseResourceLoader implements ResourceLoader
         for (Renderable renderable : this.renderables.values())
         {
             renderable.kill();
+        }
+
+        for (Sound renderable : this.sounds.values())
+        {
+
         }
 
         for (Object obj : this.objects.values())
@@ -187,9 +190,9 @@ public class BaseResourceLoader implements ResourceLoader
      * @see bt.game.resource.ResourceLoader#getSound(java.lang.String)
      */
     @Override
-    public Clip getSound(String resourceName)
+    public Sound getSound(String resourceName)
     {
-        return this.sounds.get(resourceName.toUpperCase()).getClip();
+        return this.sounds.get(resourceName.toUpperCase());
     }
 
     /**
