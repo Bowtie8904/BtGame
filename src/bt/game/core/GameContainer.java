@@ -201,9 +201,6 @@ public abstract class GameContainer extends Canvas
 
         Graphics g = bs.getDrawGraphics();
 
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
-
         if (this.currentScene != null && this.currentScene.isLoaded())
         {
             this.currentScene.render(g);
