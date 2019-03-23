@@ -9,7 +9,6 @@ package bt.game.util.unit;
 public class Unit
 {
     private static float ratio = 1;
-    private float pixels;
     private float units;
 
     /**
@@ -66,28 +65,26 @@ public class Unit
      */
     public void addPixels(float pixels)
     {
-        setPixels(this.pixels + pixels);
+        setPixels(pixels() + pixels);
     }
 
     /**
-     * Sets the units of this instance to the given value. The pixels will be calculated with the set ratio.
+     * Sets the units of this instance to the given value.
      * 
      * @param units
      */
     public void setUnits(float units)
     {
         this.units = units;
-        this.pixels = units * Unit.ratio;
     }
 
     /**
-     * Sets the pixels of this instance to the given value. The units will be calculated with the set ratio.
+     * Uses the given pixels to calculate the unit value.
      * 
-     * @param units
+     * @param pixels
      */
     public void setPixels(float pixels)
     {
-        this.pixels = pixels;
         this.units = pixels / Unit.ratio;
     }
 
@@ -102,13 +99,13 @@ public class Unit
     }
 
     /**
-     * Gets the value for pixels this instance holds.
+     * Gets the value for pixels. This value is calculated every call to ensure accuracy in case the ratio is changed.
      * 
      * @return
      */
     public float pixels()
     {
-        return this.pixels;
+        return this.units * Unit.ratio;
     }
 
     protected Unit()
@@ -118,6 +115,6 @@ public class Unit
     @Override
     public String toString()
     {
-        return "Pixels: " + this.pixels + "  Units: " + this.units;
+        return "Pixels: " + pixels() + "  Units: " + this.units;
     }
 }
