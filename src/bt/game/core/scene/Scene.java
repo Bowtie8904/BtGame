@@ -14,6 +14,8 @@ public interface Scene extends Killable
 
     public boolean isLoaded();
 
+    public void start();
+
     public void tick();
 
     public void render(Graphics g);
