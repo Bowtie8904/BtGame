@@ -13,10 +13,24 @@ import bt.utils.log.Logger;
 public abstract class BaseScene implements Scene
 {
     protected ResourceLoader resourceLoader;
+    protected boolean isLoaded;
+
+    public BaseScene(ResourceLoader resourceLoader)
+    {
+        if (resourceLoader == null)
+        {
+            this.resourceLoader = new BaseResourceLoader();
+        }
+        else
+        {
+            this.resourceLoader = resourceLoader;
+        }
+
+    }
 
     public BaseScene()
     {
-        this.resourceLoader = new BaseResourceLoader();
+        this(null);
     }
 
     /**
@@ -25,9 +39,19 @@ public abstract class BaseScene implements Scene
     @Override
     public void load(String name)
     {
-        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2); // higher priority than resource loaders to avoid
-                                                                    // killing them twice
+        this.isLoaded = false;
+        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
         this.resourceLoader.load(name);
+        this.isLoaded = true;
+    }
+
+    /**
+     * @see bt.game.core.scene.Scene#isLoaded()
+     */
+    @Override
+    public boolean isLoaded()
+    {
+        return this.isLoaded;
     }
 
     /**
@@ -36,6 +60,7 @@ public abstract class BaseScene implements Scene
     @Override
     public void kill()
     {
+        this.isLoaded = false;
         Logger.global().print("Killing scene.");
 
         // kill resource loader if instance killer is not already doing it or if the loader is not registered for
