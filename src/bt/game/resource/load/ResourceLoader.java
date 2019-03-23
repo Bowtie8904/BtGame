@@ -3,10 +3,9 @@ package bt.game.resource.load;
 import java.awt.Font;
 import java.io.File;
 
-import javax.sound.sampled.Clip;
-
 import bt.game.resource.render.Renderable;
 import bt.runtime.Killable;
+import bt.types.sound.Sound;
 
 /**
  * An interface definition for classes that should load, hold, distribute and close resources during their lifespan to
@@ -48,7 +47,7 @@ public interface ResourceLoader extends Killable
      *            The unique name that the sound was loaded with.
      * @return The sound or null if no mapping for the recource name exists.
      */
-    public Clip getSound(String resourceName);
+    public Sound getSound(String resourceName);
 
     /**
      * Gets the file for the given resource name if such a file has been loaded before.
