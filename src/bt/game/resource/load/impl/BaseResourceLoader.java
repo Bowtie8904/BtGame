@@ -1,7 +1,6 @@
 package bt.game.resource.load.impl;
 
 import java.awt.Font;
-import java.awt.image.BufferedImage;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +13,7 @@ import javax.sound.sampled.Clip;
 
 import bt.game.resource.load.Loadable;
 import bt.game.resource.load.ResourceLoader;
+import bt.game.resource.render.Renderable;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.types.sound.Sound;
@@ -27,7 +27,7 @@ import bt.utils.log.Logger;
  */
 public class BaseResourceLoader implements ResourceLoader
 {
-    private Map<String, BufferedImage> images;
+    private Map<String, Renderable> renderables;
     private Map<String, Sound> sounds;
     private Map<String, File> files;
     private Map<String, Font> fonts;
@@ -47,7 +47,7 @@ public class BaseResourceLoader implements ResourceLoader
      */
     public BaseResourceLoader()
     {
-        this.images = new HashMap<>();
+        this.renderables = new HashMap<>();
         this.sounds = new HashMap<>();
         this.files = new HashMap<>();
         this.fonts = new HashMap<>();
@@ -71,9 +71,9 @@ public class BaseResourceLoader implements ResourceLoader
     {
         Logger.global().print("Closing resources.");
 
-        for (BufferedImage image : this.images.values())
+        for (Renderable renderable : this.renderables.values())
         {
-            image.flush();
+            renderable.kill();
         }
 
         for (Object obj : this.objects.values())
@@ -97,7 +97,7 @@ public class BaseResourceLoader implements ResourceLoader
             }
         }
 
-        this.images.clear();
+        this.renderables.clear();
         this.sounds.clear();
         this.files.clear();
         this.fonts.clear();
@@ -106,17 +106,17 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * Maps the given image by the given (case insensitive) resource name. Once the image has been added it becomes
-     * accessible by {@link #getImage(String)}.
+     * Maps the given renderable by the given (case insensitive) resource name. Once the renderable has been added it
+     * becomes accessible by {@link #getRenderable(String)}.
      * 
      * @param resourceName
-     *            The unique resource name for the given image.
+     *            The unique resource name for the given renderable.
      * @param value
-     *            The image to map.
+     *            The renderable to map.
      */
-    protected void add(String resourceName, BufferedImage value)
+    protected void add(String resourceName, Renderable value)
     {
-        this.images.put(resourceName.toUpperCase(), value);
+        this.renderables.put(resourceName.toUpperCase(), value);
     }
 
     /**
@@ -176,12 +176,12 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.ResourceLoader#getImage(java.lang.String)
+     * @see bt.game.resource.ResourceLoader#getRenderable(java.lang.String)
      */
     @Override
-    public BufferedImage getImage(String resourceName)
+    public Renderable getRenderable(String resourceName)
     {
-        return this.images.get(resourceName.toUpperCase());
+        return this.renderables.get(resourceName.toUpperCase());
     }
 
     /**
@@ -229,7 +229,7 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public void load(String name)
     {
-        Map<String, BufferedImage> loadedImages;
+        Map<String, Renderable> loadedRenderables;
         Map<String, Sound> loadedSounds;
         Map<String, File> loadedFiles;
         Map<String, Font> loadedFonts;
@@ -238,15 +238,16 @@ public class BaseResourceLoader implements ResourceLoader
         for (Loadable loadable : this.loadables)
         {
             // images
-            loadedImages = loadable.loadImages(name);
+            loadedRenderables = loadable.loadRenderables(name);
 
-            if (loadedImages != null)
+            if (loadedRenderables != null)
             {
-                for (String resourceKey : loadedImages.keySet())
+                for (String resourceKey : loadedRenderables.keySet())
                 {
-                    add(resourceKey, loadedImages.get(resourceKey));
+                    add(resourceKey, loadedRenderables.get(resourceKey));
                     Logger.global()
-                            .print("Loaded image '" + resourceKey + "' for " + loadable.getClass().getName() + ".");
+                            .print("Loaded renderable '" + resourceKey + "' for " + loadable.getClass().getName()
+                                    + ".");
                 }
             }
 

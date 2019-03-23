@@ -1,11 +1,11 @@
 package bt.game.resource.load;
 
 import java.awt.Font;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.sound.sampled.Clip;
 
+import bt.game.resource.render.Renderable;
 import bt.runtime.Killable;
 
 /**
@@ -33,13 +33,13 @@ public interface ResourceLoader extends Killable
     public void register(Loadable loadable);
 
     /**
-     * Gets the image for the given resource name if such an image has been loaded before.
+     * Gets the renderable for the given resource name if such an renderable has been loaded before.
      * 
      * @param resourceName
-     *            The unique name that the image was loaded with.
-     * @return The image or null if no mapping for the recource name exists.
+     *            The unique name that the renderable was loaded with.
+     * @return The renderable or null if no mapping for the recource name exists.
      */
-    public BufferedImage getImage(String resourceName);
+    public Renderable getRenderable(String resourceName);
 
     /**
      * Gets the sound for the given resource name if such a sound has been loaded before.

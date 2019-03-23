@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import bt.game.resource.load.Loadable;
 import bt.game.resource.load.ResourceLoader;
+import bt.game.resource.render.impl.RenderableImage;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.types.sound.Sound;
@@ -212,7 +213,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 path = obj.getString("path");
                 try
                 {
-                    add(alias, ImageIO.read(new File(path)));
+                    add(alias, new RenderableImage(ImageIO.read(new File(path))));
                     Logger.global().print("Loaded image '" + alias + "' from path '" + path + "'.");
                 }
                 catch (IOException e)

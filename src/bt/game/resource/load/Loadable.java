@@ -1,10 +1,10 @@
 package bt.game.resource.load;
 
 import java.awt.Font;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Map;
 
+import bt.game.resource.render.Renderable;
 import bt.types.sound.Sound;
 
 /**
@@ -15,18 +15,18 @@ import bt.types.sound.Sound;
 public interface Loadable
 {
     /**
-     * Loads all images this implementation needs.
+     * Loads all renderable this implementation needs.
      * 
      * <p>
-     * The images need to be mapped to a (ResourceLoader)-unique resource name, so that they can be accessed by
-     * {@link ResourceLoader#getImage(String)}.
+     * The renderable need to be mapped to a (ResourceLoader)-unique resource name, so that they can be accessed by
+     * {@link ResourceLoader#getRenderable(String)}.
      * </p>
      * 
      * @param name
      *            The name of the resource context, i. e. a unique name for a scene, passed by the ResourceLoader.
-     * @return A map containing all loaded images or null if no images need to be loaded.
+     * @return A map containing all loaded renderables or null if no images need to be loaded.
      */
-    public Map<String, BufferedImage> loadImages(String name);
+    public Map<String, Renderable> loadRenderables(String name);
 
     /**
      * Loads all sounds this implementation needs.
