@@ -53,7 +53,6 @@ public class BaseResourceLoader implements ResourceLoader
         this.fonts = new HashMap<>();
         this.objects = new HashMap<>();
         this.loadables = new ArrayList<>();
-        InstanceKiller.killOnShutdown(this);
     }
 
     /**
@@ -229,6 +228,8 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public void load(String name)
     {
+        InstanceKiller.killOnShutdown(this);
+
         Map<String, Renderable> loadedRenderables;
         Map<String, Sound> loadedSounds;
         Map<String, File> loadedFiles;
