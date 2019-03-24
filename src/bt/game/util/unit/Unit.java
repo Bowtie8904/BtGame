@@ -60,6 +60,61 @@ public class Unit
     }
 
     /**
+     * Subtracts the given amount of units from the value that this instance holds. A new Unit instance with the
+     * adjusted value is created and returned. The original instance is not modified.
+     * 
+     * @param unit
+     */
+    public Unit subtractUnits(Unit unit)
+    {
+        return forUnits(this.units - unit.units());
+    }
+
+    /**
+     * Adds the given amount of units to the value that this instance holds. A new Unit instance with the adjusted value
+     * is created and returned. The original instance is not modified.
+     * 
+     * @param unit
+     */
+    public Unit addUnits(Unit unit)
+    {
+        return forUnits(this.units + unit.units());
+    }
+
+    /**
+     * Subtracts the given amount of units from the value that this instance holds. A new Unit instance with the
+     * adjusted value is created and returned. The original instance is not modified.
+     * 
+     * @param units
+     */
+    public Unit subtractUnits(float units)
+    {
+        return forUnits(this.units - units);
+    }
+
+    /**
+     * Divides the value that this instance holds by the given amount. A new Unit instance with the adjusted value is
+     * created and returned. The original instance is not modified.
+     * 
+     * @param amount
+     */
+    public Unit divideBy(float amount)
+    {
+        return forUnits(this.units / amount);
+    }
+
+    /**
+     * Multiplies the value that this instance holds with the given amount. A new Unit instance with the adjusted value
+     * is created and returned. The original instance is not modified.
+     * 
+     * @param amount
+     */
+    public Unit multiplyWith(float amount)
+    {
+        return forUnits(this.units * amount);
+    }
+
+    /**
      * Adds the given amount of pixels to the value that this instance holds. A new Unit instance with the adjusted
      * value is created and returned. The original instance is not modified.
      * 
@@ -68,6 +123,39 @@ public class Unit
     public Unit addPixels(float pixels)
     {
         return forPixels(pixels() + pixels);
+    }
+
+    /**
+     * Subtracts the given amount of pixels from the value that this instance holds. A new Unit instance with the
+     * adjusted value is created and returned. The original instance is not modified.
+     * 
+     * @param pixels
+     */
+    public Unit subtractPixels(float pixels)
+    {
+        return forPixels(pixels() - pixels);
+    }
+
+    /**
+     * Adds the amount of pixels held by the given unit instance to the value that this instance holds. A new Unit
+     * instance with the adjusted value is created and returned. The original instance is not modified.
+     * 
+     * @param unit
+     */
+    public Unit addPixels(Unit unit)
+    {
+        return forPixels(pixels() + unit.pixels());
+    }
+
+    /**
+     * Subtracts the amount of pixels held by the given unit instance to the value that this instance holds. A new Unit
+     * instance with the adjusted value is created and returned. The original instance is not modified.
+     * 
+     * @param unit
+     */
+    public Unit subtractPixels(Unit unit)
+    {
+        return forPixels(pixels() - unit.pixels());
     }
 
     /**
