@@ -70,7 +70,6 @@ public abstract class GameContainer extends Canvas
         this.frame.setResizable(false);
         this.frame.setVisible(true);
         setFullScreen();
-        setupFrame();
         createScenes();
     }
 
@@ -132,7 +131,9 @@ public abstract class GameContainer extends Canvas
     public void setFullScreen()
     {
         this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         calculateRatio(this.frame);
+        setupFrame();
     }
 
     public void setScene(String name)
@@ -163,7 +164,7 @@ public abstract class GameContainer extends Canvas
 
     private void setScene(Scene scene)
     {
-        if (this.currentScene != null)
+        if (this.currentScene != null && !currentScene.equals(scene))
         {
             this.currentScene.kill();
         }
