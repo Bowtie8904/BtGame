@@ -44,38 +44,6 @@ public abstract class GameContainer extends Canvas
         return height;
     }
 
-    public GameContainer(int frameWidth, int frameHeight, float unitWidth, float unitHeight)
-    {
-        this.unitWidth = unitWidth;
-        this.unitHeight = unitHeight;
-        this.scenes = new HashMap<>();
-        this.frame = new JFrame();
-        this.frame.setSize(frameWidth, frameHeight);
-        this.frame.setUndecorated(true);
-        this.frame.setResizable(false);
-        this.frame.setLocationRelativeTo(null);
-        this.frame.setVisible(true);
-        calculateRatio(this.frame);
-        setupFrame();
-        createScenes();
-    }
-
-    public GameContainer(float unitWidth, float unitHeight)
-    {
-        this.unitWidth = unitWidth;
-        this.unitHeight = unitHeight;
-        this.scenes = new HashMap<>();
-        this.frame = new JFrame();
-        this.frame.setUndecorated(true);
-        this.frame.setResizable(false);
-        this.frame.setVisible(true);
-        this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-        calculateRatio(this.frame);
-        setupFrame();
-        createScenes();
-    }
-
     public GameContainer(ContainerSettings settings)
     {
         this.unitWidth = settings.getUnitWidth();
