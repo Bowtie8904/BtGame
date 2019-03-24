@@ -49,23 +49,25 @@ public class Unit
     }
 
     /**
-     * Adds the given amount of units to this instances units.
+     * Adds the given amount of units to the value that this instance holds. A new Unit instance with the adjusted value
+     * is created and returned. The original instance is not modified.
      * 
      * @param units
      */
-    public void addUnits(float units)
+    public Unit addUnits(float units)
     {
-        setUnits(this.units + units);
+        return forUnits(this.units + units);
     }
 
     /**
-     * Adds the given amount of pixels to this instances pixels.
+     * Adds the given amount of pixels to the value that this instance holds. A new Unit instance with the adjusted
+     * value is created and returned. The original instance is not modified.
      * 
      * @param pixels
      */
-    public void addPixels(float pixels)
+    public Unit addPixels(float pixels)
     {
-        setPixels(pixels() + pixels);
+        return forPixels(pixels() + pixels);
     }
 
     /**
