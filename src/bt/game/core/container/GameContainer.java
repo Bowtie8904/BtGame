@@ -1,4 +1,4 @@
-package bt.game.core;
+package bt.game.core.container;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -69,7 +69,44 @@ public abstract class GameContainer extends Canvas
         this.frame.setUndecorated(true);
         this.frame.setResizable(false);
         this.frame.setVisible(true);
-        setFullScreen();
+        this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        calculateRatio(this.frame);
+        setupFrame();
+        createScenes();
+    }
+
+    public GameContainer(ContainerSettings settings)
+    {
+        this.unitWidth = settings.getUnitWidth();
+        this.unitHeight = settings.getUnitHeight();
+        this.scenes = new HashMap<>();
+        this.frame = new JFrame();
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setUndecorated(settings.isUndecorated());
+        this.frame.setResizable(false);
+
+        if (!settings.isFullscreen())
+        {
+            this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
+            this.frame.setLocationRelativeTo(null);
+        }
+
+        this.frame.setVisible(true);
+
+        if (settings.isFullscreen())
+        {
+            this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        }
+        else
+        {
+            this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
+            this.frame.setLocationRelativeTo(null);
+        }
+
+        calculateRatio(this.frame);
+        setupFrame();
+
         createScenes();
     }
 
@@ -130,10 +167,7 @@ public abstract class GameContainer extends Canvas
 
     public void setFullScreen()
     {
-        this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        calculateRatio(this.frame);
-        setupFrame();
     }
 
     public void setScene(String name)

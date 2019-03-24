@@ -3,7 +3,7 @@ package bt.game.core.scene.impl;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import bt.game.core.GameContainer;
+import bt.game.core.container.GameContainer;
 import bt.game.util.unit.Unit;
 
 /**
