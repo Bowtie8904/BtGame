@@ -5,16 +5,18 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import bt.game.resource.load.Loadable;
 import bt.game.resource.load.ResourceLoader;
+import bt.game.resource.render.impl.RenderableGif;
 import bt.game.resource.render.impl.RenderableImage;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
-import bt.types.sound.Sound;
+import bt.types.sound.SoundSupplier;
 import bt.utils.files.FileUtils;
 import bt.utils.json.JSON;
 import bt.utils.log.Logger;
@@ -26,8 +28,8 @@ import bt.utils.log.Logger;
  * <h3>The json file needs to be in the following format:</h3>
  * 
  * <p>
- * The arrays 'images', 'sounds', 'files' and 'fonts' are all optional. They can be empty, contain multiple entries or
- * not exist at all. <br>
+ * The arrays 'images', 'gifs', 'sounds', 'files' and 'fonts' are all optional. They can be empty, contain multiple
+ * entries or not exist at all. <br>
  * The alias will be the resource name that the resource is mapped by.
  * </p>
  * 
@@ -40,6 +42,14 @@ import bt.utils.log.Logger;
             {
                 "path":"resource/images/test.png",
                 "alias":"test_image"
+            },
+            ...
+        ],
+        "gifs":
+        [
+            {
+                "path":"resource/images/test.gif",
+                "alias":"test_gif"
             },
             ...
         ],
@@ -129,8 +139,8 @@ public class JsonResourceLoader extends BaseResourceLoader
      * <h3>The json file needs to be in the following format:</h3>
      * 
      * <p>
-     * The arrays 'images', 'sounds', 'files' and 'fonts' are all optional. They can be empty, contain multiple entries
-     * or not exist at all. <br>
+     * The arrays 'images', 'gifs', 'sounds', 'files' and 'fonts' are all optional. They can be empty, contain multiple
+     * entries or not exist at all. <br>
      * The alias will be the resource name that the resource is mapped by. This is case insensitive.
      * </p>
      * 
@@ -143,6 +153,14 @@ public class JsonResourceLoader extends BaseResourceLoader
                 {
                     "path":"resource/images/test.png",
                     "alias":"test_image"
+                },
+                ...
+            ],
+            "gifs":
+            [
+                {
+                    "path":"resource/images/test.gif",
+                    "alias":"test_gif"
                 },
                 ...
             ],
@@ -197,7 +215,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 obj = soundArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
-                add(alias, new Sound(new File(path)));
+                add(alias, new SoundSupplier(new File(path)));
                 Logger.global().print("Loaded sound '" + alias + "' from path '" + path + "'.");
             }
         }
@@ -215,6 +233,27 @@ public class JsonResourceLoader extends BaseResourceLoader
                 {
                     add(alias, new RenderableImage(ImageIO.read(new File(path))));
                     Logger.global().print("Loaded image '" + alias + "' from path '" + path + "'.");
+                }
+                catch (IOException e)
+                {
+                    Logger.global().print(e);
+                }
+            }
+        }
+
+        if (json.has("gifs"))
+        {
+            JSONArray imageArray = json.getJSONArray("gifs");
+
+            for (int i = 0; i < imageArray.length(); i ++ )
+            {
+                obj = imageArray.getJSONObject(i);
+                alias = obj.getString("alias");
+                path = obj.getString("path");
+                try
+                {
+                    add(alias, new RenderableGif(new ImageIcon(new File(path).toURI().toURL())));
+                    Logger.global().print("Loaded gif '" + alias + "' from path '" + path + "'.");
                 }
                 catch (IOException e)
                 {

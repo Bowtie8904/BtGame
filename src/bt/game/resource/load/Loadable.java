@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.Map;
 
 import bt.game.resource.render.Renderable;
-import bt.types.sound.Sound;
+import bt.types.sound.SoundSupplier;
 
 /**
  * Interface to define a class that can load its own resources which can then be accessed by a {@link ResourceLoader}.
@@ -40,7 +40,7 @@ public interface Loadable
      *            The name of the resource context, i. e. a unique name for a scene, passed by the ResourceLoader.
      * @return A map containing all loaded sounds or null if no sounds need to be loaded.
      */
-    public Map<String, Sound> loadSounds(String name);
+    public Map<String, SoundSupplier> loadSounds(String name);
 
     /**
      * Loads all files this implementation needs.

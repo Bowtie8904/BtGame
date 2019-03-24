@@ -15,6 +15,7 @@ import bt.game.resource.render.Renderable;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.types.sound.Sound;
+import bt.types.sound.SoundSupplier;
 import bt.utils.log.Logger;
 
 /**
@@ -26,7 +27,7 @@ import bt.utils.log.Logger;
 public class BaseResourceLoader implements ResourceLoader
 {
     private Map<String, Renderable> renderables;
-    private Map<String, Sound> sounds;
+    private Map<String, SoundSupplier> sounds;
     private Map<String, File> files;
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
@@ -73,11 +74,6 @@ public class BaseResourceLoader implements ResourceLoader
         for (Renderable renderable : this.renderables.values())
         {
             renderable.kill();
-        }
-
-        for (Sound renderable : this.sounds.values())
-        {
-
         }
 
         for (Object obj : this.objects.values())
@@ -130,15 +126,15 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * Maps the given sound by the given (case insensitive) resource name. Once the sound has been added it becomes
-     * accessible by {@link #getSound(String)}.
+     * Maps the given sound supplier by the given (case insensitive) resource name. Once the sound supplier has been
+     * added its services become accessible by {@link #getSound(String)}.
      * 
      * @param resourceName
-     *            The unique resource name for the given sound.
+     *            The unique resource name for the given sound supplier.
      * @param value
      *            The sound to map.
      */
-    protected void add(String resourceName, Sound value)
+    protected void add(String resourceName, SoundSupplier value)
     {
         this.sounds.put(resourceName.toUpperCase(), value);
     }
@@ -200,7 +196,7 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public Sound getSound(String resourceName)
     {
-        return this.sounds.get(resourceName.toUpperCase());
+        return this.sounds.get(resourceName.toUpperCase()).getSound();
     }
 
     /**
@@ -242,7 +238,7 @@ public class BaseResourceLoader implements ResourceLoader
         InstanceKiller.killOnShutdown(this);
 
         Map<String, Renderable> loadedRenderables;
-        Map<String, Sound> loadedSounds;
+        Map<String, SoundSupplier> loadedSounds;
         Map<String, File> loadedFiles;
         Map<String, Font> loadedFonts;
         Map<String, Object> loadedObjects;
