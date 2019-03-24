@@ -24,12 +24,20 @@ public interface ResourceLoader extends Killable
     public void load(String name);
 
     /**
-     * Registeres the given {@link Loadable} so that its resources will be loaded and added to this instance.
+     * Registers the given {@link Loadable} so that its resources will be loaded and added to this instance.
      * 
      * @param loadable
      *            The loadable to add.
      */
     public void register(Loadable loadable);
+
+    /**
+     * Registers the given runnable to be executed during the kill operation of this instance.
+     * 
+     * @param closingOp
+     *            The closing operation to execute.
+     */
+    public void registerClosingOperation(Runnable closingOp);
 
     /**
      * Gets the renderable for the given resource name if such an renderable has been loaded before.

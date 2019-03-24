@@ -31,6 +31,7 @@ public class BaseResourceLoader implements ResourceLoader
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
     private List<Loadable> loadables;
+    private List<Runnable> closingOpeartions;
 
     /**
      * Creates a new instance and initializes its maps and lists.
@@ -51,6 +52,7 @@ public class BaseResourceLoader implements ResourceLoader
         this.fonts = new HashMap<>();
         this.objects = new HashMap<>();
         this.loadables = new ArrayList<>();
+        this.closingOpeartions = new ArrayList<>();
     }
 
     /**
@@ -99,12 +101,18 @@ public class BaseResourceLoader implements ResourceLoader
             }
         }
 
+        for (Runnable closingOp : this.closingOpeartions)
+        {
+            closingOp.run();
+        }
+
         this.renderables.clear();
         this.sounds.clear();
         this.files.clear();
         this.fonts.clear();
         this.objects.clear();
         this.loadables.clear();
+        this.closingOpeartions.clear();
     }
 
     /**
@@ -316,5 +324,14 @@ public class BaseResourceLoader implements ResourceLoader
     public void register(Loadable loadable)
     {
         this.loadables.add(loadable);
+    }
+
+    /**
+     * @see bt.game.resource.load.ResourceLoader#registerClosingOperation(java.lang.Runnable)
+     */
+    @Override
+    public void registerClosingOperation(Runnable closingOp)
+    {
+        this.closingOpeartions.add(closingOp);
     }
 }
