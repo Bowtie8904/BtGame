@@ -1,22 +1,35 @@
 package bt.game.resource.render.impl;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import java.awt.Image;
 
 import bt.game.resource.render.Renderable;
 import bt.game.util.unit.Unit;
 
 /**
+ * 
+ * 
  * @author &#8904
- *
  */
 public class RenderableImage implements Renderable
 {
-    private BufferedImage image;
+    protected Image image;
+    protected double rotationAngle;
 
-    public RenderableImage(BufferedImage image)
+    public RenderableImage(Image image)
     {
         this.image = image;
+    }
+
+    /**
+     * Sets the angle by which this text will be rotated.
+     * 
+     * @param rotationAngle
+     */
+    public void setRotation(double rotationAngle)
+    {
+        this.rotationAngle = rotationAngle;
     }
 
     /**
@@ -25,7 +38,14 @@ public class RenderableImage implements Renderable
     @Override
     public void render(Graphics g, Unit x, Unit y, Unit w, Unit h)
     {
-        g.drawImage(image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
+        Graphics2D g2 = (Graphics2D)g.create();
+
+        g2.rotate(Math.toRadians(this.rotationAngle),
+                x.pixels() + w.pixels() / 2,
+                y.pixels() + h.pixels() / 2);
+
+        g2.drawImage(image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
+        g2.dispose();
     }
 
     /**
