@@ -32,7 +32,15 @@ public class RenderableImage implements Renderable
         this.rotationAngle = rotationAngle;
     }
 
+    public double getRotation()
+    {
+        return this.rotationAngle;
+    }
+
     /**
+     * Renders this instance at the position x|y with a width of w and a height of h. The given Graphics object is used
+     * to create a {@link Graphics2D} copy, so that rotation actions can be performed.
+     * 
      * @see bt.game.resource.render.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override

@@ -39,7 +39,8 @@ public class RenderableText implements Renderable
     }
 
     /**
-     * Sets the angle by which this text will be rotated.
+     * Sets the angle by which this text will be rotated. The axis point will be in the middle of the the defined
+     * rectangle in {@link #render(Graphics, Unit, Unit, Unit, Unit) render}.
      * 
      * @param rotationAngle
      */
@@ -62,6 +63,9 @@ public class RenderableText implements Renderable
     }
 
     /**
+     * Renders this instance at the position x|y with a width of w and a height of h. The given Graphics object is used
+     * to create a {@link Graphics2D} copy, so that accurate scaling actions can be performed.
+     * 
      * @see bt.game.resource.render.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit,
      *      bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
@@ -79,6 +83,7 @@ public class RenderableText implements Renderable
         FontRenderContext renderContext = g2.getFontRenderContext();
         LineMetrics metrics = font.getLineMetrics(this.text, renderContext);
 
+        // only do this if the scaling really needs to be adjusted
         if (!w.equals(this.lastWidth) || !h.equals(this.lastHeight))
         {
             float height = metrics.getAscent() + metrics.getDescent();
