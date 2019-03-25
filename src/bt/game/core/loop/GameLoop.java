@@ -11,17 +11,23 @@ import bt.utils.thread.Threads;
  */
 public class GameLoop implements Runnable, Killable
 {
-    private boolean running;
-    private int framesPerSecond = -1;
-    private double ticksPerSecond = 60.0;
-    private int frameCheckInterval = 200;
-    private Runnable tick;
-    private Runnable render;
+    protected boolean running;
+    protected int framesPerSecond = -1;
+    protected double ticksPerSecond = 60.0;
+    protected int frameCheckInterval = 200;
+    protected int threadSleepers;
+    protected int desiredFramesPerSecond = 60;
+    protected Runnable tick;
+    protected Runnable render;
+    protected Runnable onFpsUpdate;
 
     public GameLoop(Runnable tick, Runnable render)
     {
         this.tick = tick;
         this.render = render;
+        this.onFpsUpdate = () ->
+        {
+        };
         InstanceKiller.killOnShutdown(this, 1);
     }
 
@@ -89,8 +95,42 @@ public class GameLoop implements Runnable, Killable
                 frames *= 1000 / this.frameCheckInterval;
                 this.framesPerSecond = frames;
                 frames = 0;
+                this.onFpsUpdate.run();
+
+                if (this.framesPerSecond > this.desiredFramesPerSecond)
+                {
+                    this.threadSleepers ++ ;
+                }
+                else if (this.framesPerSecond < this.desiredFramesPerSecond)
+                {
+                    this.threadSleepers -- ;
+                }
+            }
+
+            try
+            {
+                Thread.sleep(this.threadSleepers);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
             }
         }
+    }
+
+    public void setFrameRate(int desiredFramesPerSecond)
+    {
+        this.desiredFramesPerSecond = desiredFramesPerSecond;
+    }
+
+    /**
+     * Defines an action that is executed when the frames per second are updated.
+     * 
+     * @param onUpdate
+     */
+    public void onFpsUpdate(Runnable onUpdate)
+    {
+        this.onFpsUpdate = onUpdate;
     }
 
     /**
