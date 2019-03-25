@@ -207,4 +207,14 @@ public class Unit
     {
         return "Pixels: " + pixels() + "  Units: " + this.units;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o instanceof Unit)
+        {
+            return this.units == ((Unit)o).units();
+        }
+        return false;
+    }
 }
