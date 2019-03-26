@@ -1,5 +1,6 @@
 package bt.game.core.scene.impl;
 
+import bt.game.core.loop.GameLoop;
 import bt.game.core.scene.Scene;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
@@ -14,6 +15,7 @@ public abstract class BaseScene implements Scene
 {
     protected ResourceLoader resourceLoader;
     protected boolean isLoaded;
+    protected GameLoop asyncLoop;
 
     public BaseScene(ResourceLoader resourceLoader)
     {
@@ -25,12 +27,32 @@ public abstract class BaseScene implements Scene
         {
             this.resourceLoader = resourceLoader;
         }
-
     }
 
     public BaseScene()
     {
         this(null);
+    }
+
+    public void setAsyncLoop(GameLoop loop)
+    {
+        this.asyncLoop = loop;
+    }
+
+    public void startAsyncLoop()
+    {
+        if (this.asyncLoop != null)
+        {
+            this.asyncLoop.start();
+        }
+    }
+
+    public void stopAsyncLoop()
+    {
+        if (this.asyncLoop != null)
+        {
+            this.asyncLoop.stop();
+        }
     }
 
     /**
@@ -71,5 +93,18 @@ public abstract class BaseScene implements Scene
             InstanceKiller.unregister(this.resourceLoader);
             InstanceKiller.unregister(this);
         }
+
+        // kill async loop if instance killer is not already doing it or if the loader is not registered for
+        // termination at all
+        if (this.asyncLoop != null && (!InstanceKiller.isActive() || !InstanceKiller.isRegistered(this.asyncLoop)))
+        {
+            this.asyncLoop.kill();
+            InstanceKiller.unregister(this.asyncLoop);
+        }
+    }
+
+    public void tickAsync()
+    {
+
     }
 }
