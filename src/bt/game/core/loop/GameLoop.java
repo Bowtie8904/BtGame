@@ -25,9 +25,6 @@ public class GameLoop implements Runnable, Killable
     {
         this.tick = tick;
         this.render = render;
-        this.onFpsUpdate = () ->
-        {
-        };
         InstanceKiller.killOnShutdown(this, 1);
     }
 
@@ -82,11 +79,17 @@ public class GameLoop implements Runnable, Killable
 
             while (delta >= 1)
             {
-                this.tick.run();
+                if (this.tick != null)
+                {
+                    this.tick.run();
+                }
                 delta -- ;
             }
 
-            this.render.run();
+            if (this.render != null)
+            {
+                this.render.run();
+            }
             frames ++ ;
 
             if (System.currentTimeMillis() - timer > this.frameCheckInterval)
@@ -95,7 +98,11 @@ public class GameLoop implements Runnable, Killable
                 frames *= 1000 / this.frameCheckInterval;
                 this.framesPerSecond = frames;
                 frames = 0;
-                this.onFpsUpdate.run();
+
+                if (this.onFpsUpdate != null)
+                {
+                    this.onFpsUpdate.run();
+                }
 
                 if (this.framesPerSecond > this.desiredFramesPerSecond)
                 {
