@@ -46,14 +46,21 @@ public class RenderableImage implements Renderable
     @Override
     public void render(Graphics g, Unit x, Unit y, Unit w, Unit h)
     {
-        Graphics2D g2 = (Graphics2D)g.create();
+        if (this.rotationAngle == 0 || this.rotationAngle % 360 == 0)
+        {
+            g.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
+        }
+        else
+        {
+            Graphics2D g2 = (Graphics2D)g.create();
 
-        g2.rotate(Math.toRadians(this.rotationAngle),
-                x.pixels() + w.pixels() / 2,
-                y.pixels() + h.pixels() / 2);
+            g2.rotate(Math.toRadians(this.rotationAngle),
+                    x.pixels() + w.pixels() / 2,
+                    y.pixels() + h.pixels() / 2);
 
-        g2.drawImage(image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
-        g2.dispose();
+            g2.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
+            g2.dispose();
+        }
     }
 
     /**
