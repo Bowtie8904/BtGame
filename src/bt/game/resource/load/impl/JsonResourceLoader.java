@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,6 +17,7 @@ import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.types.sound.SoundSupplier;
 import bt.utils.files.FileUtils;
+import bt.utils.img.ImageUtils;
 import bt.utils.json.JSON;
 import bt.utils.log.Logger;
 
@@ -250,15 +250,8 @@ public class JsonResourceLoader extends BaseResourceLoader
                 obj = imageArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
-                try
-                {
-                    add(alias, new RenderableGif(new ImageIcon(new File(path).toURI().toURL())));
-                    Logger.global().print("Loaded gif '" + alias + "' from path '" + path + "'.");
-                }
-                catch (IOException e)
-                {
-                    Logger.global().print(e);
-                }
+                add(alias, new RenderableGif(ImageUtils.gertImageIcon(new File(path))));
+                Logger.global().print("Loaded gif '" + alias + "' from path '" + path + "'.");
             }
         }
 
