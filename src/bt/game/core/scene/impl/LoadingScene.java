@@ -28,17 +28,18 @@ public class LoadingScene extends BaseScene
      *            Specifies the interval at which the highlighted bar will move. Default is 5, which means that the bar
      *            will be moved every 5 ticks.
      */
-    public LoadingScene(int ticksPerMove)
+    public LoadingScene(GameContainer gameContainer, int ticksPerMove)
     {
+        super(gameContainer);
         this.ticks = ticksPerMove;
     }
 
     /**
      * Creates a new scene which moves the bar every 5 ticks.
      */
-    public LoadingScene()
+    public LoadingScene(GameContainer gameContainer)
     {
-        this.ticks = 5;
+        this(gameContainer, 5);
     }
 
     /**
