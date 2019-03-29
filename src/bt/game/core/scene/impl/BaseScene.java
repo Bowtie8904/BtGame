@@ -1,6 +1,10 @@
 package bt.game.core.scene.impl;
 
-import bt.game.core.loop.GameLoop;
+import java.awt.Graphics;
+
+import bt.game.core.container.GameContainer;
+import bt.game.core.obj.hand.GameObjectHandler;
+import bt.game.core.obj.hand.impl.BaseGameObjectHandler;
 import bt.game.core.scene.Scene;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
@@ -14,11 +18,15 @@ import bt.utils.log.Logger;
 public abstract class BaseScene implements Scene
 {
     protected ResourceLoader resourceLoader;
+    protected GameObjectHandler gameObjectHandler;
+    protected GameContainer gameContainer;
     protected boolean isLoaded;
-    protected GameLoop asyncLoop;
+    protected String name;
 
-    public BaseScene(ResourceLoader resourceLoader)
+    public BaseScene(GameContainer gameContainer, ResourceLoader resourceLoader)
     {
+        this.gameContainer = gameContainer;
+
         if (resourceLoader == null)
         {
             this.resourceLoader = new BaseResourceLoader();
@@ -27,32 +35,31 @@ public abstract class BaseScene implements Scene
         {
             this.resourceLoader = resourceLoader;
         }
+
+        this.gameObjectHandler = new BaseGameObjectHandler();
     }
 
-    public BaseScene()
+    public BaseScene(GameContainer gameContainer)
     {
-        this(null);
+        this(gameContainer, null);
     }
 
-    public void setAsyncLoop(GameLoop loop)
+    @Override
+    public GameObjectHandler getGameObjectHandler()
     {
-        this.asyncLoop = loop;
+        return this.gameObjectHandler;
     }
 
-    public void startAsyncLoop()
+    @Override
+    public ResourceLoader getResourceLoader()
     {
-        if (this.asyncLoop != null)
-        {
-            this.asyncLoop.start();
-        }
+        return this.resourceLoader;
     }
 
-    public void stopAsyncLoop()
+    @Override
+    public GameContainer getGameContainer()
     {
-        if (this.asyncLoop != null)
-        {
-            this.asyncLoop.stop();
-        }
+        return this.gameContainer;
     }
 
     /**
@@ -63,6 +70,7 @@ public abstract class BaseScene implements Scene
     {
         this.isLoaded = false;
         InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
+        this.name = name;
         this.resourceLoader.load(name);
         this.isLoaded = true;
     }
@@ -80,10 +88,10 @@ public abstract class BaseScene implements Scene
      * @see bt.runtime.Killable#kill()
      */
     @Override
-    public void kill()
+    public synchronized void kill()
     {
         this.isLoaded = false;
-        Logger.global().print("Killing scene.");
+        Logger.global().print(this.name == null ? "Killing scene." : "Killing scene '" + this.name + "'.");
 
         // kill resource loader if instance killer is not already doing it or if the loader is not registered for
         // termination at all
@@ -93,18 +101,17 @@ public abstract class BaseScene implements Scene
             InstanceKiller.unregister(this.resourceLoader);
             InstanceKiller.unregister(this);
         }
-
-        // kill async loop if instance killer is not already doing it or if the loader is not registered for
-        // termination at all
-        if (this.asyncLoop != null && (!InstanceKiller.isActive() || !InstanceKiller.isRegistered(this.asyncLoop)))
-        {
-            this.asyncLoop.kill();
-            InstanceKiller.unregister(this.asyncLoop);
-        }
     }
 
-    public void tickAsync()
+    @Override
+    public synchronized void tick()
     {
+        this.gameObjectHandler.tick();
+    }
 
+    @Override
+    public synchronized void render(Graphics g)
+    {
+        this.gameObjectHandler.render(g);
     }
 }
