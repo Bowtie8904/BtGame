@@ -26,6 +26,7 @@ import bt.utils.log.Logger;
  */
 public class BaseResourceLoader implements ResourceLoader
 {
+    protected boolean killed = false;
     private Map<String, Renderable> renderables;
     private Map<String, SoundSupplier> sounds;
     private Map<String, File> files;
@@ -70,6 +71,8 @@ public class BaseResourceLoader implements ResourceLoader
     public void kill()
     {
         Logger.global().print("Closing resources.");
+
+        this.killed = true;
 
         for (Renderable renderable : this.renderables.values())
         {
@@ -187,6 +190,11 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public Renderable getRenderable(String resourceName)
     {
+        if (this.killed)
+        {
+            throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
+        }
+
         return this.renderables.get(resourceName.toUpperCase());
     }
 
@@ -196,6 +204,11 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public Sound getSound(String resourceName)
     {
+        if (this.killed)
+        {
+            throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
+        }
+
         return this.sounds.get(resourceName.toUpperCase()).getSound();
     }
 
@@ -205,6 +218,11 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public File getFile(String resourceName)
     {
+        if (this.killed)
+        {
+            throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
+        }
+
         return this.files.get(resourceName.toUpperCase());
     }
 
@@ -214,6 +232,11 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public Font getFont(String resourceName)
     {
+        if (this.killed)
+        {
+            throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
+        }
+
         return this.fonts.get(resourceName.toUpperCase());
     }
 
@@ -223,6 +246,11 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public Object get(String resourceName)
     {
+        if (this.killed)
+        {
+            throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
+        }
+
         return this.objects.get(resourceName.toUpperCase());
     }
 
@@ -243,8 +271,19 @@ public class BaseResourceLoader implements ResourceLoader
         Map<String, Font> loadedFonts;
         Map<String, Object> loadedObjects;
 
+        List<String> loadedClasses = new ArrayList<>();
+
         for (Loadable loadable : this.loadables)
         {
+            if (loadedClasses.contains(loadable.getClass().getName()))
+            {
+                continue;
+            }
+            else
+            {
+                loadedClasses.add(loadable.getClass().getName());
+            }
+            
             // images
             loadedRenderables = loadable.loadRenderables(name);
 
@@ -311,6 +350,8 @@ public class BaseResourceLoader implements ResourceLoader
                 }
             }
         }
+
+        this.killed = false;
     }
 
     /**
