@@ -11,12 +11,12 @@ import bt.utils.thread.Threads;
  */
 public class GameLoop implements Runnable, Killable
 {
-    protected boolean running;
+    protected volatile boolean running;
     protected int framesPerSecond = -1;
     protected double ticksPerSecond = 60.0;
     protected int frameCheckInterval = 200;
     protected int threadSleepers;
-    protected int desiredFramesPerSecond = 60;
+    protected int desiredFramesPerSecond = -1;
     protected Runnable tick;
     protected Runnable render;
     protected Runnable onFpsUpdate;
@@ -79,17 +79,11 @@ public class GameLoop implements Runnable, Killable
 
             while (delta >= 1)
             {
-                if (this.tick != null)
-                {
-                    this.tick.run();
-                }
+                runTick();
                 delta -- ;
             }
 
-            if (this.render != null)
-            {
-                this.render.run();
-            }
+            runRender();
             frames ++ ;
 
             if (System.currentTimeMillis() - timer > this.frameCheckInterval)
@@ -104,23 +98,28 @@ public class GameLoop implements Runnable, Killable
                     this.onFpsUpdate.run();
                 }
 
-                if (this.framesPerSecond > this.desiredFramesPerSecond)
+                if (this.desiredFramesPerSecond > -1)
                 {
-                    this.threadSleepers ++ ;
-                }
-                else if (this.framesPerSecond < this.desiredFramesPerSecond)
-                {
-                    this.threadSleepers -- ;
+                    if (this.framesPerSecond > this.desiredFramesPerSecond)
+                    {
+                        this.threadSleepers ++ ;
+                    }
+                    else if (this.framesPerSecond < this.desiredFramesPerSecond)
+                    {
+                        this.threadSleepers -- ;
+                    }
                 }
             }
 
-            try
+            if (this.desiredFramesPerSecond > -1 && this.threadSleepers > 0)
             {
-                Thread.sleep(this.threadSleepers);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
+                try
+                {
+                    Thread.sleep(this.threadSleepers);
+                }
+                catch (InterruptedException e)
+                {
+                }
             }
         }
     }
@@ -168,5 +167,21 @@ public class GameLoop implements Runnable, Killable
     public void setTicksPerSecond(double ticks)
     {
         this.ticksPerSecond = ticks;
+    }
+
+    private synchronized void runRender()
+    {
+        if (this.render != null)
+        {
+            this.render.run();
+        }
+    }
+
+    private void runTick()
+    {
+        if (this.tick != null)
+        {
+            this.tick.run();
+        }
     }
 }
