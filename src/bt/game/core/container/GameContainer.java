@@ -60,10 +60,9 @@ public abstract class GameContainer extends Canvas
             this.frame.setLocationRelativeTo(null);
         }
 
-        this.frame.setVisible(true);
-
         if (settings.isFullscreen())
         {
+            this.frame.setVisible(true);
             this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
         else
@@ -101,11 +100,11 @@ public abstract class GameContainer extends Canvas
         width = Unit.forUnits(this.unitWidth);
         height = Unit.forUnits(this.unitHeight);
 
-        this.setSize(new Dimension((int)width.pixels(), (int)height.pixels()));
-        this.setPreferredSize(new Dimension((int)width.pixels(), (int)height.pixels()));
-        this.setMaximumSize(new Dimension((int)width.pixels(), (int)height.pixels()));
+        setSize(new Dimension((int)width.pixels(), (int)height.pixels()));
+        setPreferredSize(new Dimension((int)width.pixels(), (int)height.pixels()));
+        setMaximumSize(new Dimension((int)width.pixels(), (int)height.pixels()));
 
-        if (this.getWidth() < this.frame.getWidth())
+        if (getWidth() < this.frame.getWidth())
         {
             this.frame.getContentPane().setLayout(new BoxLayout(this.frame.getContentPane(), BoxLayout.X_AXIS));
             this.frame.getContentPane().add(Box.createHorizontalGlue());
@@ -126,6 +125,8 @@ public abstract class GameContainer extends Canvas
 
         this.frame.revalidate();
         this.frame.repaint();
+
+        this.frame.setVisible(true);
     }
 
     public JFrame getFrame()
