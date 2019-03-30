@@ -6,21 +6,56 @@ import bt.utils.log.Logger;
 import bt.utils.thread.Threads;
 
 /**
+ * A class to handle tick and render method calls at a (nearly) fix tick and frame rate.
+ * 
  * @author &#8904
- *
  */
 public class GameLoop implements Runnable, Killable
 {
+    /**
+     * Indicates whether this loop is currently running. Setting this to false is the easiest way to terminate the loop.
+     */
     protected volatile boolean running;
+
+    /** The current frames per second. */
     protected int framesPerSecond = -1;
+
+    /** The number of times the {@link #tick} should be called per second. */
     protected double ticksPerSecond = 60.0;
+
+    /** The interval (in milliseconds) at which the {@link #framesPerSecond frame rate} is updated. */
     protected int frameCheckInterval = 200;
+
+    /**
+     * The amount of milliseconds that the loop thread will sleep after each iteration to keep the frame rate stable.
+     */
     protected int threadSleepers;
+
+    /**
+     * The target frame rate that the loop should aim for. Setting this to -1 causes the loop to try and achieve the
+     * highest frame rate possible.
+     */
     protected int desiredFramesPerSecond = -1;
+
+    /** The set tick runnable that is called {@link #ticksPerSecond n} times per second. */
     protected Runnable tick;
+
+    /** The set render runnable that is called {@link #framesPerSecond n} times per second. */
     protected Runnable render;
+
+    /** The set runnable that is executed whenever the frame rate is updated. See {@link #frameCheckInterval}. */
     protected Runnable onFpsUpdate;
 
+    /**
+     * Creates a new instance and sets the runnables for tick and render methods.
+     * 
+     * <p>
+     * This constructor registers the loop to the {@link InstanceKiller} with a priority of 1.
+     * </p>
+     * 
+     * @param tick
+     * @param render
+     */
     public GameLoop(Runnable tick, Runnable render)
     {
         this.tick = tick;
@@ -28,6 +63,16 @@ public class GameLoop implements Runnable, Killable
         InstanceKiller.killOnShutdown(this, 1);
     }
 
+    /**
+     * Kills the loop. This method just adds logging to the {@link #stop()} call.
+     * 
+     * <p>
+     * This will not cancel the current iteration. The tick and render methods might still be called once before the
+     * loop truly terminates.
+     * </p>
+     * 
+     * @see bt.runtime.Killable#kill()
+     */
     @Override
     public void kill()
     {
@@ -60,6 +105,11 @@ public class GameLoop implements Runnable, Killable
         this.running = false;
     }
 
+    /**
+     * The core of the loop.
+     * 
+     * @see java.lang.Runnable#run()
+     */
     @Override
     public void run()
     {
@@ -124,6 +174,13 @@ public class GameLoop implements Runnable, Killable
         }
     }
 
+    /**
+     * Sets the target frame rate that this loop will try to hold.
+     * 
+     * @param desiredFramesPerSecond
+     *            The target frame rate. Setting this to -1 causes the loop to try and achieve the highest frame rate
+     *            possible.
+     */
     public void setFrameRate(int desiredFramesPerSecond)
     {
         this.desiredFramesPerSecond = desiredFramesPerSecond;
@@ -149,11 +206,21 @@ public class GameLoop implements Runnable, Killable
         this.frameCheckInterval = 1000 / updatesPerSecond;
     }
 
+    /**
+     * Gets the current frame rate. This value is updated {@link #setFpsUpdateRate(int) n} times per second.
+     * 
+     * @return
+     */
     public int getFramesPerSecond()
     {
         return this.framesPerSecond;
     }
 
+    /**
+     * Gets how many times the tick method is called per second.
+     * 
+     * @return
+     */
     public double getTicksPerSecond()
     {
         return this.ticksPerSecond;
@@ -169,7 +236,10 @@ public class GameLoop implements Runnable, Killable
         this.ticksPerSecond = ticks;
     }
 
-    private synchronized void runRender()
+    /**
+     * Runs the render runnable if it is not null.
+     */
+    private void runRender()
     {
         if (this.render != null)
         {
@@ -177,6 +247,9 @@ public class GameLoop implements Runnable, Killable
         }
     }
 
+    /**
+     * Runs the tick runnable if it is not null.
+     */
     private void runTick()
     {
         if (this.tick != null)

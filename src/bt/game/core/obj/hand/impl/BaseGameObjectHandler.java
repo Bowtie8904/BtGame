@@ -9,14 +9,24 @@ import bt.game.core.obj.GameObject;
 import bt.game.core.obj.hand.GameObjectHandler;
 
 /**
+ * A base implementation of the {@link GameObjectHandler} interface.
+ * 
+ * <p>
+ * This implementation holds a list of {@link GameObject game objects} which it iterates over to call their tick and
+ * render methods. The list is sorted after the objects Z value (low to high) everytime the render method is called.
+ * This behavior can be adapted by overriding {@link #sortObjects()}.
+ * </p>
+ * 
  * @author &#8904
- *
  */
 public class BaseGameObjectHandler implements GameObjectHandler
 {
     protected List<GameObject> objects;
     private Comparator<GameObject> zComparator;
 
+    /**
+     * Creates a new instance.
+     */
     public BaseGameObjectHandler()
     {
         this.objects = new CopyOnWriteArrayList<>();

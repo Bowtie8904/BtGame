@@ -15,35 +15,72 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
+import bt.game.core.ctrl.GameController;
 import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 import bt.utils.thread.Threads;
 
 /**
+ * A frame including a canvas to display a game. This class handles the starting and ending of {@link Scene scenes}.
+ * 
  * @author &#8904
- *
  */
 public abstract class GameContainer extends Canvas
 {
+    /** The currently active scene. */
     protected Scene currentScene;
+
+    /** The frame that contains the game canvas. */
     protected JFrame frame;
+
+    /**
+     * A collection mapping entries with scenes to unique names. The entries will hold the main scene as a key and an
+     * optional (may be null) loading scene as a value.
+     */
     private Map<String, Entry<Scene, Scene>> scenes;
+
+    /** The pixel to {@link Unit} ratio that is calcualted when the frame is set up. */
     protected float ratio;
+    
+    /** The width in units. */
     private float unitWidth;
+    
+    /** The height in units. */
     private float unitHeight;
+
+    /** The width in units. */
     private static Unit width;
+
+    /** The height in units. */
     private static Unit height;
 
+    /**
+     * The {@link Unit} that describes the X axis of the game.
+     * 
+     * @return The unit instance.
+     */
     public static Unit width()
     {
         return width;
     }
 
+    /**
+     * The {@link Unit} that describes the Y axis of the game.
+     * 
+     * @return The unit instance.
+     */
     public static Unit height()
     {
         return height;
     }
 
+    /**
+     * Creates a new instance and uses the given settings. This will setup the frame, calculate and set the ratio for
+     * {@link Unit units} and call {@link #createScenes()}.
+     * 
+     * @param settings
+     *            The settings to use for this game container.
+     */
     public GameContainer(ContainerSettings settings)
     {
         this.unitWidth = settings.getUnitWidth();
@@ -72,11 +109,22 @@ public abstract class GameContainer extends Canvas
         }
 
         calculateRatio(this.frame);
+
+        GameController.get().doInitialMapping(this.frame);
+
         setupFrame();
 
         createScenes();
     }
 
+    /**
+     * Calculates the pixel per unit ratio by using the width and height of the given component and the units set in the
+     * {@link ContainerSettings settings} given to the constructor. This method will call {@link Unit#setRatio(float)}
+     * with the result.
+     * 
+     * @param comp
+     *            The component whichs width and height are used to calculate the ration.
+     */
     private void calculateRatio(Component comp)
     {
         if (((float)comp.getWidth() / (float)comp.getHeight()) / (this.unitWidth / this.unitHeight) == 1f)
@@ -93,6 +141,10 @@ public abstract class GameContainer extends Canvas
         Unit.setRatio(this.ratio);
     }
 
+    /**
+     * Sets up the frame abd the canvas. This will set the frame background color to black and position the canvas in
+     * the middle of the frame. At the end of this method the frame will be made visible.
+     */
     private void setupFrame()
     {
         this.frame.getContentPane().setBackground(Color.BLACK);
@@ -129,16 +181,24 @@ public abstract class GameContainer extends Canvas
         this.frame.setVisible(true);
     }
 
+    /**
+     * Gets the frame that contains this games canvas.
+     * 
+     * @return
+     */
     public JFrame getFrame()
     {
         return this.frame;
     }
 
-    public void setFullScreen()
-    {
-
-    }
-
+    /**
+     * Sets the {@link Scene} to be displayed. This will properly {@link Scene#kill() kill} the current scene. The new
+     * main scene will be loaded in a different thread. During the loading of the main scene the set loading scene is
+     * played (if it exists).
+     * 
+     * @param name
+     *            The name of the scene that should be played.
+     */
     public void setScene(String name)
     {
         if (this.currentScene != null)
@@ -165,6 +225,11 @@ public abstract class GameContainer extends Canvas
         });
     }
 
+    /**
+     * Sets the given scene. This kills the current scene if it does not equal the given one.
+     * 
+     * @param scene
+     */
     private void setScene(Scene scene)
     {
         if (this.currentScene != null && !currentScene.equals(scene))
@@ -175,16 +240,44 @@ public abstract class GameContainer extends Canvas
         this.currentScene = scene;
     }
 
+    /**
+     * Adds the given scene and maps it to the given name.
+     * 
+     * <p>
+     * This is a convinience method for
+     * 
+     * <pre>
+     * {@link #addScene(String, Scene, Scene) addScene(name, scene, null);}
+     * </pre>
+     * </p>
+     * 
+     * @param name
+     * @param scene
+     */
     protected void addScene(String name, Scene scene)
     {
         addScene(name, scene, null);
     }
 
+    /**
+     * Adds the given main scene and loading scene and maps them to the given name.
+     * 
+     * <p>
+     * The loading scene may be null. If it is not null it will be displayed while the main scene is loading.
+     * </p>
+     * 
+     * @param name
+     * @param mainScene
+     * @param loadingScene
+     */
     protected void addScene(String name, Scene mainScene, Scene loadingScene)
     {
         this.scenes.put(name.toUpperCase(), new SimpleEntry<Scene, Scene>(mainScene, loadingScene));
     }
 
+    /**
+     * Calls {@link Scene#tick() tick} of the current scene as soon as {@link Scene#isLoaded() isLoaded} returns true.
+     */
     public void tick()
     {
         if (this.currentScene != null && this.currentScene.isLoaded())
@@ -193,6 +286,10 @@ public abstract class GameContainer extends Canvas
         }
     }
 
+    /**
+     * Calls {@link Scene#render(Graphics) render} of the current scene as soon as {@link Scene#isLoaded() isLoaded}
+     * returns true.
+     */
     public void render()
     {
         BufferStrategy bs = this.getBufferStrategy();
@@ -214,5 +311,8 @@ public abstract class GameContainer extends Canvas
         bs.show();
     }
 
+    /**
+     * Defines the scenes that are used within this game.
+     */
     protected abstract void createScenes();
 }

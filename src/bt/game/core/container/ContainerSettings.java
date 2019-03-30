@@ -1,8 +1,9 @@
 package bt.game.core.container;
 
 /**
+ * A configuration class for {@link GameContainers}.
+ * 
  * @author &#8904
- *
  */
 public class ContainerSettings
 {
@@ -13,6 +14,16 @@ public class ContainerSettings
     private boolean undecorated;
     private boolean fullscreen;
 
+    /**
+     * Sets the measurements of the the game canvas in {@link Unit units}. This has no effect on the actual window size,
+     * it just measn that the window width <i>n</i> will consist of <i>unitWidth</i> units.
+     * 
+     * @param unitWidth
+     *            The units of the X axis.
+     * @param unitHeight
+     *            The units of the Y axis.
+     * @return This instance for chaining.
+     */
     public ContainerSettings gameUnits(float unitWidth, float unitHeight)
     {
         this.unitWidth = unitWidth;
@@ -20,6 +31,15 @@ public class ContainerSettings
         return this;
     }
 
+    /**
+     * Sets the size of the frame. This setting has no effect if {@link #fullscreen(boolean)} is set to true.
+     * 
+     * @param width
+     *            The width of the window.
+     * @param height
+     *            The height of the window.
+     * @return This instance for chaining.
+     */
     public ContainerSettings frameSize(int width, int height)
     {
         this.frameWidth = width;
@@ -27,12 +47,26 @@ public class ContainerSettings
         return this;
     }
 
+    /**
+     * Sets whether the window will be decorated.
+     * 
+     * @param undecorated
+     *            true to remove window decorations.
+     * @return This instance for chaining.
+     */
     public ContainerSettings undecorated(boolean undecorated)
     {
         this.undecorated = undecorated;
         return this;
     }
 
+    /**
+     * Indicates whether the game should be in fullscreen mode.
+     * 
+     * @param fullscreen
+     *            true if the game shuld be in fullscreen.
+     * @return This instance for chaining.
+     */
     public ContainerSettings fullscreen(boolean fullscreen)
     {
         this.fullscreen = fullscreen;
