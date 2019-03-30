@@ -1,25 +1,23 @@
 package bt.game.core.ctrl;
 
 import java.awt.Component;
-import java.awt.event.KeyEvent;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
 
+import bt.game.core.ctrl.spec.KeyController;
 import bt.key.KeyAction;
-import bt.key.KeyBoardHook;
-import bt.utils.log.Logger;
 
 /**
  * A class to handle key and mouse controls. Actions defined in runnables can be defined for each key or mouse button.
+ * 
+ * <p>
+ * This class is created for convinient access as it is a singleton which holds all relevant controller instances.
+ * </p>
  * 
  * @author &#8904
  */
 public class GameController
 {
     private static GameController instance;
-    private Map<Integer, KeyAction[]> keyMappings;
+    private KeyController keyController;
 
     public static GameController get()
     {
@@ -33,7 +31,7 @@ public class GameController
 
     protected GameController()
     {
-        this.keyMappings = new HashMap<>();
+        this.keyController = new KeyController();
     }
 
     /**
@@ -59,14 +57,7 @@ public class GameController
      */
     public void onKeyPress(int keyCode, int modifier, Runnable action)
     {
-        KeyAction[] actions = this.keyMappings.get(keyCode);
-
-        if (actions == null)
-        {
-            throw new IllegalArgumentException("No mapping for key code = " + keyCode);
-        }
-
-        actions[modifier].setKeyPressedAction((e) -> action.run());
+        this.keyController.onKeyPress(keyCode, modifier, action);
     }
 
     /**
@@ -93,70 +84,16 @@ public class GameController
      */
     public void onKeyRelease(int keyCode, int modifier, Runnable action)
     {
-        KeyAction[] actions = this.keyMappings.get(keyCode);
-
-        if (actions == null)
-        {
-            throw new IllegalArgumentException("No mapping for key code = " + keyCode);
-        }
-
-        actions[modifier].setKeyReleasedAction((e) -> action.run());
+        this.keyController.onKeyRelease(keyCode, modifier, action);
     }
 
-    public void doInitialMapping(Component comp)
+    /**
+     * Initialises all sub contrllers with the given component.
+     * 
+     * @param comp
+     */
+    public void init(Component comp)
     {
-        int count = 0;
-        Field[] fields = KeyEvent.class.getDeclaredFields();
-
-        for (Field f : fields)
-        {
-            if (Modifier.isStatic(f.getModifiers())
-                    && Modifier.isPublic(f.getModifiers())
-                    && Modifier.isFinal(f.getModifiers())
-                    && f.getName().startsWith("VK_"))
-            {
-                try
-                {
-                    count ++ ;
-                    int code = f.getInt(null);
-
-                    KeyAction[] actions = new KeyAction[] {
-                            new KeyAction(comp, code, KeyAction.NO_MODIFIER, (e) ->
-                            {
-                            }, (e) ->
-                            {
-                            }),
-                            new KeyAction(comp, code, KeyAction.SHIFT_MODIFIER, (e) ->
-                            {
-                            }, (e) ->
-                            {
-                            }),
-                            new KeyAction(comp, code, KeyAction.ALT_MODIFIER, (e) ->
-                            {
-                            }, (e) ->
-                            {
-                            }),
-                            new KeyAction(comp, code, KeyAction.CTRL_MODIFIER, (e) ->
-                            {
-                            }, (e) ->
-                            {
-                            }),
-                    };
-
-                    this.keyMappings.put(code, actions);
-
-                    for (KeyAction a : actions)
-                    {
-                        KeyBoardHook.get().addKeyAction(a);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.global().print(e);
-                }
-            }
-        }
-
-        Logger.global().print("Mapped " + count + " keys.");
+        this.keyController.doInitialMapping(comp);
     }
 }
