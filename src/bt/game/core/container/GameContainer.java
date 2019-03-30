@@ -110,7 +110,7 @@ public abstract class GameContainer extends Canvas
 
         calculateRatio(this.frame);
 
-        GameController.get().doInitialMapping(this.frame);
+        GameController.get().init(this.frame);
 
         setupFrame();
 
