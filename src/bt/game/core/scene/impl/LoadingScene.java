@@ -5,6 +5,8 @@ import java.awt.Graphics;
 
 import bt.game.core.container.GameContainer;
 import bt.game.util.unit.Unit;
+import bt.runtime.InstanceKiller;
+import bt.utils.log.Logger;
 
 /**
  * A very simple scene displaying a black background with blinking dark grey / white loading bars in the middle.
@@ -40,6 +42,22 @@ public class LoadingScene extends BaseScene
     public LoadingScene(GameContainer gameContainer)
     {
         this(gameContainer, 5);
+    }
+
+    @Override
+    public synchronized void kill()
+    {
+        this.isLoaded = false;
+        Logger.global().print("Killing loading scene.");
+
+        // kill resource loader if instance killer is not already doing it or if the loader is not registered for
+        // termination at all
+        if (!InstanceKiller.isActive() || !InstanceKiller.isRegistered(this.resourceLoader))
+        {
+            this.resourceLoader.kill();
+            InstanceKiller.unregister(this.resourceLoader);
+            InstanceKiller.unregister(this);
+        }
     }
 
     /**
