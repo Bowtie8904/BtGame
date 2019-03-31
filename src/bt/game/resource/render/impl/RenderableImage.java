@@ -61,6 +61,8 @@ public class RenderableImage implements Renderable
             g2.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
             g2.dispose();
         }
+
+        this.rotationAngle = 0;
     }
 
     /**
