@@ -22,11 +22,13 @@ public class MouseController extends MouseAdapter
     private Component component;
     private int mouseX;
     private int mouseY;
+    private MouseTarget lastClicked;
 
     public MouseController(Component component)
     {
         this.component = component;
         this.component.addMouseListener(this);
+        this.component.addMouseMotionListener(this);
         this.mouseTargets = new CopyOnWriteArrayList<>();
 
         this.onClick = () -> {};
@@ -64,6 +66,14 @@ public class MouseController extends MouseAdapter
 
     public void checkHover()
     {
+        if (this.lastClicked != null)
+        {
+            // dont switch to another hover target if we havtn released our last click yet, i.e. are still dragging the
+            // target around
+            this.lastClicked.onHover();
+            return;
+        }
+
         if (this.component.getMousePosition() != null && this.component.getMousePosition() != null)
         {
             sortTargets();
@@ -116,9 +126,27 @@ public class MouseController extends MouseAdapter
         {
             if (mouseOver(this.mouseX, this.mouseY, target.getX(), target.getY(), target.getW(), target.getH()))
             {
+                this.lastClicked = target;
                 target.onClick();
                 return;
             }
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+        this.lastClicked = null;
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e)
+    {
+        if (this.lastClicked != null)
+        {
+            this.lastClicked.onDrag(Unit.forPixels(e.getX() - this.mouseX), Unit.forPixels(e.getY() - this.mouseY));
+            this.mouseX = e.getX();
+            this.mouseY = e.getY();
         }
     }
 

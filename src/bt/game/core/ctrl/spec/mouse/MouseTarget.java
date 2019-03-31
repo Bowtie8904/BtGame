@@ -9,6 +9,8 @@ public interface MouseTarget
 {
     public void onClick();
 
+    public void onDrag(Unit xOffset, Unit yOffset);
+
     public void onHover();
 
     public void afterHover();
