@@ -23,6 +23,10 @@ public class KeyController
      * Sets the action that is executed when the key with the given key code is pressed without any modifiers (shift,
      * ctrl or alt). This method will override any action that was set for this specifid condition before.
      * 
+     * <p>
+     * The action may be null which will lead to an empty runnable being bound to the key.
+     * </p>
+     * 
      * @param keyCode
      * @param action
      */
@@ -35,6 +39,10 @@ public class KeyController
      * Sets the action that is executed when the key with the given key code is pressed together with the given modifier
      * ({@link KeyAction#SHIFT_MODIFIER shift}, {@link KeyAction#CTRL_MODIFIER ctrl} or {@link KeyAction#ALT_MODIFIER
      * alt}). This method will override any action that was set for this specifid condition before.
+     * 
+     * <p>
+     * The action may be null which will lead to an empty runnable being bound to the key.
+     * </p>
      * 
      * @param keyCode
      * @param modifier
@@ -56,6 +64,10 @@ public class KeyController
      * Sets the action that is executed when the key with the given key code is released without any modifiers (shift,
      * ctrl or alt). This method will override any action that was set for this specifid condition before.
      * 
+     * <p>
+     * The action may be null which will lead to an empty runnable being bound to the key.
+     * </p>
+     * 
      * @param keyCode
      * @param action
      */
@@ -70,6 +82,10 @@ public class KeyController
      * {@link KeyAction#ALT_MODIFIER alt}). This method will override any action that was set for this specifid
      * condition before.
      * 
+     * <p>
+     * The action may be null which will lead to an empty runnable being bound to the key.
+     * </p>
+     * 
      * @param keyCode
      * @param modifier
      * @param action
@@ -83,7 +99,7 @@ public class KeyController
             throw new IllegalArgumentException("No mapping possible for key code = " + keyCode);
         }
 
-        actions[modifier].setKeyReleasedAction((e) -> action.run());
+        actions[modifier].setKeyReleasedAction(action == null ? (e) -> {} : (e) -> action.run());
     }
 
     public void doInitialMapping(Component comp)
