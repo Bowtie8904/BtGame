@@ -15,7 +15,6 @@ import bt.game.util.unit.Unit;
 public class RenderableImage implements Renderable
 {
     protected Image image;
-    protected double rotationAngle;
 
     public RenderableImage(Image image)
     {
@@ -23,30 +22,32 @@ public class RenderableImage implements Renderable
     }
 
     /**
-     * Sets the angle by which this text will be rotated.
-     * 
-     * @param rotationAngle
-     */
-    public void setRotation(double rotationAngle)
-    {
-        this.rotationAngle = rotationAngle;
-    }
-
-    public double getRotation()
-    {
-        return this.rotationAngle;
-    }
-
-    /**
-     * Renders this instance at the position x|y with a width of w and a height of h. The given Graphics object is used
-     * to create a {@link Graphics2D} copy, so that rotation actions can be performed.
+     * Renders this instance at the position x|y with a width of w and a height of h.
      * 
      * @see bt.game.resource.render.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     public void render(Graphics g, Unit x, Unit y, Unit w, Unit h)
     {
-        if (this.rotationAngle == 0 || this.rotationAngle % 360 == 0)
+        render(g, x, y, w, h, 0);
+    }
+
+    /**
+     * Renders this instance at the position x|y with a width of w and a height of h. The image is rotated clockwise
+     * around its middle point by the given rotation. The given Graphics object is used to create a {@link Graphics2D}
+     * copy, so that rotation actions can be performed.
+     * 
+     * @param g
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param rotation
+     *            The rotation of the image in degrees.
+     */
+    public void render(Graphics g, Unit x, Unit y, Unit w, Unit h, double rotation)
+    {
+        if (rotation == 0 || rotation % 360 == 0)
         {
             g.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
         }
@@ -54,15 +55,13 @@ public class RenderableImage implements Renderable
         {
             Graphics2D g2 = (Graphics2D)g.create();
 
-            g2.rotate(Math.toRadians(this.rotationAngle),
+            g2.rotate(Math.toRadians(rotation),
                     x.pixels() + w.pixels() / 2,
                     y.pixels() + h.pixels() / 2);
 
             g2.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
             g2.dispose();
         }
-
-        this.rotationAngle = 0;
     }
 
     /**
