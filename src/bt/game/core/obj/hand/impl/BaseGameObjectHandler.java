@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import bt.game.core.obj.GameObject;
 import bt.game.core.obj.hand.GameObjectHandler;
@@ -52,8 +53,6 @@ public class BaseGameObjectHandler implements GameObjectHandler
                 return 0;
             }
         };
-
-        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
     }
 
     /**
@@ -107,6 +106,34 @@ public class BaseGameObjectHandler implements GameObjectHandler
         {
             object.render(g);
         }
+
+        checkCollision();
+    }
+
+    public void checkCollision()
+    {
+        List<GameObject> collidableObjects = this.objects.stream()
+                .filter(GameObject::isCollidable)
+                .collect(Collectors.toList());
+
+        int threshhold = 1;
+        GameObject object2;
+
+        for (GameObject object1 : collidableObjects)
+        {
+            for (int i = threshhold; i < this.objects.size(); i ++ )
+            {
+                object2 = this.objects.get(i);
+
+                if (object1.intersects(object2))
+                {
+                    object1.collision(object2);
+                    object2.collision(object1);
+                }
+            }
+
+            threshhold ++ ;
+        }
     }
 
     /**
@@ -124,5 +151,16 @@ public class BaseGameObjectHandler implements GameObjectHandler
                 ((Killable)obj).kill();
             }
         }
+
+        this.objects.clear();
+    }
+
+    /**
+     * @see bt.game.core.obj.hand.GameObjectHandler#init()
+     */
+    @Override
+    public void init()
+    {
+        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
     }
 }

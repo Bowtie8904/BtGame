@@ -46,6 +46,9 @@ public abstract class GameObject implements Loadable
     /** The scene that this object is used in. */
     protected Scene scene;
 
+    /** Indicates whether this object can collide with other game objects. */
+    protected boolean isCollidable;
+
     /**
      * Creates a new instance and initializes its fields.
      * 
@@ -225,6 +228,23 @@ public abstract class GameObject implements Loadable
     public Map<String, Object> loadObjects(String name)
     {
         return null;
+    }
+
+    public boolean intersects(GameObject object)
+    {
+        Area difArea = getBounds();
+        difArea.intersect(object.getBounds());
+        return !difArea.isEmpty();
+    }
+
+    public void collision(GameObject object)
+    {
+
+    }
+
+    public boolean isCollidable()
+    {
+        return this.isCollidable;
     }
 
     public abstract void render(Graphics g);
