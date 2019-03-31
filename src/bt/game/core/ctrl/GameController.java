@@ -1,5 +1,7 @@
 package bt.game.core.ctrl;
 
+import java.util.function.Consumer;
+
 import bt.game.core.container.GameContainer;
 import bt.game.core.ctrl.spec.key.KeyController;
 import bt.game.core.ctrl.spec.mouse.MouseController;
@@ -37,22 +39,32 @@ public class GameController
     {
     }
 
+    /**
+     * {@link MouseController#addMouseTarget(MouseTarget)}
+     */
     public void addMouseTarget(MouseTarget target)
     {
         this.mouseController.addMouseTarget(target);
     }
 
+    /**
+     * {@link MouseController#removeMouseTarget(MouseTarget)}
+     */
     public void removeMouseTarget(MouseTarget target)
     {
         this.mouseController.removeMouseTarget(target);
     }
 
     /**
-     * Sets the action that is executed when the key with the given key code is pressed without any modifiers (shift,
-     * ctrl or alt). This method will override any action that was set for this specifid condition before.
-     * 
-     * @param keyCode
-     * @param action
+     * {@link MouseController#setGlobalOnClick(Consumer)}
+     */
+    public void setGlobalOnClick(Consumer<MouseTarget> onClick)
+    {
+        this.mouseController.setGlobalOnClick(onClick);
+    }
+
+    /**
+     * {@link KeyController#onKeyPress(int, Runnable)}
      */
     public void onKeyPress(int keyCode, Runnable action)
     {
@@ -60,13 +72,7 @@ public class GameController
     }
 
     /**
-     * Sets the action that is executed when the key with the given key code is pressed together with the given modifier
-     * ({@link KeyAction#SHIFT_MODIFIER shift}, {@link KeyAction#CTRL_MODIFIER ctrl} or {@link KeyAction#ALT_MODIFIER
-     * alt}). This method will override any action that was set for this specifid condition before.
-     * 
-     * @param keyCode
-     * @param modifier
-     * @param action
+     * {@link KeyController#onKeyPress(int, int, Runnable)}
      */
     public void onKeyPress(int keyCode, int modifier, Runnable action)
     {
@@ -74,11 +80,7 @@ public class GameController
     }
 
     /**
-     * Sets the action that is executed when the key with the given key code is released without any modifiers (shift,
-     * ctrl or alt). This method will override any action that was set for this specifid condition before.
-     * 
-     * @param keyCode
-     * @param action
+     * {@link KeyController#onKeyRelease(int, Runnable)}
      */
     public void onKeyRelease(int keyCode, Runnable action)
     {
@@ -86,14 +88,7 @@ public class GameController
     }
 
     /**
-     * Sets the action that is executed when the key with the given key code is released together with the given
-     * modifier ({@link KeyAction#SHIFT_MODIFIER shift}, {@link KeyAction#CTRL_MODIFIER ctrl} or
-     * {@link KeyAction#ALT_MODIFIER alt}). This method will override any action that was set for this specifid
-     * condition before.
-     * 
-     * @param keyCode
-     * @param modifier
-     * @param action
+     * {@link KeyController#onKeyRelease(int, int, Runnable)}
      */
     public void onKeyRelease(int keyCode, int modifier, Runnable action)
     {
@@ -101,7 +96,7 @@ public class GameController
     }
 
     /**
-     * Initialises all sub contrllers with the given component.
+     * Initialises all sub contrllers with the given container.
      * 
      * @param comp
      */
