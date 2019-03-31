@@ -14,6 +14,11 @@ import bt.runtime.Killable;
 public interface GameObjectHandler extends Killable
 {
     /**
+     * Initializes the handler.
+     */
+    public void init();
+
+    /**
      * Sorts the held objects in a custom manner.
      */
     public void sortObjects();

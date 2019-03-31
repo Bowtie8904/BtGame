@@ -69,6 +69,7 @@ public abstract class BaseScene implements Scene
     public void load(String name)
     {
         this.isLoaded = false;
+        this.gameObjectHandler.init();
         InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
         this.name = name;
         this.resourceLoader.load(name);
