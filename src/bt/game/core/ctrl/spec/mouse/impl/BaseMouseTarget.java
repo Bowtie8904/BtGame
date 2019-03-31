@@ -24,10 +24,18 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onClick()
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onLeftClick()
      */
     @Override
-    public void onClick()
+    public void onLeftClick()
+    {
+    }
+
+    /**
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onRightClick()
+     */
+    @Override
+    public void onRightClick()
     {
     }
 
@@ -98,5 +106,13 @@ public class BaseMouseTarget implements MouseTarget
     public Unit getZ()
     {
         return this.z;
+    }
+
+    /**
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onMouseWheelMove(int)
+     */
+    @Override
+    public void onMouseWheelMove(int clicks)
+    {
     }
 }

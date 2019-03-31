@@ -56,11 +56,19 @@ public class GameController
     }
 
     /**
-     * {@link MouseController#setGlobalOnClick(Consumer)}
+     * {@link MouseController#setGlobalOnLeftClick(Consumer)}
      */
-    public void setGlobalOnClick(Consumer<MouseTarget> onClick)
+    public void setGlobalOnLeftClick(Consumer<MouseTarget> onClick)
     {
-        this.mouseController.setGlobalOnClick(onClick);
+        this.mouseController.setGlobalOnLeftClick(onClick);
+    }
+
+    /**
+     * {@link MouseController#setGlobalOnRightClick(Consumer)}
+     */
+    public void setGlobalOnRightClick(Consumer<MouseTarget> onClick)
+    {
+        this.mouseController.setGlobalOnRightClick(onClick);
     }
 
     /**

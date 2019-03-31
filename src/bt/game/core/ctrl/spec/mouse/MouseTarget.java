@@ -7,13 +7,17 @@ import bt.game.util.unit.Unit;
  */
 public interface MouseTarget
 {
-    public void onClick();
+    public void onRightClick();
+
+    public void onLeftClick();
 
     public void onDrag(Unit xOffset, Unit yOffset);
 
     public void onHover();
 
     public void afterHover();
+
+    public void onMouseWheelMove(int clicks);
 
     public Unit getX();
 
