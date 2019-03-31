@@ -7,6 +7,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import bt.game.core.obj.GameObject;
 import bt.game.core.obj.hand.GameObjectHandler;
+import bt.runtime.InstanceKiller;
+import bt.runtime.Killable;
+import bt.utils.log.Logger;
 
 /**
  * A base implementation of the {@link GameObjectHandler} interface.
@@ -50,6 +53,8 @@ public class BaseGameObjectHandler implements GameObjectHandler
                 return 0;
             }
         };
+
+        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
     }
 
     /**
@@ -102,6 +107,23 @@ public class BaseGameObjectHandler implements GameObjectHandler
         for (GameObject object : this.objects)
         {
             object.render(g);
+        }
+    }
+
+    /**
+     * @see bt.runtime.Killable#kill()
+     */
+    @Override
+    public void kill()
+    {
+        Logger.global().print("Killing game object handler.");
+
+        for (GameObject obj : this.objects)
+        {
+            if (obj instanceof Killable)
+            {
+                ((Killable)obj).kill();
+            }
         }
     }
 }
