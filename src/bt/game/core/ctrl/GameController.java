@@ -6,6 +6,7 @@ import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.ctrl.spec.mouse.MouseTarget;
 import bt.game.core.loop.GameLoop;
 import bt.key.KeyAction;
+import bt.utils.log.Logger;
 
 /**
  * A class to handle key and mouse controls. Actions defined in runnables can be defined for each key or mouse button.
@@ -111,7 +112,14 @@ public class GameController
 
         this.mouseController = new MouseController(comp);
 
-        GameLoop hoverLoop = new GameLoop(this.mouseController::checkHover, null);
+        GameLoop hoverLoop = new GameLoop(this.mouseController::checkHover, null) {
+            @Override
+            public void kill()
+            {
+                Logger.global().print("Killing hover check loop.");
+                stop();
+            }
+        };
         hoverLoop.setFrameRate(60);
         hoverLoop.start();
     }
