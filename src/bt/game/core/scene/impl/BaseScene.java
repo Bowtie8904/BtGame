@@ -101,6 +101,15 @@ public abstract class BaseScene implements Scene
             InstanceKiller.unregister(this.resourceLoader);
             InstanceKiller.unregister(this);
         }
+
+        // kill game object handler if instance killer is not already doing it or if the handler is not registered for
+        // termination at all
+        if (!InstanceKiller.isActive() || !InstanceKiller.isRegistered(this.gameObjectHandler))
+        {
+            this.gameObjectHandler.kill();
+            InstanceKiller.unregister(this.gameObjectHandler);
+            InstanceKiller.unregister(this);
+        }
     }
 
     @Override
