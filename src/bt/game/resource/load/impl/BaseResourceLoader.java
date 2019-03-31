@@ -208,8 +208,9 @@ public class BaseResourceLoader implements ResourceLoader
         {
             throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
         }
-
-        return this.sounds.get(resourceName.toUpperCase()).getSound();
+        Sound sound = this.sounds.get(resourceName.toUpperCase()).getSound();
+        registerClosingOperation(sound::stop);
+        return sound;
     }
 
     /**
