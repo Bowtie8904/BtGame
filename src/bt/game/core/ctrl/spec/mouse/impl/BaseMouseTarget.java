@@ -1,5 +1,8 @@
 package bt.game.core.ctrl.spec.mouse.impl;
 
+import java.awt.Rectangle;
+import java.awt.geom.Area;
+
 import bt.game.core.ctrl.spec.mouse.MouseTarget;
 import bt.game.util.unit.Unit;
 
@@ -64,48 +67,25 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getX()
-     */
-    @Override
-    public Unit getX()
-    {
-        return this.x;
-    }
-
-    /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getY()
-     */
-    @Override
-    public Unit getY()
-    {
-        return this.y;
-    }
-
-    /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getWidth()
-     */
-    @Override
-    public Unit getW()
-    {
-        return this.w;
-    }
-
-    /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getHeight()
-     */
-    @Override
-    public Unit getH()
-    {
-        return this.h;
-    }
-
-    /**
      * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getZ()
      */
     @Override
     public Unit getZ()
     {
         return this.z;
+    }
+
+    /**
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getBounds()
+     */
+    @Override
+    public Area getBounds()
+    {
+        return new Area(
+                new Rectangle((int)this.x.pixels(),
+                        (int)this.y.pixels(),
+                        (int)this.w.pixels(),
+                        (int)this.h.pixels()));
     }
 
     /**

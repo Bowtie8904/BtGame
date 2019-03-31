@@ -100,7 +100,7 @@ public class MouseController extends MouseAdapter
 
                 for (MouseTarget target : this.mouseTargets)
                 {
-                    if (mouseOver(mx, my, target.getX(), target.getY(), target.getW(), target.getH()))
+                    if (target.getBounds().contains(p))
                     {
                         if (!target.equals(this.lastHovered))
                         {
@@ -145,7 +145,7 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (mouseOver(this.mouseX, this.mouseY, target.getX(), target.getY(), target.getW(), target.getH()))
+                if (target.getBounds().contains(e.getPoint()))
                 {
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
@@ -191,7 +191,7 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (mouseOver(this.mouseX, this.mouseY, target.getX(), target.getY(), target.getW(), target.getH()))
+                if (target.getBounds().contains(e.getPoint()))
                 {
                     target.onMouseWheelMove(e.getWheelRotation());
                     break;
@@ -214,12 +214,6 @@ public class MouseController extends MouseAdapter
     private synchronized void sortTargets()
     {
         this.mouseTargets.sort(this.zComparator);
-    }
-
-    private boolean mouseOver(int mx, int my, Unit x, Unit y, Unit width, Unit height)
-    {
-        return (mx > x.pixels() && mx < x.pixels() + width.pixels())
-                && (my > y.pixels() && my < y.pixels() + height.pixels());
     }
 
     private void onRightClick(MouseTarget target)

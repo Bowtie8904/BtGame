@@ -2,6 +2,8 @@ package bt.game.core.obj;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.geom.Area;
 import java.io.File;
 import java.util.Map;
 
@@ -169,6 +171,15 @@ public abstract class GameObject implements Loadable
     public Unit getYVelocity()
     {
         return this.yVel;
+    }
+
+    public Area getBounds()
+    {
+        return new Area(
+                new Rectangle((int)this.x.pixels(),
+                        (int)this.y.pixels(),
+                        (int)this.w.pixels(),
+                        (int)this.h.pixels()));
     }
 
     /**

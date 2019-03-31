@@ -1,5 +1,7 @@
 package bt.game.core.ctrl.spec.mouse;
 
+import java.awt.geom.Area;
+
 import bt.game.util.unit.Unit;
 
 /**
@@ -19,13 +21,7 @@ public interface MouseTarget
 
     public void onMouseWheelMove(int clicks);
 
-    public Unit getX();
-
-    public Unit getY();
-
     public Unit getZ();
-
-    public Unit getW();
-
-    public Unit getH();
+    
+    public Area getBounds();
 }
