@@ -3,6 +3,7 @@ package bt.game.core.obj.hand;
 import java.awt.Graphics;
 
 import bt.game.core.obj.GameObject;
+import bt.runtime.Killable;
 
 /**
  * An interface describing the functionalities of a game object handler. Implementations are supposed to hold
@@ -10,7 +11,7 @@ import bt.game.core.obj.GameObject;
  * 
  * @author &#8904
  */
-public interface GameObjectHandler
+public interface GameObjectHandler extends Killable
 {
     /**
      * Sorts the held objects in a custom manner.

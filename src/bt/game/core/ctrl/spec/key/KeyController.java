@@ -1,4 +1,4 @@
-package bt.game.core.ctrl.spec;
+package bt.game.core.ctrl.spec.key;
 
 import java.awt.Component;
 import java.awt.event.KeyEvent;
