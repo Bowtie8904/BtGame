@@ -283,7 +283,7 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 loadedClasses.add(loadable.getClass().getName());
             }
-            
+
             // images
             loadedRenderables = loadable.loadRenderables(name);
 

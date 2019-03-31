@@ -41,10 +41,10 @@ public abstract class GameContainer extends Canvas
 
     /** The pixel to {@link Unit} ratio that is calcualted when the frame is set up. */
     protected float ratio;
-    
+
     /** The width in units. */
     private float unitWidth;
-    
+
     /** The height in units. */
     private float unitHeight;
 
@@ -217,8 +217,7 @@ public abstract class GameContainer extends Canvas
             loadingScene.start();
         }
 
-        Threads.get().executeCached(() ->
-        {
+        Threads.get().executeCached(() -> {
             mainScene.load(name.toUpperCase());
             setScene(mainScene);
             mainScene.start();

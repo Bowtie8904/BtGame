@@ -46,10 +46,10 @@ public class KeyController
 
         if (actions == null)
         {
-            throw new IllegalArgumentException("No mapping for key code = " + keyCode);
+            throw new IllegalArgumentException("No mapping possible for key code = " + keyCode);
         }
 
-        actions[modifier].setKeyPressedAction((e) -> action.run());
+        actions[modifier].setKeyPressedAction(action == null ? (e) -> {} : (e) -> action.run());
     }
 
     /**
@@ -80,7 +80,7 @@ public class KeyController
 
         if (actions == null)
         {
-            throw new IllegalArgumentException("No mapping for key code = " + keyCode);
+            throw new IllegalArgumentException("No mapping possible for key code = " + keyCode);
         }
 
         actions[modifier].setKeyReleasedAction((e) -> action.run());
@@ -106,26 +106,10 @@ public class KeyController
 
                     KeyAction[] actions = new KeyAction[]
                     {
-                            new KeyAction(comp, code, KeyAction.NO_MODIFIER, (e) ->
-                            {
-                            }, (e) ->
-                            {
-                            }),
-                            new KeyAction(comp, code, KeyAction.SHIFT_MODIFIER, (e) ->
-                            {
-                            }, (e) ->
-                            {
-                            }),
-                            new KeyAction(comp, code, KeyAction.ALT_MODIFIER, (e) ->
-                            {
-                            }, (e) ->
-                            {
-                            }),
-                            new KeyAction(comp, code, KeyAction.CTRL_MODIFIER, (e) ->
-                            {
-                            }, (e) ->
-                            {
-                            }),
+                            new KeyAction(comp, code, KeyAction.NO_MODIFIER, (e) -> {}, (e) -> {}),
+                            new KeyAction(comp, code, KeyAction.SHIFT_MODIFIER, (e) -> {}, (e) -> {}),
+                            new KeyAction(comp, code, KeyAction.ALT_MODIFIER, (e) -> {}, (e) -> {}),
+                            new KeyAction(comp, code, KeyAction.CTRL_MODIFIER, (e) -> {}, (e) -> {}),
                     };
 
                     this.keyMappings.put(code, actions);

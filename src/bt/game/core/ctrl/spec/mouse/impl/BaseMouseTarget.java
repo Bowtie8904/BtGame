@@ -14,7 +14,7 @@ public class BaseMouseTarget implements MouseTarget
     protected Unit z;
     protected Unit w;
     protected Unit h;
-    
+
     public BaseMouseTarget(Unit x, Unit y, Unit z, Unit w, Unit h)
     {
         this.x = x;

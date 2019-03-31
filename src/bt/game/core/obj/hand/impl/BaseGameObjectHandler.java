@@ -33,8 +33,7 @@ public class BaseGameObjectHandler implements GameObjectHandler
     public BaseGameObjectHandler()
     {
         this.objects = new CopyOnWriteArrayList<>();
-        this.zComparator = new Comparator<GameObject>()
-        {
+        this.zComparator = new Comparator<GameObject>() {
             @Override
             public int compare(GameObject o1, GameObject o2)
             {

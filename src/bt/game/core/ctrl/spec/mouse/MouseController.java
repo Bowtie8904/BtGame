@@ -29,12 +29,9 @@ public class MouseController extends MouseAdapter
         this.component.addMouseListener(this);
         this.mouseTargets = new CopyOnWriteArrayList<>();
 
-        this.onClick = () ->
-        {
-        };
+        this.onClick = () -> {};
 
-        this.zComparator = new Comparator<MouseTarget>()
-        {
+        this.zComparator = new Comparator<MouseTarget>() {
             @Override
             public int compare(MouseTarget o1, MouseTarget o2)
             {

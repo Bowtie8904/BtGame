@@ -168,8 +168,7 @@ public class GameLoop implements Runnable, Killable
                     Thread.sleep(this.threadSleepers);
                 }
                 catch (InterruptedException e)
-                {
-                }
+                {}
             }
         }
     }
