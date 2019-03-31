@@ -1,8 +1,10 @@
 package bt.game.core.ctrl;
 
-import java.awt.Component;
-
-import bt.game.core.ctrl.spec.KeyController;
+import bt.game.core.container.GameContainer;
+import bt.game.core.ctrl.spec.key.KeyController;
+import bt.game.core.ctrl.spec.mouse.MouseController;
+import bt.game.core.ctrl.spec.mouse.MouseTarget;
+import bt.game.core.loop.GameLoop;
 import bt.key.KeyAction;
 
 /**
@@ -18,6 +20,7 @@ public class GameController
 {
     private static GameController instance;
     private KeyController keyController;
+    private MouseController mouseController;
 
     public static GameController get()
     {
@@ -31,7 +34,16 @@ public class GameController
 
     protected GameController()
     {
-        this.keyController = new KeyController();
+    }
+
+    public void addMouseTarget(MouseTarget target)
+    {
+        this.mouseController.addMouseTarget(target);
+    }
+
+    public void removeMouseTarget(MouseTarget target)
+    {
+        this.mouseController.removeMouseTarget(target);
     }
 
     /**
@@ -92,8 +104,15 @@ public class GameController
      * 
      * @param comp
      */
-    public void init(Component comp)
+    public void init(GameContainer comp)
     {
-        this.keyController.doInitialMapping(comp);
+        this.keyController = new KeyController();
+        this.keyController.doInitialMapping(comp.getFrame());
+
+        this.mouseController = new MouseController(comp);
+
+        GameLoop hoverLoop = new GameLoop(this.mouseController::checkHover, null);
+        hoverLoop.setFrameRate(60);
+        hoverLoop.start();
     }
 }
