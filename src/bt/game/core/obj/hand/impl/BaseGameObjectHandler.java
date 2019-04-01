@@ -116,13 +116,13 @@ public class BaseGameObjectHandler implements GameObjectHandler
      * with any of the game objects that implement the {@link PassiveCollider} interface. If two of such objects have
      * collided (checked via the {@link GameObject#intersects(GameObject) intersects} method) the
      * {@link ActiveCollider#activeCollision(GameObject) activeCollision} and
-     * {@link PassiveCollider#passiveCollision(GameObject) passiveCollision} methods are called repectively.
+     * {@link PassiveCollider#passiveCollision(GameObject) passiveCollision} methods are called respectively.
      */
     public void checkCollision()
     {
         this.objects.stream()
                 .parallel()
-                .filter(o -> o instanceof ActiveCollider)
+                .filter(ActiveCollider.class::isInstance)
                 .forEach(object1 -> {
                     this.objects.stream()
                             .parallel()
