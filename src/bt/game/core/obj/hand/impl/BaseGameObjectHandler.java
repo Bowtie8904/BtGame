@@ -109,6 +109,31 @@ public class BaseGameObjectHandler implements GameObjectHandler
 
         checkCollision();
     }
+    
+    public void checkCollision2()
+    {
+        int threshhold = 1;
+        GameObject object2;
+
+        for (GameObject object1 : this.objects)
+        {
+            if (object1.isCollidable())
+            {
+                for (int i = threshhold; i < this.objects.size(); i ++ )
+                {
+                    object2 = this.objects.get(i);
+
+                    if (object2.isCollidable() && object1.intersects(object2))
+                    {
+                        object1.collision(object2);
+                        object2.collision(object1);
+                    }
+                }
+            }  
+
+            threshhold ++ ;
+        }
+    }
 
     public void checkCollision()
     {
