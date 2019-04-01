@@ -4,10 +4,11 @@ import java.awt.Graphics;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 import bt.game.core.obj.GameObject;
 import bt.game.core.obj.hand.GameObjectHandler;
+import bt.game.core.obj.intf.ActiveCollider;
+import bt.game.core.obj.intf.PassiveCollider;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.utils.log.Logger;
@@ -92,6 +93,8 @@ public class BaseGameObjectHandler implements GameObjectHandler
         {
             object.tick();
         }
+
+        checkCollision();
     }
 
     /**
@@ -106,59 +109,24 @@ public class BaseGameObjectHandler implements GameObjectHandler
         {
             object.render(g);
         }
-
-        checkCollision();
     }
     
-    public void checkCollision2()
-    {
-        int threshhold = 1;
-        GameObject object2;
-
-        for (GameObject object1 : this.objects)
-        {
-            if (object1.isCollidable())
-            {
-                for (int i = threshhold; i < this.objects.size(); i ++ )
-                {
-                    object2 = this.objects.get(i);
-
-                    if (object2.isCollidable() && object1.intersects(object2))
-                    {
-                        object1.collision(object2);
-                        object2.collision(object1);
-                    }
-                }
-            }  
-
-            threshhold ++ ;
-        }
-    }
-
     public void checkCollision()
     {
-        List<GameObject> collidableObjects = this.objects.stream()
-                .filter(GameObject::isCollidable)
-                .collect(Collectors.toList());
-
-        int threshhold = 1;
-        GameObject object2;
-
-        for (GameObject object1 : collidableObjects)
-        {
-            for (int i = threshhold; i < collidableObjects.size(); i ++ )
-            {
-                object2 = collidableObjects.get(i);
-
-                if (object1.intersects(object2))
-                {
-                    object1.collision(object2);
-                    object2.collision(object1);
-                }
-            }
-
-            threshhold ++ ;
-        }
+        this.objects.stream()
+                .parallel()
+                .filter(o -> o instanceof ActiveCollider)
+                .forEach(object1 -> {
+                    this.objects.stream()
+                            .parallel()
+                            .filter(o2 -> !o2.equals(object1)
+                                    && o2 instanceof PassiveCollider
+                                    && o2.intersects(object1))
+                            .forEach(object2 -> {
+                                ((ActiveCollider)object1).activeCollision(object2);
+                                ((PassiveCollider)object2).passiveCollision(object1);
+                            });
+                });
     }
 
     /**
