@@ -121,9 +121,9 @@ public class BaseGameObjectHandler implements GameObjectHandler
 
         for (GameObject object1 : collidableObjects)
         {
-            for (int i = threshhold; i < this.objects.size(); i ++ )
+            for (int i = threshhold; i < collidableObjects.size(); i ++ )
             {
-                object2 = this.objects.get(i);
+                object2 = collidableObjects.get(i);
 
                 if (object1.intersects(object2))
                 {
