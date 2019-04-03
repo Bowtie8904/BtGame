@@ -2,7 +2,6 @@ package bt.game.core.obj.hand;
 
 import java.awt.Graphics;
 
-import bt.game.core.obj.GameObject;
 import bt.runtime.Killable;
 
 /**
@@ -28,14 +27,14 @@ public interface GameObjectHandler extends Killable
      * 
      * @param object
      */
-    public void addObject(GameObject object);
+    public void addObject(Object object);
 
     /**
      * Removed the given object from the collection.
      * 
      * @param object
      */
-    public void removeObject(GameObject object);
+    public void removeObject(Object object);
 
     /**
      * Forwards the tick call to all held objects.
