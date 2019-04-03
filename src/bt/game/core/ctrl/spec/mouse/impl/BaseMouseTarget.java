@@ -76,10 +76,10 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getBounds()
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getArea()
      */
     @Override
-    public Area getBounds()
+    public Area getArea()
     {
         return new Area(
                 new Rectangle((int)this.x.pixels(),

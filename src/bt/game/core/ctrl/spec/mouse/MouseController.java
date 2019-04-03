@@ -100,7 +100,7 @@ public class MouseController extends MouseAdapter
 
                 for (MouseTarget target : this.mouseTargets)
                 {
-                    if (target.getBounds().contains(p))
+                    if (target.getArea().contains(p))
                     {
                         if (!target.equals(this.lastHovered))
                         {
@@ -145,7 +145,7 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (target.getBounds().contains(e.getPoint()))
+                if (target.getArea().contains(e.getPoint()))
                 {
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
@@ -191,7 +191,7 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (target.getBounds().contains(e.getPoint()))
+                if (target.getArea().contains(e.getPoint()))
                 {
                     target.onMouseWheelMove(e.getWheelRotation());
                     break;
