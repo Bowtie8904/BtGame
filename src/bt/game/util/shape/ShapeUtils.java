@@ -23,4 +23,11 @@ public final class ShapeUtils
         transform.rotate(Math.toRadians(rotation), anchorX, anchorY);
         return area.createTransformedArea(transform);
     }
+
+    public static boolean intersects(Area a, Area b)
+    {
+        Area difArea = (Area)a.clone();
+        difArea.intersect(b);
+        return !difArea.isEmpty();
+    }
 }
