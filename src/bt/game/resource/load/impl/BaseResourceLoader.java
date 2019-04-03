@@ -74,10 +74,11 @@ public class BaseResourceLoader implements ResourceLoader
 
         this.killed = true;
 
-        for (Renderable renderable : this.renderables.values())
-        {
-            renderable.kill();
-        }
+		this.renderables.values().stream()
+								.parallel()
+								.filter(Killable.class::isInstance)
+								.map(Killable.class::cast)
+                .forEach(killable -> killable.kill());
 
         for (Object obj : this.objects.values())
         {

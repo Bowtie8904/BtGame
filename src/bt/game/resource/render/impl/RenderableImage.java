@@ -6,13 +6,14 @@ import java.awt.Image;
 
 import bt.game.resource.render.Renderable;
 import bt.game.util.unit.Unit;
+import bt.runtime.Killable;
 
 /**
  * 
  * 
  * @author &#8904
  */
-public class RenderableImage implements Renderable
+public class RenderableImage implements Renderable, Killable
 {
     protected Image image;
 
@@ -71,5 +72,28 @@ public class RenderableImage implements Renderable
     public void kill()
     {
         this.image.flush();
+    }
+
+    /**
+     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
+     */
+    @Override
+    public void render(Graphics g)
+    {
+        render(g,
+                Unit.forUnits(0),
+                Unit.forUnits(0),
+                Unit.forUnits(this.image.getWidth(null)),
+                Unit.forUnits(this.image.getHeight(null)),
+                0);
+    }
+
+    /**
+     * @see bt.game.resource.render.Renderable#getZ()
+     */
+    @Override
+    public Unit getZ()
+    {
+        return Unit.forUnits(0);
     }
 }

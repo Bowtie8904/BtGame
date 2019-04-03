@@ -26,6 +26,8 @@ public class RenderableText implements Renderable
     public RenderableText(String text)
     {
         this.text = text;
+        this.lastWidth = Unit.forUnits(0);
+        this.lastHeight = Unit.forUnits(0);
     }
 
     public String getText()
@@ -52,14 +54,6 @@ public class RenderableText implements Renderable
     public double getRotation()
     {
         return this.rotationAngle;
-    }
-
-    /**
-     * @see bt.runtime.Killable#kill()
-     */
-    @Override
-    public void kill()
-    {
     }
 
     /**
@@ -108,5 +102,27 @@ public class RenderableText implements Renderable
 
         g2.drawString(this.text, x.pixels(), y.pixels());
         g2.dispose();
+    }
+
+    /**
+     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
+     */
+    @Override
+    public void render(Graphics g)
+    {
+        render(g,
+                Unit.forUnits(0),
+                Unit.forUnits(0),
+                this.lastWidth,
+                this.lastHeight);
+    }
+
+    /**
+     * @see bt.game.resource.render.Renderable#getZ()
+     */
+    @Override
+    public Unit getZ()
+    {
+        return Unit.forUnits(0);
     }
 }

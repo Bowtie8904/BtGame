@@ -8,7 +8,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import bt.game.core.obj.GameObject;
 import bt.game.core.obj.hand.GameObjectHandler;
 import bt.game.core.obj.intf.ActiveCollider;
+import bt.game.core.obj.intf.Bounds;
 import bt.game.core.obj.intf.PassiveCollider;
+import bt.game.core.obj.intf.Tickable;
+import bt.game.resource.render.Renderable;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.utils.log.Logger;
@@ -26,18 +29,26 @@ import bt.utils.log.Logger;
  */
 public class BaseGameObjectHandler implements GameObjectHandler
 {
-    protected List<GameObject> objects;
-    private Comparator<GameObject> zComparator;
+    protected List<Tickable> tickables;
+    protected List<Renderable> renderables;
+    protected List<ActiveCollider> activeColliders;
+    protected List<PassiveCollider> passiveColliders;
+    protected List<Killable> killables;
+    private Comparator<Renderable> zComparator;
 
     /**
      * Creates a new instance.
      */
     public BaseGameObjectHandler()
     {
-        this.objects = new CopyOnWriteArrayList<>();
-        this.zComparator = new Comparator<GameObject>() {
+        this.tickables = new CopyOnWriteArrayList<>();
+        this.renderables = new CopyOnWriteArrayList<>();
+        this.activeColliders = new CopyOnWriteArrayList<>();
+        this.passiveColliders = new CopyOnWriteArrayList<>();
+        this.killables = new CopyOnWriteArrayList<>();
+        this.zComparator = new Comparator<Renderable>() {
             @Override
-            public int compare(GameObject o1, GameObject o2)
+            public int compare(Renderable o1, Renderable o2)
             {
                 if (o1.getZ().units() == o2.getZ().units())
                 {
@@ -62,25 +73,71 @@ public class BaseGameObjectHandler implements GameObjectHandler
     @Override
     public synchronized void sortObjects()
     {
-        this.objects.sort(this.zComparator);
+        this.renderables.sort(this.zComparator);
     }
 
     /**
      * @see bt.game.core.obj.hand.GameObjectHandler#addObject(bt.game.core.obj.GameObject)
      */
     @Override
-    public synchronized void addObject(GameObject object)
+    public synchronized void addObject(Object object)
     {
-        this.objects.add(object);
+        if (object instanceof Tickable)
+        {
+            this.tickables.add(Tickable.class.cast(object));
+        }
+
+        if (object instanceof Renderable)
+        {
+            this.renderables.add(Renderable.class.cast(object));
+        }
+
+        if (object instanceof Killable)
+        {
+            this.killables.add(Killable.class.cast(object));
+        }
+
+        if (object instanceof PassiveCollider)
+        {
+            this.passiveColliders.add(PassiveCollider.class.cast(object));
+        }
+
+        if (object instanceof ActiveCollider)
+        {
+            this.activeColliders.add(ActiveCollider.class.cast(object));
+        }
     }
 
     /**
      * @see bt.game.core.obj.hand.GameObjectHandler#removeObject(bt.game.core.obj.GameObject)
      */
     @Override
-    public synchronized void removeObject(GameObject object)
+    public synchronized void removeObject(Object object)
     {
-        this.objects.remove(object);
+        if (object instanceof Tickable)
+        {
+            this.tickables.remove(object);
+        }
+
+        if (object instanceof Renderable)
+        {
+            this.renderables.remove(object);
+        }
+
+        if (object instanceof Killable)
+        {
+            this.killables.remove(object);
+        }
+
+        if (object instanceof PassiveCollider)
+        {
+            this.passiveColliders.remove(object);
+        }
+
+        if (object instanceof ActiveCollider)
+        {
+            this.activeColliders.remove(object);
+        }
     }
 
     /**
@@ -89,12 +146,18 @@ public class BaseGameObjectHandler implements GameObjectHandler
     @Override
     public void tick()
     {
-        for (GameObject object : this.objects)
-        {
-            object.tick();
-        }
+        this.tickables.stream()
+                .parallel()
+                .forEach(Tickable::tick);
+
+        long before;
+        long after;
+        before = System.currentTimeMillis();
 
         checkCollision();
+
+        after = System.currentTimeMillis();
+        // System.out.println(after - before);
     }
 
     /**
@@ -105,33 +168,33 @@ public class BaseGameObjectHandler implements GameObjectHandler
     {
         sortObjects();
 
-        for (GameObject object : this.objects)
+        for (Renderable renderable : this.renderables)
         {
-            object.render(g);
+            renderable.render(g);
         }
     }
     
     /**
      * Checks all added game objects that implement the {@link ActiveCollider} interface to see if they have collided
      * with any of the game objects that implement the {@link PassiveCollider} interface. If two of such objects have
-     * collided (checked via the {@link GameObject#intersects(GameObject) intersects} method) the
+     * collided (checked via the {@link Bounds#intersects(Bounds) intersects} method) the
      * {@link ActiveCollider#activeCollision(GameObject) activeCollision} and
      * {@link PassiveCollider#passiveCollision(GameObject) passiveCollision} methods are called respectively.
      */
     public void checkCollision()
     {
-        this.objects.stream()
+        this.activeColliders.stream()
                 .parallel()
-                .filter(ActiveCollider.class::isInstance)
                 .forEach(object1 -> {
-                    this.objects.stream()
+                    this.passiveColliders.stream()
                             .parallel()
                             .filter(o2 -> !o2.equals(object1)
-                                    && o2 instanceof PassiveCollider
-                                    && o2.intersects(object1))
+                                    && o2 instanceof PassiveCollider)
+                            .map(PassiveCollider.class::cast)
+                            .filter(o2 -> o2.intersects(object1))
                             .forEach(object2 -> {
-                                ((ActiveCollider)object1).activeCollision(object2);
-                                ((PassiveCollider)object2).passiveCollision(object1);
+                                object1.activeCollision(object2);
+                                object2.passiveCollision(object1);
                             });
                 });
     }
@@ -144,15 +207,16 @@ public class BaseGameObjectHandler implements GameObjectHandler
     {
         Logger.global().print("Killing game object handler.");
 
-        for (GameObject obj : this.objects)
+        for (Killable obj : this.killables)
         {
-            if (obj instanceof Killable)
-            {
-                ((Killable)obj).kill();
-            }
+            obj.kill();
         }
 
-        this.objects.clear();
+        this.tickables.clear();
+        this.renderables.clear();
+        this.activeColliders.clear();
+        this.passiveColliders.clear();
+        this.killables.clear();
     }
 
     /**
