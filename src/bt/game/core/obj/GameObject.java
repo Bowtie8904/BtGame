@@ -1,18 +1,8 @@
 package bt.game.core.obj;
 
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.geom.Area;
-import java.io.File;
-import java.util.Map;
-
 import bt.game.core.obj.hand.GameObjectHandler;
 import bt.game.core.scene.Scene;
-import bt.game.resource.load.Loadable;
-import bt.game.resource.render.Renderable;
 import bt.game.util.unit.Unit;
-import bt.types.sound.SoundSupplier;
 
 /**
  * An abstract base class for all objects that need to be handled by a {@link GameObjectHandler}, i.e. characters in a
@@ -20,7 +10,7 @@ import bt.types.sound.SoundSupplier;
  * 
  * @author &#8904
  */
-public abstract class GameObject implements Loadable
+public abstract class GameObject
 {
     /** The unit X position of this object. */
     protected Unit x;
@@ -172,69 +162,4 @@ public abstract class GameObject implements Loadable
     {
         return this.yVel;
     }
-
-    public Area getBounds()
-    {
-        return new Area(
-                new Rectangle((int)this.x.pixels(),
-                        (int)this.y.pixels(),
-                        (int)this.w.pixels(),
-                        (int)this.h.pixels()));
-    }
-
-    /**
-     * @see bt.game.resource.load.Loadable#loadRenderables(java.lang.String)
-     */
-    @Override
-    public Map<String, Renderable> loadRenderables(String name)
-    {
-        return null;
-    }
-
-    /**
-     * @see bt.game.resource.load.Loadable#loadSounds(java.lang.String)
-     */
-    @Override
-    public Map<String, SoundSupplier> loadSounds(String name)
-    {
-        return null;
-    }
-
-    /**
-     * @see bt.game.resource.load.Loadable#loadFiles(java.lang.String)
-     */
-    @Override
-    public Map<String, File> loadFiles(String name)
-    {
-        return null;
-    }
-
-    /**
-     * @see bt.game.resource.load.Loadable#loadFonts(java.lang.String)
-     */
-    @Override
-    public Map<String, Font> loadFonts(String name)
-    {
-        return null;
-    }
-
-    /**
-     * @see bt.game.resource.load.Loadable#loadObjects(java.lang.String)
-     */
-    @Override
-    public Map<String, Object> loadObjects(String name)
-    {
-        return null;
-    }
-
-    public boolean intersects(GameObject object)
-    {
-        Area difArea = getBounds();
-        difArea.intersect(object.getBounds());
-        return !difArea.isEmpty();
-    }
-
-    public abstract void render(Graphics g);
-
-    public abstract void tick();
 }
