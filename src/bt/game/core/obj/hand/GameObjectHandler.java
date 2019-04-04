@@ -5,8 +5,8 @@ import java.awt.Graphics;
 import bt.runtime.Killable;
 
 /**
- * An interface describing the functionalities of a game object handler. Implementations are supposed to hold
- * collections of game objects and forward tick and render calls to them.
+ * An interface describing the functionalities of an object handler. Implementations are supposed to hold collections of
+ * objects and forward tick and render calls to them.
  * 
  * @author &#8904
  */

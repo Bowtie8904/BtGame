@@ -77,7 +77,7 @@ public class BaseGameObjectHandler implements GameObjectHandler
     }
 
     /**
-     * @see bt.game.core.obj.hand.GameObjectHandler#addObject(bt.game.core.obj.GameObject)
+     * @see bt.game.core.obj.hand.GameObjectHandler#addObject(java.lang.Object)
      */
     @Override
     public synchronized void addObject(Object object)
@@ -109,7 +109,7 @@ public class BaseGameObjectHandler implements GameObjectHandler
     }
 
     /**
-     * @see bt.game.core.obj.hand.GameObjectHandler#removeObject(bt.game.core.obj.GameObject)
+     * @see bt.game.core.obj.hand.GameObjectHandler#removeObject(java.lang.Object)
      */
     @Override
     public synchronized void removeObject(Object object)
@@ -150,14 +150,7 @@ public class BaseGameObjectHandler implements GameObjectHandler
                 .parallel()
                 .forEach(Tickable::tick);
 
-        long before;
-        long after;
-        before = System.currentTimeMillis();
-
         checkCollision();
-
-        after = System.currentTimeMillis();
-        System.out.println(after - before);
     }
 
     /**
@@ -178,8 +171,8 @@ public class BaseGameObjectHandler implements GameObjectHandler
      * Checks all added game objects that implement the {@link ActiveCollider} interface to see if they have collided
      * with any of the game objects that implement the {@link PassiveCollider} interface. If two of such objects have
      * collided (checked via the {@link Bounds#intersects(Bounds) intersects} method) the
-     * {@link ActiveCollider#activeCollision(GameObject) activeCollision} and
-     * {@link PassiveCollider#passiveCollision(GameObject) passiveCollision} methods are called respectively.
+     * {@link ActiveCollider#activeCollision(PassiveCollider) activeCollision} and
+     * {@link PassiveCollider#passiveCollision(ActiveCollider) passiveCollision} methods are called respectively.
      */
     public void checkCollision()
     {
