@@ -157,7 +157,7 @@ public class BaseGameObjectHandler implements GameObjectHandler
         checkCollision();
 
         after = System.currentTimeMillis();
-        // System.out.println(after - before);
+        System.out.println(after - before);
     }
 
     /**
@@ -188,10 +188,7 @@ public class BaseGameObjectHandler implements GameObjectHandler
                 .forEach(object1 -> {
                     this.passiveColliders.stream()
                             .parallel()
-                            .filter(o2 -> !o2.equals(object1)
-                                    && o2 instanceof PassiveCollider)
-                            .map(PassiveCollider.class::cast)
-                            .filter(o2 -> o2.intersects(object1))
+                            .filter(o2 -> !o2.equals(object1) && o2.intersects(object1))
                             .forEach(object2 -> {
                                 object1.activeCollision(object2);
                                 object2.passiveCollision(object1);
