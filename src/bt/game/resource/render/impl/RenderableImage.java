@@ -88,6 +88,16 @@ public class RenderableImage implements Renderable, Killable
                 0);
     }
 
+    public void render(Graphics g, double rotation)
+    {
+        render(g,
+                Unit.forUnits(0),
+                Unit.forUnits(0),
+                Unit.forUnits(this.image.getWidth(null)),
+                Unit.forUnits(this.image.getHeight(null)),
+                rotation);
+    }
+
     /**
      * @see bt.game.resource.render.Renderable#getZ()
      */
