@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bt.game.core.obj.intf.Animated;
 import bt.game.resource.load.Loadable;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.render.Renderable;
@@ -33,6 +34,7 @@ public class BaseResourceLoader implements ResourceLoader
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
     private List<Loadable> loadables;
+    private List<Animated> animated;
     private List<Runnable> closingOpeartions;
 
     /**
@@ -54,6 +56,7 @@ public class BaseResourceLoader implements ResourceLoader
         this.fonts = new HashMap<>();
         this.objects = new HashMap<>();
         this.loadables = new ArrayList<>();
+        this.animated = new ArrayList<>();
         this.closingOpeartions = new ArrayList<>();
     }
 
@@ -112,6 +115,7 @@ public class BaseResourceLoader implements ResourceLoader
         this.fonts.clear();
         this.objects.clear();
         this.loadables.clear();
+        this.animated.clear();
         this.closingOpeartions.clear();
     }
 
@@ -352,17 +356,37 @@ public class BaseResourceLoader implements ResourceLoader
                 }
             }
         }
+    }
+
+    /**
+     * @see bt.game.resource.load.ResourceLoader#finishLoad()
+     */
+    @Override
+    public void finishLoad()
+    {
+        for (Animated anim : this.animated)
+        {
+            anim.setupAnimations();
+        }
 
         this.killed = false;
     }
 
     /**
-     * @see bt.game.resource.load.ResourceLoader#register(bt.game.resource.load.Loadable)
+     * @see bt.game.resource.load.ResourceLoader#register(java.lang.Object)
      */
     @Override
-    public void register(Loadable loadable)
+    public void register(Object object)
     {
-        this.loadables.add(loadable);
+        if (object instanceof Loadable)
+        {
+            this.loadables.add(Loadable.class.cast(object));
+        }
+
+        if (object instanceof Animated)
+        {
+            this.animated.add(Animated.class.cast(object));
+        }
     }
 
     /**
