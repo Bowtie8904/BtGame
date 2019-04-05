@@ -73,6 +73,7 @@ public abstract class BaseScene implements Scene
         InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
         this.name = name;
         this.resourceLoader.load(name);
+        this.resourceLoader.finishLoad();
         this.isLoaded = true;
     }
 
