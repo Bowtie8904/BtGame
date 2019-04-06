@@ -23,6 +23,16 @@ public class Unit
     }
 
     /**
+     * Creates a new instance with a unit and pixel value of zero.
+     * 
+     * @return
+     */
+    public static Unit zero()
+    {
+        return forUnits(0);
+    }
+
+    /**
      * Creates a new instance where the given value is treated as units.
      * 
      * @param units
