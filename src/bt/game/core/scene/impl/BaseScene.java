@@ -8,6 +8,7 @@ import bt.game.core.obj.hand.impl.BaseGameObjectHandler;
 import bt.game.core.scene.Scene;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
+import bt.game.util.unit.Unit;
 import bt.runtime.InstanceKiller;
 import bt.utils.log.Logger;
 
@@ -124,5 +125,23 @@ public abstract class BaseScene implements Scene
     public synchronized void render(Graphics g)
     {
         this.gameObjectHandler.render(g);
+    }
+
+    /**
+     * @see bt.game.core.scene.Scene#getWidth()
+     */
+    @Override
+    public Unit getWidth()
+    {
+        return GameContainer.width();
+    }
+
+    /**
+     * @see bt.game.core.scene.Scene#getHeight()
+     */
+    @Override
+    public Unit getHeight()
+    {
+        return GameContainer.height();
     }
 }

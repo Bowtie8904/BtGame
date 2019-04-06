@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import bt.game.core.container.GameContainer;
 import bt.game.core.obj.hand.GameObjectHandler;
 import bt.game.resource.load.ResourceLoader;
+import bt.game.util.unit.Unit;
 import bt.runtime.Killable;
 
 /**
@@ -18,6 +19,10 @@ public interface Scene extends Killable
     public ResourceLoader getResourceLoader();
 
     public GameContainer getGameContainer();
+
+    public Unit getWidth();
+
+    public Unit getHeight();
 
     public void load(String name);
 
