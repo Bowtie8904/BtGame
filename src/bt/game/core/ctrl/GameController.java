@@ -72,6 +72,14 @@ public class GameController
     }
 
     /**
+     * {@link MouseController#clearMouseTargets()}
+     */
+    public void clearMouseTargets()
+    {
+        this.mouseController.clearMouseTargets();
+    }
+
+    /**
      * {@link KeyController#onKeyPress(int, Runnable)}
      */
     public void onKeyPress(int keyCode, Runnable action)
@@ -101,6 +109,14 @@ public class GameController
     public void onKeyRelease(int keyCode, int modifier, Runnable action)
     {
         this.keyController.onKeyRelease(keyCode, modifier, action);
+    }
+
+    /**
+     * {@link KeyController#clearMappings()}
+     */
+    public void clearKeyMappings()
+    {
+        this.keyController.clearMappings();
     }
 
     /**

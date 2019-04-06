@@ -144,4 +144,23 @@ public class KeyController
 
         Logger.global().print("Mapped " + count + " keys.");
     }
+
+    /**
+     * Resets all key mappings.
+     */
+    public void clearMappings()
+    {
+        for (Integer key : this.keyMappings.keySet())
+        {
+            onKeyPress(key, KeyAction.NO_MODIFIER, null);
+            onKeyPress(key, KeyAction.ALT_MODIFIER, null);
+            onKeyPress(key, KeyAction.CTRL_MODIFIER, null);
+            onKeyPress(key, KeyAction.SHIFT_MODIFIER, null);
+
+            onKeyRelease(key, KeyAction.NO_MODIFIER, null);
+            onKeyRelease(key, KeyAction.ALT_MODIFIER, null);
+            onKeyRelease(key, KeyAction.CTRL_MODIFIER, null);
+            onKeyRelease(key, KeyAction.SHIFT_MODIFIER, null);
+        }
+    }
 }

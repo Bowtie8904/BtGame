@@ -77,6 +77,11 @@ public class MouseController extends MouseAdapter
         this.onLeftClick = onClick;
     }
 
+    public void clearMouseTargets()
+    {
+        this.mouseTargets.clear();
+    }
+
     public void checkHover()
     {
         if (this.lastClicked != null)
