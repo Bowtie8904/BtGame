@@ -1,7 +1,7 @@
 package bt.game.core.obj.intf;
 
 /**
- * Defines actions of a game object that are executed every tick.
+ * Defines actions of an object that are executed every tick.
  * 
  * @author &#8904
  */
@@ -9,7 +9,7 @@ package bt.game.core.obj.intf;
 public interface Tickable
 {
     /**
-     * Defines actions of a game object that are executed every tick.
+     * Defines actions of an object that are executed every tick.
      */
     public void tick();
 }
