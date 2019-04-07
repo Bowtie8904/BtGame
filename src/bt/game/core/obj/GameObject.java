@@ -1,12 +1,12 @@
 package bt.game.core.obj;
 
-import bt.game.core.obj.hand.GameObjectHandler;
+import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 
 /**
- * An abstract base class for all objects that need to be handled by a {@link GameObjectHandler}, i.e. characters in a
- * scene.
+ * An abstract base class for all objects that have a position in the game and need to be handled by an
+ * {@link ObjectHandler}, i.e. characters in a scene.
  * 
  * @author &#8904
  */
