@@ -7,23 +7,40 @@ import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 
 /**
+ * A {@link Camera} extension that centers on a given game object and follows it.
+ * 
  * @author &#8904
- *
  */
 public class ObjectCamera extends Camera implements Tickable
 {
+    /** The object to follow. */
     protected GameObject object;
 
     /**
+     * Creates a new instance and sets the object to follow.
+     * 
      * @param scene
      */
     public ObjectCamera(Scene scene, GameObject object)
     {
         super(scene);
+
+        if (object == null)
+        {
+            throw new IllegalArgumentException("Given object may not be null.");
+        }
+
         this.object = object;
     }
 
     /**
+     * Moves the camera to stay centered on the object.
+     * 
+     * <p>
+     * This method calls {@link #moveTo(Unit, Unit) moveTo}, so the {@link #clipToBorders(boolean) clipToBorders}
+     * behavior is handled there.
+     * </p>
+     * 
      * @see bt.game.core.obj.intf.Tickable#tick()
      */
     @Override
