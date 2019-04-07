@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 
 import bt.game.core.container.GameContainer;
 import bt.game.core.ctrl.GameController;
+import bt.game.core.scene.cam.Camera;
 import bt.game.core.scene.impl.BaseScene;
 import bt.game.resource.load.Loadable;
 import bt.game.resource.render.Renderable;
@@ -46,6 +47,7 @@ public class SingleScene extends BaseScene
     private Sound sound;
     private Sound sound2;
     private RenderableText text;
+    private Camera camera;
 
     @Override
     public synchronized void tick()
@@ -61,6 +63,7 @@ public class SingleScene extends BaseScene
             w = w.addUnits(0.2f);
             h = h.addUnits(0.2f);
         }
+        // this.camera.moveTo(Unit.forUnits(-50), Unit.forUnits(-50));
         super.tick();
     }
 
@@ -69,10 +72,20 @@ public class SingleScene extends BaseScene
     {
         isLoaded = false;
 
+        this.camera = new Camera(this);
+
         GameController.get().onKeyRelease(KeyEvent.VK_ESCAPE, () -> System.exit(0));
         GameController.get().onKeyPress(KeyEvent.VK_1, () -> this.gameContainer.setScene("test"));
         GameController.get().onKeyPress(KeyEvent.VK_2, () -> this.gameContainer.setScene("load"));
         GameController.get().onKeyPress(KeyEvent.VK_3, () -> this.gameContainer.setScene("load2"));
+        GameController.get().onKeyPress(KeyEvent.VK_W,
+                () -> this.camera.moveTo(this.camera.getX(), this.camera.getY().subtractUnits(10)));
+        GameController.get().onKeyPress(KeyEvent.VK_S,
+                () -> this.camera.moveTo(this.camera.getX(), this.camera.getY().addUnits(10)));
+        GameController.get().onKeyPress(KeyEvent.VK_A,
+                () -> this.camera.moveTo(this.camera.getX().subtractUnits(10), this.camera.getY()));
+        GameController.get().onKeyPress(KeyEvent.VK_D,
+                () -> this.camera.moveTo(this.camera.getX().addUnits(10), this.camera.getY()));
 
         Loadable loadable = new Loadable() {
 
@@ -179,6 +192,9 @@ public class SingleScene extends BaseScene
     @Override
     public synchronized void render(Graphics g)
     {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, (int)GameContainer.width().pixels(), (int)GameContainer.height().pixels());
+        this.camera.render(g);
         g.setColor(Color.GRAY);
         g.fillRect(0, 0, (int)GameContainer.width().pixels(), (int)GameContainer.height().pixels());
 
@@ -212,12 +228,15 @@ public class SingleScene extends BaseScene
         sound2 = this.resourceLoader.getSound("elevator");
         sound2.setVolume(0.5f);
         sound2.loop();
+
+        Camera.currentCamera = this.camera;
     }
 
     @Override
     public void kill()
     {
         super.kill();
+        Camera.currentCamera = null;
         GameController.get().clearKeyMappings();
         GameController.get().clearMouseTargets();
     }

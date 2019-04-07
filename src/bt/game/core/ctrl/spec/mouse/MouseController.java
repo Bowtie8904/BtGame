@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+import bt.game.core.scene.cam.Camera;
 import bt.game.util.unit.Unit;
 
 /**
@@ -98,14 +99,20 @@ public class MouseController extends MouseAdapter
             Point p = this.component.getMousePosition();
             if (p != null)
             {
-                int mx = (int)p.getX();
-                int my = (int)p.getY();
+                double mx = p.getX();
+                double my = p.getY();
+
+                if (Camera.currentCamera != null)
+                {
+                    mx += Camera.currentCamera.getX().pixels();
+                    my += Camera.currentCamera.getY().pixels();
+                }
 
                 boolean foundOne = false;
 
                 for (MouseTarget target : this.mouseTargets)
                 {
-                    if (target.getArea().contains(p))
+                    if (target.getArea().contains(mx, my))
                     {
                         if (!target.equals(this.lastHovered))
                         {
@@ -144,16 +151,29 @@ public class MouseController extends MouseAdapter
         this.mouseX = e.getX();
         this.mouseY = e.getY();
 
+        if (Camera.currentCamera != null)
+        {
+            this.mouseX += Camera.currentCamera.getX().pixels();
+            this.mouseY += Camera.currentCamera.getY().pixels();
+        }
+
         if (e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON3)
         {
             sortTargets();
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (target.getArea().contains(e.getPoint()))
+                if (target.getArea().contains(this.mouseX, this.mouseY))
                 {
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
+                        // resetting mouse positions for dragging
+                        if (Camera.currentCamera != null)
+                        {
+                            this.mouseX -= Camera.currentCamera.getX().pixels();
+                            this.mouseY -= Camera.currentCamera.getY().pixels();
+                        }
+
                         this.lastClicked = target; // used for dragging. only used with left mouse button
                         onLeftClick(target);
                         target.onLeftClick();
@@ -192,11 +212,17 @@ public class MouseController extends MouseAdapter
             this.mouseX = e.getX();
             this.mouseY = e.getY();
 
+            if (Camera.currentCamera != null)
+            {
+                this.mouseX += Camera.currentCamera.getX().pixels();
+                this.mouseY += Camera.currentCamera.getY().pixels();
+            }
+
             sortTargets();
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (target.getArea().contains(e.getPoint()))
+                if (target.getArea().contains(this.mouseX, this.mouseY))
                 {
                     target.onMouseWheelMove(e.getWheelRotation());
                     break;
@@ -211,8 +237,9 @@ public class MouseController extends MouseAdapter
         if (this.lastClicked != null)
         {
             this.lastClicked.onDrag(Unit.forPixels(e.getX() - this.mouseX), Unit.forPixels(e.getY() - this.mouseY));
-            this.mouseX = e.getX();
-            this.mouseY = e.getY();
+
+            this.mouseX += e.getX() - this.mouseX;
+            this.mouseY += e.getY() - this.mouseY;
         }
     }
 
