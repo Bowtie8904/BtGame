@@ -10,7 +10,7 @@ import bt.runtime.Killable;
  * 
  * @author &#8904
  */
-public interface GameObjectHandler extends Killable
+public interface ObjectHandler extends Killable
 {
     /**
      * Initializes the handler.
