@@ -3,8 +3,8 @@ package bt.game.core.scene.impl;
 import java.awt.Graphics;
 
 import bt.game.core.container.GameContainer;
-import bt.game.core.obj.hand.GameObjectHandler;
-import bt.game.core.obj.hand.impl.BaseGameObjectHandler;
+import bt.game.core.obj.hand.ObjectHandler;
+import bt.game.core.obj.hand.impl.BaseObjectHandler;
 import bt.game.core.scene.Scene;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
@@ -19,7 +19,7 @@ import bt.utils.log.Logger;
 public abstract class BaseScene implements Scene
 {
     protected ResourceLoader resourceLoader;
-    protected GameObjectHandler gameObjectHandler;
+    protected ObjectHandler gameObjectHandler;
     protected GameContainer gameContainer;
     protected boolean isLoaded;
     protected String name;
@@ -37,7 +37,7 @@ public abstract class BaseScene implements Scene
             this.resourceLoader = resourceLoader;
         }
 
-        this.gameObjectHandler = new BaseGameObjectHandler();
+        this.gameObjectHandler = new BaseObjectHandler();
     }
 
     public BaseScene(GameContainer gameContainer)
@@ -46,7 +46,7 @@ public abstract class BaseScene implements Scene
     }
 
     @Override
-    public GameObjectHandler getGameObjectHandler()
+    public ObjectHandler getGameObjectHandler()
     {
         return this.gameObjectHandler;
     }

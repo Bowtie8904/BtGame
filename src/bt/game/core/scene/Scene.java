@@ -3,7 +3,7 @@ package bt.game.core.scene;
 import java.awt.Graphics;
 
 import bt.game.core.container.GameContainer;
-import bt.game.core.obj.hand.GameObjectHandler;
+import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.util.unit.Unit;
 import bt.runtime.Killable;
@@ -14,7 +14,7 @@ import bt.runtime.Killable;
  */
 public interface Scene extends Killable
 {
-    public GameObjectHandler getGameObjectHandler();
+    public ObjectHandler getGameObjectHandler();
 
     public ResourceLoader getResourceLoader();
 
