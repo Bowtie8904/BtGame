@@ -45,18 +45,27 @@ public abstract class BaseScene implements Scene
         this(gameContainer, null);
     }
 
+    /**
+     * @see bt.game.core.scene.Scene#getGameObjectHandler()
+     */
     @Override
     public ObjectHandler getGameObjectHandler()
     {
         return this.gameObjectHandler;
     }
 
+    /**
+     * @see bt.game.core.scene.Scene#getResourceLoader()
+     */
     @Override
     public ResourceLoader getResourceLoader()
     {
         return this.resourceLoader;
     }
 
+    /**
+     * @see bt.game.core.scene.Scene#getGameContainer()
+     */
     @Override
     public GameContainer getGameContainer()
     {
@@ -115,12 +124,18 @@ public abstract class BaseScene implements Scene
         }
     }
 
+    /**
+     * @see bt.game.core.scene.Scene#tick()
+     */
     @Override
     public synchronized void tick()
     {
         this.gameObjectHandler.tick();
     }
 
+    /**
+     * @see bt.game.core.scene.Scene#render(java.awt.Graphics)
+     */
     @Override
     public synchronized void render(Graphics g)
     {
