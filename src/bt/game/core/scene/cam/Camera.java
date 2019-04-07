@@ -39,7 +39,20 @@ public class Camera
         {
             if (this.x.pixels() > this.scene.getWidth().pixels() - GameContainer.width().pixels())
             {
+                this.x = Unit.forPixels(this.scene.getWidth().pixels() - GameContainer.width().pixels());
+            }
+            else if (this.x.pixels() < 0)
+            {
+                this.x = Unit.zero();
+            }
 
+            if (this.y.pixels() > this.scene.getHeight().pixels() - GameContainer.height().pixels())
+            {
+                this.y = Unit.forPixels(this.scene.getHeight().pixels() - GameContainer.height().pixels());
+            }
+            else if (this.y.pixels() < 0)
+            {
+                this.y = Unit.zero();
             }
         }
     }
