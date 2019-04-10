@@ -7,6 +7,7 @@ import bt.game.core.ctrl.spec.key.KeyController;
 import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.ctrl.spec.mouse.MouseTarget;
 import bt.game.core.loop.GameLoop;
+import bt.game.core.loop.impl.FixedGameLoop;
 import bt.key.KeyAction;
 import bt.utils.log.Logger;
 
@@ -131,7 +132,7 @@ public class GameController
 
         this.mouseController = new MouseController(comp);
 
-        GameLoop hoverLoop = new GameLoop(this.mouseController::checkHover, null) {
+        GameLoop hoverLoop = new FixedGameLoop(i -> this.mouseController.checkHover(), null) {
             @Override
             public void kill()
             {

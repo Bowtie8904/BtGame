@@ -277,11 +277,11 @@ public abstract class GameContainer extends Canvas
     /**
      * Calls {@link Scene#tick() tick} of the current scene as soon as {@link Scene#isLoaded() isLoaded} returns true.
      */
-    public void tick()
+    public void tick(double delta)
     {
         if (this.currentScene != null && this.currentScene.isLoaded())
         {
-            this.currentScene.tick();
+            this.currentScene.tick(delta);
         }
     }
 

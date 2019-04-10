@@ -73,7 +73,7 @@ public class LoadingScene extends BaseScene
      * @see bt.game.core.scene.Scene#tick()
      */
     @Override
-    public void tick()
+    public void tick(double delta)
     {
         this.count ++ ;
 

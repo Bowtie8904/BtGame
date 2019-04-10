@@ -1,5 +1,7 @@
 package bt.game.core.loop;
 
+import java.util.function.Consumer;
+
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.utils.log.Logger;
@@ -10,7 +12,7 @@ import bt.utils.thread.Threads;
  * 
  * @author &#8904
  */
-public class GameLoop implements Runnable, Killable
+public abstract class GameLoop implements Runnable, Killable
 {
     /**
      * Indicates whether this loop is currently running. Setting this to false is the easiest way to terminate the loop.
@@ -37,8 +39,8 @@ public class GameLoop implements Runnable, Killable
      */
     protected int desiredFramesPerSecond = -1;
 
-    /** The set tick runnable that is called {@link #ticksPerSecond n} times per second. */
-    protected Runnable tick;
+    /** The set tick consumer that is called {@link #ticksPerSecond n} times per second and is passed the delta. */
+    protected Consumer<Double> tick;
 
     /** The set render runnable that is called {@link #framesPerSecond n} times per second. */
     protected Runnable render;
@@ -56,7 +58,7 @@ public class GameLoop implements Runnable, Killable
      * @param tick
      * @param render
      */
-    public GameLoop(Runnable tick, Runnable render)
+    public GameLoop(Consumer<Double> tick, Runnable render)
     {
         this.tick = tick;
         this.render = render;
@@ -103,74 +105,6 @@ public class GameLoop implements Runnable, Killable
     public void stop()
     {
         this.running = false;
-    }
-
-    /**
-     * The core of the loop.
-     * 
-     * @see java.lang.Runnable#run()
-     */
-    @Override
-    public void run()
-    {
-        long lastTime = System.nanoTime();
-        double ns;
-        double delta = 0;
-        long timer = System.currentTimeMillis();
-        int frames = 0;
-        long now;
-
-        while (this.running)
-        {
-            ns = 1000000000 / this.ticksPerSecond;
-            now = System.nanoTime();
-            delta += (now - lastTime) / ns;
-            lastTime = now;
-
-            while (delta >= 1)
-            {
-                runTick();
-                delta -- ;
-            }
-
-            runRender();
-            frames ++ ;
-
-            if (System.currentTimeMillis() - timer > this.frameCheckInterval)
-            {
-                timer += this.frameCheckInterval;
-                frames *= 1000 / this.frameCheckInterval;
-                this.framesPerSecond = frames;
-                frames = 0;
-
-                if (this.onFpsUpdate != null)
-                {
-                    this.onFpsUpdate.run();
-                }
-
-                if (this.desiredFramesPerSecond > -1)
-                {
-                    if (this.framesPerSecond > this.desiredFramesPerSecond)
-                    {
-                        this.threadSleepers ++ ;
-                    }
-                    else if (this.framesPerSecond < this.desiredFramesPerSecond)
-                    {
-                        this.threadSleepers -- ;
-                    }
-                }
-            }
-
-            if (this.desiredFramesPerSecond > -1 && this.threadSleepers > 0)
-            {
-                try
-                {
-                    Thread.sleep(this.threadSleepers);
-                }
-                catch (InterruptedException e)
-                {}
-            }
-        }
     }
 
     /**
@@ -238,7 +172,7 @@ public class GameLoop implements Runnable, Killable
     /**
      * Runs the render runnable if it is not null.
      */
-    private void runRender()
+    protected void runRender()
     {
         if (this.render != null)
         {
@@ -249,11 +183,11 @@ public class GameLoop implements Runnable, Killable
     /**
      * Runs the tick runnable if it is not null.
      */
-    private void runTick()
+    protected void runTick(double delta)
     {
         if (this.tick != null)
         {
-            this.tick.run();
+            this.tick.accept(delta);
         }
     }
 }

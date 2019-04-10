@@ -30,7 +30,7 @@ public interface Scene extends Killable
 
     public void start();
 
-    public void tick();
+    public void tick(double delta);
 
     public void render(Graphics g);
 }

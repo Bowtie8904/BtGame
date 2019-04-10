@@ -128,9 +128,9 @@ public abstract class BaseScene implements Scene
      * @see bt.game.core.scene.Scene#tick()
      */
     @Override
-    public synchronized void tick()
+    public synchronized void tick(double delta)
     {
-        this.gameObjectHandler.tick();
+        this.gameObjectHandler.tick(delta);
     }
 
     /**

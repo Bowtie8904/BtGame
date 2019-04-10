@@ -44,7 +44,7 @@ public class ObjectCamera extends Camera implements Tickable
      * @see bt.game.core.obj.intf.Tickable#tick()
      */
     @Override
-    public void tick()
+    public void tick(double delta)
     {
         float xPix = this.object.getX().pixels()
                 + (this.object.getW().pixels() / 2)

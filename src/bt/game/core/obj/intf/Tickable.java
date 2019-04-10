@@ -11,5 +11,5 @@ public interface Tickable
     /**
      * Defines actions of an object that are executed every tick.
      */
-    public void tick();
+    public void tick(double delta);
 }

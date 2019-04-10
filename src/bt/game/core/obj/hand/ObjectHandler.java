@@ -39,7 +39,7 @@ public interface ObjectHandler extends Killable
     /**
      * Forwards the tick call to all held objects.
      */
-    public void tick();
+    public void tick(double delta);
 
     /**
      * Forwards the render call to all held objects.

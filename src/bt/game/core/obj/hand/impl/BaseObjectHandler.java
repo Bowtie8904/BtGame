@@ -200,11 +200,11 @@ public class BaseObjectHandler implements ObjectHandler
      * @see bt.game.core.obj.hand.ObjectHandler#tick()
      */
     @Override
-    public void tick()
+    public void tick(double delta)
     {
         this.tickables.stream()
                 .parallel()
-                .forEach(Tickable::tick);
+                .forEach(t -> t.tick(delta));
 
         checkCollision();
     }

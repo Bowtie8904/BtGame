@@ -175,7 +175,7 @@ public class Animation implements Renderable, Tickable
      * @see bt.game.core.obj.intf.Tickable#tick()
      */
     @Override
-    public void tick()
+    public void tick(double delta)
     {
         if (System.currentTimeMillis() - this.lastTime >= this.interval || this.lastTime == 0)
         {
