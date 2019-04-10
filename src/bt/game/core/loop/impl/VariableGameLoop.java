@@ -10,6 +10,8 @@ import bt.game.core.loop.GameLoop;
  */
 public class VariableGameLoop extends GameLoop
 {
+    protected double delta = 0;
+
     /**
      * @param tick
      * @param render
@@ -17,6 +19,11 @@ public class VariableGameLoop extends GameLoop
     public VariableGameLoop(Consumer<Double> tick, Runnable render)
     {
         super(tick, render);
+    }
+
+    public double getLastDelta()
+    {
+        return this.delta;
     }
 
     /**
@@ -29,7 +36,7 @@ public class VariableGameLoop extends GameLoop
     {
         long lastTime = System.nanoTime();
         double ns;
-        double delta = 0;
+        this.delta = 0;
         long timer = System.currentTimeMillis();
         int frames = 0;
         long now;
@@ -41,7 +48,7 @@ public class VariableGameLoop extends GameLoop
             delta = (now - lastTime) / ns;
             lastTime = now;
 
-            runTick(delta);
+            runTick(this.delta);
             runRender();
             frames ++ ;
 
