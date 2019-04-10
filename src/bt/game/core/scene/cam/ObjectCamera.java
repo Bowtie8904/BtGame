@@ -17,13 +17,29 @@ public class ObjectCamera extends Camera implements Tickable
     protected GameObject object;
 
     /**
-     * Creates a new instance and sets the object to follow.
+     * The area to each side on the X axis of the objects middle point that the given object can move in without moving
+     * the camera.
+     */
+    protected Unit movementOffsetX;
+
+    /**
+     * The area to each side on the Y axis of the objects middle point that the given object can move in without moving
+     * the camera.
+     */
+    protected Unit movementOffsetY;
+
+    /**
+     * Creates a new instance and sets the object to follow when it leaves the area defined by the given offset.
      * 
      * @param scene
+     * @param object
+     * @param movementOffset
      */
-    public ObjectCamera(Scene scene, GameObject object)
+    public ObjectCamera(Scene scene, GameObject object, Unit movementOffsetX, Unit movementOffsetY)
     {
         super(scene);
+        this.movementOffsetX = movementOffsetX;
+        this.movementOffsetY = movementOffsetY;
 
         if (object == null)
         {
@@ -34,7 +50,18 @@ public class ObjectCamera extends Camera implements Tickable
     }
 
     /**
-     * Moves the camera to stay centered on the object.
+     * Creates a new instance and sets the object to follow.
+     * 
+     * @param scene
+     * @param object
+     */
+    public ObjectCamera(Scene scene, GameObject object)
+    {
+        this(scene, object, Unit.zero(), Unit.zero());
+    }
+
+    /**
+     * Moves the camera to keep the object inside the area defined by the offsets.
      * 
      * <p>
      * This method calls {@link #moveTo(Unit, Unit) moveTo}, so the {@link #clipToBorders(boolean) clipToBorders}
@@ -46,13 +73,33 @@ public class ObjectCamera extends Camera implements Tickable
     @Override
     public void tick(double delta)
     {
-        float xPix = this.object.getX().pixels()
-                + (this.object.getW().pixels() / 2)
-                - GameContainer.width().pixels() / 2;
-        float yPix = this.object.getY().pixels()
-                + (this.object.getH().pixels() / 2)
-                - GameContainer.height().pixels() / 2;
+        float objectX = this.object.getX().units() + this.object.getW().units() / 2;
+        float objectY = this.object.getY().units() + this.object.getH().units() / 2;
+        
+        float camX = getX().units() + GameContainer.width().units() / 2;
+        float camY = getY().units() + GameContainer.height().units() / 2;
+        
+        float xMove = 0;
+        float yMove = 0;
+        
+        if (objectX > camX + this.movementOffsetX.units())
+        {
+            xMove = objectX - camX - this.movementOffsetX.units();
+        }
+        else if (objectX < camX - this.movementOffsetX.units())
+        {
+            xMove = objectX - camX + this.movementOffsetX.units();
+        }
 
-        moveTo(Unit.forPixels(xPix), Unit.forPixels(yPix));
+        if (objectY > camY + this.movementOffsetY.units())
+        {
+            yMove = objectY - camY - this.movementOffsetY.units();
+        }
+        else if (objectY < camY - this.movementOffsetY.units())
+        {
+            yMove = objectY - camY + this.movementOffsetY.units();
+        }
+
+        moveTo(getX().addUnits(xMove), getY().addUnits(yMove));
     }
 }
