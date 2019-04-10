@@ -20,7 +20,7 @@ import bt.utils.log.Logger;
 public class LoadingScene extends BaseScene
 {
     private int highlight;
-    private int count;
+    private double count;
     private int ticks;
 
     /**
@@ -75,7 +75,7 @@ public class LoadingScene extends BaseScene
     @Override
     public void tick(double delta)
     {
-        this.count ++ ;
+        this.count += delta;
 
         if (this.count > this.ticks)
         {
