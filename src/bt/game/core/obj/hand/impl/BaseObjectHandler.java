@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import bt.game.core.obj.hand.ObjectHandler;
-import bt.game.core.obj.intf.ActiveCollider;
-import bt.game.core.obj.intf.Bounds;
-import bt.game.core.obj.intf.PassiveCollider;
 import bt.game.core.obj.intf.Tickable;
+import bt.game.core.obj.intf.col.ActiveCollider;
+import bt.game.core.obj.intf.col.Bounds;
+import bt.game.core.obj.intf.col.PassiveCollider;
 import bt.game.resource.render.Renderable;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
@@ -241,8 +241,8 @@ public class BaseObjectHandler implements ObjectHandler
                             .parallel()
                             .filter(o2 -> !o2.equals(object1) && o2.intersects(object1))
                             .forEach(object2 -> {
-                                object1.activeCollision(object2);
                                 object2.passiveCollision(object1);
+                                object1.activeCollision(object2);
                             });
                 });
     }
