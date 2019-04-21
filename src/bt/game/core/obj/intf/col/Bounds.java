@@ -1,4 +1,4 @@
-package bt.game.core.obj.intf;
+package bt.game.core.obj.intf.col;
 
 import java.awt.geom.Area;
 

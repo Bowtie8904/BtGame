@@ -1,4 +1,4 @@
-package bt.game.core.obj.intf;
+package bt.game.core.obj.intf.col;
 
 /**
  * Defines collision behavior of an active object. Active means that the object can actively collide with another

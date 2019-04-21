@@ -1,4 +1,4 @@
-package bt.game.core.obj.intf;
+package bt.game.core.obj.intf.col;
 
 /**
  * Defines collision behavior of a passive object. Passive means that the object can get hit, but can't actively hit
