@@ -1,6 +1,6 @@
 package bt.game.core.obj.hand;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import bt.runtime.Killable;
 
@@ -44,5 +44,5 @@ public interface ObjectHandler extends Killable
     /**
      * Forwards the render call to all held objects.
      */
-    public void render(Graphics g);
+    public void render(Graphics2D g);
 }
