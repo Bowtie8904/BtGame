@@ -1,6 +1,6 @@
 package bt.game.resource.render.impl;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -210,7 +210,7 @@ public class Animation implements Renderable, Tickable
      *      bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
-    public void render(Graphics g, Unit x, Unit y, Unit w, Unit h)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
         if (this.currentIndex >= 0 && this.currentIndex < this.images.length)
         {
@@ -222,7 +222,7 @@ public class Animation implements Renderable, Tickable
      * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics g)
+    public void render(Graphics2D g)
     {
         if (this.currentIndex >= 0 && this.currentIndex < this.images.length)
         {
