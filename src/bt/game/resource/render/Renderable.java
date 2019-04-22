@@ -1,6 +1,6 @@
 package bt.game.resource.render;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import bt.game.util.unit.Unit;
 
@@ -21,7 +21,7 @@ public interface Renderable
      * @param w
      * @param h
      */
-    public void render(Graphics g, Unit x, Unit y, Unit w, Unit h);
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h);
 	
 	/**
      * Renders this instance. The given Graphics object is used
@@ -29,7 +29,7 @@ public interface Renderable
      * 
      * @param g
      */
-	public void render(Graphics g);
+    public void render(Graphics2D g);
 
     /**
      * Gets the Z position of this object. This should be used to render the objects with the lowest Z value first.
