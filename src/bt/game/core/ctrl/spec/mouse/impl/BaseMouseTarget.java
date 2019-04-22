@@ -1,7 +1,6 @@
 package bt.game.core.ctrl.spec.mouse.impl;
 
-import java.awt.Rectangle;
-import java.awt.geom.Area;
+import org.dyn4j.geometry.Shape;
 
 import bt.game.core.ctrl.spec.mouse.MouseTarget;
 import bt.game.util.unit.Unit;
@@ -27,18 +26,18 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onLeftClick()
-     */
-    @Override
-    public void onLeftClick()
-    {
-    }
-
-    /**
      * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onRightClick()
      */
     @Override
     public void onRightClick()
+    {
+    }
+
+    /**
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onLeftClick()
+     */
+    @Override
+    public void onLeftClick()
     {
     }
 
@@ -67,32 +66,28 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getZ()
-     */
-    @Override
-    public Unit getZ()
-    {
-        return this.z;
-    }
-
-    /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getArea()
-     */
-    @Override
-    public Area getArea()
-    {
-        return new Area(
-                new Rectangle((int)this.x.pixels(),
-                        (int)this.y.pixels(),
-                        (int)this.w.pixels(),
-                        (int)this.h.pixels()));
-    }
-
-    /**
      * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onMouseWheelMove(int)
      */
     @Override
     public void onMouseWheelMove(int clicks)
     {
+    }
+
+    /**
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getZ()
+     */
+    @Override
+    public Unit getZ()
+    {
+        return null;
+    }
+
+    /**
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getShape()
+     */
+    @Override
+    public Shape getShape()
+    {
+        return null;
     }
 }
