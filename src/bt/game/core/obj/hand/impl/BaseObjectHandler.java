@@ -1,15 +1,17 @@
 package bt.game.core.obj.hand.impl;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.joint.Joint;
+
 import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.core.obj.intf.Tickable;
-import bt.game.core.obj.intf.col.ActiveCollider;
-import bt.game.core.obj.intf.col.Bounds;
-import bt.game.core.obj.intf.col.PassiveCollider;
+import bt.game.core.scene.Scene;
 import bt.game.resource.render.Renderable;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
@@ -50,27 +52,23 @@ public class BaseObjectHandler implements ObjectHandler
     /** The list of renderable objects. */
     protected List<Renderable> renderables;
 
-    /** The list of active colliders. */
-    protected List<ActiveCollider> activeColliders;
-
-    /** The list of passive colliders. */
-    protected List<PassiveCollider> passiveColliders;
-
     /** The list of killable objects. */
     protected List<Killable> killables;
 
     /** The comparator to sort renderables after their Z value. */
     protected Comparator<Renderable> zComparator;
 
+    /** The scene that uses this handler. */
+    protected Scene scene;
+
     /**
      * Creates a new instance.
      */
-    public BaseObjectHandler()
+    public BaseObjectHandler(Scene scene)
     {
+        this.scene = scene;
         this.tickables = new CopyOnWriteArrayList<>();
         this.renderables = new CopyOnWriteArrayList<>();
-        this.activeColliders = new CopyOnWriteArrayList<>();
-        this.passiveColliders = new CopyOnWriteArrayList<>();
         this.killables = new CopyOnWriteArrayList<>();
         this.zComparator = new Comparator<Renderable>() {
             @Override
@@ -129,6 +127,16 @@ public class BaseObjectHandler implements ObjectHandler
     @Override
     public synchronized void addObject(Object object)
     {
+        if (object instanceof Body)
+        {
+            this.scene.getWorld().addBody(Body.class.cast(object));
+        }
+
+        if (object instanceof Joint)
+        {
+            this.scene.getWorld().addJoint(Joint.class.cast(object));
+        }
+
         if (object instanceof Tickable)
         {
             this.tickables.add(Tickable.class.cast(object));
@@ -143,16 +151,6 @@ public class BaseObjectHandler implements ObjectHandler
         {
             this.killables.add(Killable.class.cast(object));
         }
-
-        if (object instanceof PassiveCollider)
-        {
-            this.passiveColliders.add(PassiveCollider.class.cast(object));
-        }
-
-        if (object instanceof ActiveCollider)
-        {
-            this.activeColliders.add(ActiveCollider.class.cast(object));
-        }
     }
 
     /**
@@ -163,6 +161,16 @@ public class BaseObjectHandler implements ObjectHandler
     @Override
     public synchronized void removeObject(Object object)
     {
+        if (object instanceof Body)
+        {
+            this.scene.getWorld().removeBody(Body.class.cast(object));
+        }
+
+        if (object instanceof Joint)
+        {
+            this.scene.getWorld().removeJoint(Joint.class.cast(object));
+        }
+
         if (object instanceof Tickable)
         {
             this.tickables.remove(object);
@@ -176,16 +184,6 @@ public class BaseObjectHandler implements ObjectHandler
         if (object instanceof Killable)
         {
             this.killables.remove(object);
-        }
-
-        if (object instanceof PassiveCollider)
-        {
-            this.passiveColliders.remove(object);
-        }
-
-        if (object instanceof ActiveCollider)
-        {
-            this.activeColliders.remove(object);
         }
     }
 
@@ -205,8 +203,6 @@ public class BaseObjectHandler implements ObjectHandler
         this.tickables.stream()
                 .parallel()
                 .forEach(t -> t.tick(delta));
-
-        checkCollision();
     }
 
     /**
@@ -215,7 +211,7 @@ public class BaseObjectHandler implements ObjectHandler
      * @see bt.game.core.obj.hand.ObjectHandler#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics g)
+    public void render(Graphics2D g)
     {
         sortObjects();
 
@@ -223,28 +219,6 @@ public class BaseObjectHandler implements ObjectHandler
         {
             renderable.render(g);
         }
-    }
-    
-    /**
-     * Checks all added game objects that implement the {@link ActiveCollider} interface to see if they have collided
-     * with any of the game objects that implement the {@link PassiveCollider} interface. If two of such objects have
-     * collided (checked via the {@link Bounds#intersects(Bounds) intersects} method) the
-     * {@link ActiveCollider#activeCollision(PassiveCollider) activeCollision} and
-     * {@link PassiveCollider#passiveCollision(ActiveCollider) passiveCollision} methods are called respectively.
-     */
-    public void checkCollision()
-    {
-        this.activeColliders.stream()
-                .parallel()
-                .forEach(object1 -> {
-                    this.passiveColliders.stream()
-                            .parallel()
-                            .filter(o2 -> !o2.equals(object1) && o2.intersects(object1))
-                            .forEach(object2 -> {
-                                object2.passiveCollision(object1);
-                                object1.activeCollision(object2);
-                            });
-                });
     }
 
     /**
@@ -264,8 +238,6 @@ public class BaseObjectHandler implements ObjectHandler
 
         this.tickables.clear();
         this.renderables.clear();
-        this.activeColliders.clear();
-        this.passiveColliders.clear();
         this.killables.clear();
     }
 
