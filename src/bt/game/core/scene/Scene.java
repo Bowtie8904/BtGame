@@ -1,6 +1,8 @@
 package bt.game.core.scene;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import org.dyn4j.dynamics.World;
 
 import bt.game.core.container.GameContainer;
 import bt.game.core.obj.hand.ObjectHandler;
@@ -20,6 +22,8 @@ public interface Scene extends Killable
 
     public GameContainer getGameContainer();
 
+    public World getWorld();
+
     public Unit getWidth();
 
     public Unit getHeight();
@@ -32,5 +36,5 @@ public interface Scene extends Killable
 
     public void tick(double delta);
 
-    public void render(Graphics g);
+    public void render(Graphics2D g);
 }
