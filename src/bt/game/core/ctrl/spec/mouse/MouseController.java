@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+import org.dyn4j.geometry.Vector2;
+
 import bt.game.core.scene.cam.Camera;
 import bt.game.util.unit.Unit;
 
@@ -26,8 +28,8 @@ public class MouseController extends MouseAdapter
     private Component component;
     private int mouseX;
     private int mouseY;
-    private MouseTarget lastClicked;
-    private MouseTarget lastHovered;
+    private MouseTarget lastClickedTarget;
+    private MouseTarget lastHoveredTarget;
 
     public MouseController(Component component)
     {
@@ -85,7 +87,7 @@ public class MouseController extends MouseAdapter
 
     public void checkHover()
     {
-        if (this.lastClicked != null)
+        if (this.lastClickedTarget != null)
         {
             // dont switch to another hover target if we havnt released our last click yet, i.e. are still dragging the
             // target around
@@ -112,16 +114,16 @@ public class MouseController extends MouseAdapter
 
                 for (MouseTarget target : this.mouseTargets)
                 {
-                    if (target.getArea().contains(mx, my))
+                    if (target.getShape().contains(new Vector2(mx, my)))
                     {
-                        if (!target.equals(this.lastHovered))
+                        if (!target.equals(this.lastHoveredTarget))
                         {
-                            if (this.lastHovered != null)
+                            if (this.lastHoveredTarget != null)
                             {
-                                this.lastHovered.afterHover();
+                                this.lastHoveredTarget.afterHover();
                             }
 
-                            this.lastHovered = target;
+                            this.lastHoveredTarget = target;
                             target.onHover();
                         }
                         foundOne = true;
@@ -129,18 +131,18 @@ public class MouseController extends MouseAdapter
                     }
                 }
 
-                if (!foundOne && this.lastHovered != null)
+                if (!foundOne && this.lastHoveredTarget != null)
                 {
-                    this.lastHovered.afterHover();
-                    this.lastHovered = null;
+                    this.lastHoveredTarget.afterHover();
+                    this.lastHoveredTarget = null;
                 }
             }
         }
         else
         {
-            if (this.lastHovered != null)
+            if (this.lastHoveredTarget != null)
             {
-                this.lastHovered.afterHover();
+                this.lastHoveredTarget.afterHover();
             }
         }
     }
@@ -165,11 +167,11 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (target.getArea().contains(p))
+                if (target.getShape().contains(new Vector2(p.x, p.y)))
                 {
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
-                        this.lastClicked = target; // used for dragging. only used with left mouse button
+                        this.lastClickedTarget = target; // used for dragging. only used with left mouse button
                         onLeftClick(target);
                         target.onLeftClick();
                     }
@@ -178,7 +180,7 @@ public class MouseController extends MouseAdapter
                         onRightClick(target);
                         target.onRightClick();
                     }
-                    break;
+                    return;
                 }
             }
         }
@@ -189,18 +191,18 @@ public class MouseController extends MouseAdapter
     {
         if (e.getButton() == MouseEvent.BUTTON1)
         {
-            this.lastClicked = null;
+            this.lastClickedTarget = null;
         }
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e)
     {
-        if (this.lastClicked != null)
+        if (this.lastClickedTarget != null)
         {
             // dont switch to another target if we havnt released our last click yet, i.e. are still dragging the
             // target around
-            this.lastClicked.onMouseWheelMove(e.getWheelRotation());
+            this.lastClickedTarget.onMouseWheelMove(e.getWheelRotation());
         }
         else
         {
@@ -219,10 +221,10 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (target.getArea().contains(p))
+                if (target.getShape().contains(new Vector2(p.x, p.y)))
                 {
                     target.onMouseWheelMove(e.getWheelRotation());
-                    break;
+                    return;
                 }
             }
         }
@@ -231,9 +233,11 @@ public class MouseController extends MouseAdapter
     @Override
     public void mouseDragged(MouseEvent e)
     {
-        if (this.lastClicked != null)
+        if (this.lastClickedTarget != null)
         {
-            this.lastClicked.onDrag(Unit.forPixels(e.getX() - this.mouseX), Unit.forPixels(e.getY() - this.mouseY));
+            this.lastClickedTarget.onDrag(
+                    Unit.forPixels(e.getX() - this.mouseX),
+                    Unit.forPixels(e.getY() - this.mouseY));
 
             this.mouseX = e.getX();
             this.mouseY = e.getY();
