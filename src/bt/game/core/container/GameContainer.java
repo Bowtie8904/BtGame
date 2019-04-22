@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
@@ -299,7 +300,7 @@ public abstract class GameContainer extends Canvas
             return;
         }
 
-        Graphics g = bs.getDrawGraphics();
+        Graphics2D g = (Graphics2D)bs.getDrawGraphics();
 
         if (this.currentScene != null && this.currentScene.isLoaded())
         {
