@@ -73,14 +73,14 @@ public class ObjectCamera extends Camera implements Tickable
     @Override
     public void tick(double delta)
     {
-        float objectX = this.object.getX().units() + this.object.getW().units() / 2;
-        float objectY = this.object.getY().units() + this.object.getH().units() / 2;
+        double objectX = this.object.getCenterX().units() + this.object.getW().units() / 2;
+        double objectY = this.object.getCenterY().units() + this.object.getH().units() / 2;
         
-        float camX = getX().units() + GameContainer.width().units() / 2;
-        float camY = getY().units() + GameContainer.height().units() / 2;
+        double camX = getX().units() + GameContainer.width().units() / 2;
+        double camY = getY().units() + GameContainer.height().units() / 2;
         
-        float xMove = 0;
-        float yMove = 0;
+        double xMove = 0;
+        double yMove = 0;
         
         if (objectX > camX + this.movementOffsetX.units())
         {
