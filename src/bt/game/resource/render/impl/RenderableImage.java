@@ -1,6 +1,5 @@
 package bt.game.resource.render.impl;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
@@ -28,7 +27,7 @@ public class RenderableImage implements Renderable, Killable
      * @see bt.game.resource.render.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
-    public void render(Graphics g, Unit x, Unit y, Unit w, Unit h)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
         render(g, x, y, w, h, 0);
     }
@@ -46,7 +45,7 @@ public class RenderableImage implements Renderable, Killable
      * @param rotation
      *            The rotation of the image in degrees.
      */
-    public void render(Graphics g, Unit x, Unit y, Unit w, Unit h, double rotation)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation)
     {
         if (rotation == 0 || rotation % 360 == 0)
         {
@@ -78,7 +77,7 @@ public class RenderableImage implements Renderable, Killable
      * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics g)
+    public void render(Graphics2D g)
     {
         render(g,
                 Unit.forUnits(0),
@@ -88,7 +87,7 @@ public class RenderableImage implements Renderable, Killable
                 0);
     }
 
-    public void render(Graphics g, double rotation)
+    public void render(Graphics2D g, double rotation)
     {
         render(g,
                 Unit.forUnits(0),
