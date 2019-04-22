@@ -64,7 +64,7 @@ public class RenderableText implements Renderable
      *      bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
-    public void render(Graphics g, Unit x, Unit y, Unit w, Unit h)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
         Graphics2D g2 = (Graphics2D)g.create();
 
@@ -100,7 +100,7 @@ public class RenderableText implements Renderable
 
         g2.setFont(font.deriveFont(this.transform));
 
-        g2.drawString(this.text, x.pixels(), y.pixels());
+        g2.drawString(this.text, (int)x.pixels(), (int)y.pixels());
         g2.dispose();
     }
 
@@ -108,7 +108,7 @@ public class RenderableText implements Renderable
      * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics g)
+    public void render(Graphics2D g)
     {
         render(g,
                 Unit.forUnits(0),
