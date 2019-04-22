@@ -1,6 +1,6 @@
 package bt.game.core.ctrl.spec.mouse;
 
-import java.awt.geom.Area;
+import org.dyn4j.geometry.Shape;
 
 import bt.game.util.unit.Unit;
 
@@ -23,5 +23,5 @@ public interface MouseTarget
 
     public Unit getZ();
     
-    public Area getArea();
+    public Shape getShape();
 }
