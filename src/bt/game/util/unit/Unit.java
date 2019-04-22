@@ -8,8 +8,8 @@ package bt.game.util.unit;
  */
 public class Unit
 {
-    private static float ratio = 1;
-    private float units;
+    private static double ratio = 1;
+    private double units;
 
     /**
      * Sets the pixel per unit ratio. The given value is the amount of pixels one unit should consist of. If this method
@@ -20,6 +20,11 @@ public class Unit
     public static void setRatio(float pixelsPerUnit)
     {
         Unit.ratio = pixelsPerUnit;
+    }
+
+    public static double getRatio()
+    {
+        return ratio;
     }
 
     /**
@@ -38,7 +43,7 @@ public class Unit
      * @param units
      * @return
      */
-    public static Unit forUnits(float units)
+    public static Unit forUnits(double units)
     {
         Unit unit = new Unit();
         unit.setUnits(units);
@@ -51,7 +56,7 @@ public class Unit
      * @param pixels
      * @return
      */
-    public static Unit forPixels(float pixels)
+    public static Unit forPixels(double pixels)
     {
         Unit unit = new Unit();
         unit.setPixels(pixels);
@@ -64,7 +69,7 @@ public class Unit
      * 
      * @param units
      */
-    public Unit addUnits(float units)
+    public Unit addUnits(double units)
     {
         return forUnits(this.units + units);
     }
@@ -97,7 +102,7 @@ public class Unit
      * 
      * @param units
      */
-    public Unit subtractUnits(float units)
+    public Unit subtractUnits(double units)
     {
         return forUnits(this.units - units);
     }
@@ -108,7 +113,7 @@ public class Unit
      * 
      * @param amount
      */
-    public Unit divideBy(float amount)
+    public Unit divideBy(double amount)
     {
         return forUnits(this.units / amount);
     }
@@ -119,7 +124,7 @@ public class Unit
      * 
      * @param amount
      */
-    public Unit multiplyWith(float amount)
+    public Unit multiplyWith(double amount)
     {
         return forUnits(this.units * amount);
     }
@@ -130,7 +135,7 @@ public class Unit
      * 
      * @param pixels
      */
-    public Unit addPixels(float pixels)
+    public Unit addPixels(double pixels)
     {
         return forPixels(pixels() + pixels);
     }
@@ -141,7 +146,7 @@ public class Unit
      * 
      * @param pixels
      */
-    public Unit subtractPixels(float pixels)
+    public Unit subtractPixels(double pixels)
     {
         return forPixels(pixels() - pixels);
     }
@@ -173,7 +178,7 @@ public class Unit
      * 
      * @param units
      */
-    public void setUnits(float units)
+    public void setUnits(double units)
     {
         this.units = units;
     }
@@ -183,7 +188,7 @@ public class Unit
      * 
      * @param pixels
      */
-    public void setPixels(float pixels)
+    public void setPixels(double pixels)
     {
         this.units = pixels / Unit.ratio;
     }
@@ -193,7 +198,7 @@ public class Unit
      * 
      * @return
      */
-    public float units()
+    public double units()
     {
         return this.units;
     }
@@ -203,7 +208,7 @@ public class Unit
      * 
      * @return
      */
-    public float pixels()
+    public double pixels()
     {
         return this.units * Unit.ratio;
     }
