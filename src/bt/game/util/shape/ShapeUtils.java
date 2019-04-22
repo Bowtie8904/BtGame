@@ -26,8 +26,13 @@ public final class ShapeUtils
 
     public static boolean intersects(Area a, Area b)
     {
+        return !getOverlappingArea(a, b).isEmpty();
+    }
+
+    public static Area getOverlappingArea(Area a, Area b)
+    {
         Area difArea = (Area)a.clone();
         difArea.intersect(b);
-        return !difArea.isEmpty();
+        return difArea;
     }
 }
