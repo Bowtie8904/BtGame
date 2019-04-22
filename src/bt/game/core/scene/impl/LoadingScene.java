@@ -1,7 +1,9 @@
 package bt.game.core.scene.impl;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import org.dyn4j.dynamics.World;
 
 import bt.game.core.container.GameContainer;
 import bt.game.util.unit.Unit;
@@ -92,7 +94,7 @@ public class LoadingScene extends BaseScene
      * @see bt.game.core.scene.Scene#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics g)
+    public void render(Graphics2D g)
     {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, (int)GameContainer.width().pixels(), (int)GameContainer.height().pixels());
@@ -120,5 +122,14 @@ public class LoadingScene extends BaseScene
     @Override
     public void start()
     {
+    }
+
+    /**
+     * @see bt.game.core.scene.Scene#getWorld()
+     */
+    @Override
+    public World getWorld()
+    {
+        return null;
     }
 }
