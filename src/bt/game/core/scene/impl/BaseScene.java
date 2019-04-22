@@ -1,6 +1,9 @@
 package bt.game.core.scene.impl;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import org.dyn4j.dynamics.World;
+import org.dyn4j.geometry.Vector2;
 
 import bt.game.core.container.GameContainer;
 import bt.game.core.obj.hand.ObjectHandler;
@@ -23,6 +26,7 @@ public abstract class BaseScene implements Scene
     protected GameContainer gameContainer;
     protected boolean isLoaded;
     protected String name;
+    protected World world;
 
     public BaseScene(GameContainer gameContainer, ResourceLoader resourceLoader)
     {
@@ -37,12 +41,20 @@ public abstract class BaseScene implements Scene
             this.resourceLoader = resourceLoader;
         }
 
-        this.gameObjectHandler = new BaseObjectHandler();
+        this.world = new World();
+        this.world.setGravity(new Vector2(0, 9.8));
+        this.gameObjectHandler = new BaseObjectHandler(this);
     }
 
     public BaseScene(GameContainer gameContainer)
     {
         this(gameContainer, null);
+    }
+
+    @Override
+    public World getWorld()
+    {
+        return this.world;
     }
 
     /**
@@ -122,6 +134,9 @@ public abstract class BaseScene implements Scene
             InstanceKiller.unregister(this.gameObjectHandler);
             InstanceKiller.unregister(this);
         }
+
+        this.world.removeAllBodiesAndJoints();
+        this.world.removeAllListeners();
     }
 
     /**
@@ -131,13 +146,14 @@ public abstract class BaseScene implements Scene
     public synchronized void tick(double delta)
     {
         this.gameObjectHandler.tick(delta);
+        this.world.update(delta);
     }
 
     /**
      * @see bt.game.core.scene.Scene#render(java.awt.Graphics)
      */
     @Override
-    public synchronized void render(Graphics g)
+    public synchronized void render(Graphics2D g)
     {
         this.gameObjectHandler.render(g);
     }
