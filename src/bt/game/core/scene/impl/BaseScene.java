@@ -41,6 +41,7 @@ public abstract class BaseScene implements Scene
         }
 
         this.world = new World();
+        this.world.setGravity(World.ZERO_GRAVITY);
         this.world.getSettings().setStepFrequency(1 / 500.0);
         this.world.getSettings().setPositionConstraintSolverIterations(70);
 
