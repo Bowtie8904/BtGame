@@ -3,7 +3,6 @@ package bt.game.core.scene.impl;
 import java.awt.Graphics2D;
 
 import org.dyn4j.dynamics.World;
-import org.dyn4j.geometry.Vector2;
 
 import bt.game.core.container.GameContainer;
 import bt.game.core.obj.hand.ObjectHandler;
@@ -42,7 +41,9 @@ public abstract class BaseScene implements Scene
         }
 
         this.world = new World();
-        this.world.setGravity(new Vector2(0, 9.8));
+        this.world.getSettings().setStepFrequency(1 / 500.0);
+        this.world.getSettings().setPositionConstraintSolverIterations(70);
+
         this.gameObjectHandler = new BaseObjectHandler(this);
     }
 
