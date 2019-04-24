@@ -200,7 +200,13 @@ public abstract class GameContainer extends Canvas
     }
 
     /**
-     * Requests a new scene to be loaded after the next render iteration.
+     * Requests a new scene to be loaded after the current render iteration.
+     * 
+     * <p>
+     * This will cause the container to properly {@link Scene#kill() kill} the current scene. The new main scene will be
+     * loaded in a different thread. During the loading of the main scene the set loading scene is played (if it
+     * exists).
+     * </p>
      * 
      * @param name
      */
