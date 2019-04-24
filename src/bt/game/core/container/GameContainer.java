@@ -32,6 +32,12 @@ public abstract class GameContainer extends Canvas
     /** The currently active scene. */
     protected Scene currentScene;
 
+    /** The name of the currently active scene. */
+    protected String currentSceneName;
+
+    /** Indicates whether a new scene was requested and should be loaded. */
+    protected boolean sceneRequested;
+
     /** The frame that contains the game canvas. */
     protected JFrame frame;
 
@@ -194,6 +200,17 @@ public abstract class GameContainer extends Canvas
     }
 
     /**
+     * Requests a new scene to be loaded after the next render iteration.
+     * 
+     * @param name
+     */
+    public void requestScene(String name)
+    {
+        this.currentSceneName = name;
+        this.sceneRequested = true;
+    }
+
+    /**
      * Sets the {@link Scene} to be displayed. This will properly {@link Scene#kill() kill} the current scene. The new
      * main scene will be loaded in a different thread. During the loading of the main scene the set loading scene is
      * played (if it exists).
@@ -201,7 +218,7 @@ public abstract class GameContainer extends Canvas
      * @param name
      *            The name of the scene that should be played.
      */
-    public void setScene(String name)
+    private void setScene(String name)
     {
         if (this.currentScene != null)
         {
@@ -313,6 +330,12 @@ public abstract class GameContainer extends Canvas
 
         g.dispose();
         bs.show();
+
+        if (this.sceneRequested)
+        {
+            setScene(this.currentSceneName);
+            this.sceneRequested = false;
+        }
     }
 
     /**

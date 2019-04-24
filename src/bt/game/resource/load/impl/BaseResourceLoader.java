@@ -364,12 +364,12 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public void finishLoad()
     {
+        this.killed = false;
+
         for (Animated anim : this.animated)
         {
             anim.setupAnimations();
         }
-
-        this.killed = false;
     }
 
     /**

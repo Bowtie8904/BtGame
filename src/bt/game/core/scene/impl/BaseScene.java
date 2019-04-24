@@ -147,8 +147,11 @@ public abstract class BaseScene implements Scene
     @Override
     public synchronized void tick(double delta)
     {
-        this.gameObjectHandler.tick(delta);
-        this.world.update(delta);
+        if (this.isLoaded)
+        {
+            this.gameObjectHandler.tick(delta);
+            this.world.update(delta);
+        }
     }
 
     /**
@@ -157,7 +160,10 @@ public abstract class BaseScene implements Scene
     @Override
     public synchronized void render(Graphics2D g)
     {
-        this.gameObjectHandler.render(g);
+        if (this.isLoaded)
+        {
+            this.gameObjectHandler.render(g);
+        }
     }
 
     /**
