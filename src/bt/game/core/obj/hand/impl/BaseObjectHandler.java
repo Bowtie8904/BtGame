@@ -3,12 +3,20 @@ package bt.game.core.obj.hand.impl;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Comparator;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.dyn4j.collision.manifold.Manifold;
+import org.dyn4j.collision.narrowphase.Penetration;
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.CollisionListener;
+import org.dyn4j.dynamics.contact.ContactConstraint;
 import org.dyn4j.dynamics.joint.Joint;
 
+import bt.game.core.obj.col.Collider;
 import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.Scene;
@@ -25,16 +33,17 @@ import bt.utils.log.Logger;
  * {@link #addObject(Object)} method to handle their specififc needs. A single object may implement multiple of these
  * interfaces.<br>
  * <br>
- * <b>Supported interfaces</b><br>
+ * <b>Supported types</b><br>
  * <ul>
  * <li>{@link Renderable}: Will be rendered during the {@link #render(Graphics)} method.</li>
  * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
  * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
  * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
- * <li>{@link ActiveCollider}: Collision with {@link PassiveCollider passive colliders} is checked during every
- * {@link #tick()} call via the {@link #checkCollision()} method.</li>
- * <li>{@link PassiveCollider}: Collision with {@link ActiveCollider active colliders} is checked during every
- * {@link #tick()} call via the {@link #checkCollision()} method.</li>
+ * <li>{@link Collider}: Their
+ * {@link Collider#onCollision(Body, org.dyn4j.dynamics.BodyFixture, Body, org.dyn4j.dynamics.BodyFixture, org.dyn4j.collision.narrowphase.Penetration)
+ * onCollide} method is called whenever they collide with another body.</li>
+ * <li>{@link Body}: Added to the world object of the scene.</li>
+ * <li>{@link Joint}: Added to the world object of the scene.</li>
  * </ul>
  * </p>
  * <p>
@@ -44,7 +53,7 @@ import bt.utils.log.Logger;
  * 
  * @author &#8904
  */
-public class BaseObjectHandler implements ObjectHandler
+public class BaseObjectHandler implements ObjectHandler, CollisionListener
 {
     /** The list of tickable objects. */
     protected List<Tickable> tickables;
@@ -54,6 +63,9 @@ public class BaseObjectHandler implements ObjectHandler
 
     /** The list of killable objects. */
     protected List<Killable> killables;
+
+    /** The map of collider objects. */
+    protected Map<Body, Collider> colliders;
 
     /** The comparator to sort renderables after their Z value. */
     protected Comparator<Renderable> zComparator;
@@ -70,6 +82,7 @@ public class BaseObjectHandler implements ObjectHandler
         this.tickables = new CopyOnWriteArrayList<>();
         this.renderables = new CopyOnWriteArrayList<>();
         this.killables = new CopyOnWriteArrayList<>();
+        this.colliders = new Hashtable<>();
         this.zComparator = new Comparator<Renderable>() {
             @Override
             public int compare(Renderable o1, Renderable o2)
@@ -112,10 +125,11 @@ public class BaseObjectHandler implements ObjectHandler
      * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
      * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
      * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
-     * <li>{@link ActiveCollider}: Collision with {@link PassiveCollider passive colliders} is checked during every
-     * {@link #tick()} call via the {@link #checkCollision()} method.</li>
-     * <li>{@link PassiveCollider}: Collision with {@link ActiveCollider active colliders} is checked during every
-     * {@link #tick()} call via the {@link #checkCollision()} method.</li>
+     * <li>{@link Collider}: Their
+     * {@link Collider#onCollision(Body, org.dyn4j.dynamics.BodyFixture, Body, org.dyn4j.dynamics.BodyFixture, org.dyn4j.collision.narrowphase.Penetration)
+     * onCollide} method is called whenever they collide with another body.</li>
+     * <li>{@link Body}: Added to the world object of the scene.</li>
+     * <li>{@link Joint}: Added to the world object of the scene.</li>
      * </ul>
      * 
      * <p>
@@ -151,6 +165,15 @@ public class BaseObjectHandler implements ObjectHandler
         {
             this.killables.add(Killable.class.cast(object));
         }
+
+        if (object instanceof Collider)
+        {
+            Collider collider = Collider.class.cast(object);
+            if (collider.getBody() != null)
+            {
+                this.colliders.put(collider.getBody(), collider);
+            }
+        }
     }
 
     /**
@@ -184,6 +207,12 @@ public class BaseObjectHandler implements ObjectHandler
         if (object instanceof Killable)
         {
             this.killables.remove(object);
+        }
+
+        if (object instanceof Collider)
+        {
+            Collider collider = Collider.class.cast(object);
+            this.colliders.remove(collider.getBody());
         }
     }
 
@@ -250,5 +279,65 @@ public class BaseObjectHandler implements ObjectHandler
     public void init()
     {
         InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
+
+        if (this.scene.getWorld() != null)
+        {
+            this.scene.getWorld().addListener(this);
+        }
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.CollisionListener#collision(org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture,
+     *      org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture)
+     */
+    @Override
+    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2)
+    {
+        return true;
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.CollisionListener#collision(org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture,
+     *      org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture, org.dyn4j.collision.narrowphase.Penetration)
+     */
+    @Override
+    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2,
+            Penetration penetration)
+    {
+        Collider collider1 = this.colliders.get(body1);
+        Collider collider2 = this.colliders.get(body2);
+
+        boolean proceed = true;
+        
+        if (collider1 != null)
+        {
+            proceed = proceed && collider1.onCollision(body1, fixture1, body2, fixture2, penetration);
+        }
+
+        if (collider2 != null)
+        {
+            proceed = proceed && collider2.onCollision(body1, fixture1, body2, fixture2, penetration);
+        }
+
+        return proceed;
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.CollisionListener#collision(org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture,
+     *      org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture, org.dyn4j.collision.manifold.Manifold)
+     */
+    @Override
+    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Manifold manifold)
+    {
+        return true;
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.CollisionListener#collision(org.dyn4j.dynamics.contact.ContactConstraint)
+     */
+    @Override
+    public boolean collision(ContactConstraint contactConstraint)
+    {
+        return true;
     }
 }
