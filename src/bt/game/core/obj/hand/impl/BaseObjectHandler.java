@@ -16,7 +16,10 @@ import org.dyn4j.dynamics.CollisionListener;
 import org.dyn4j.dynamics.contact.ContactConstraint;
 import org.dyn4j.dynamics.joint.Joint;
 
-import bt.game.core.obj.col.Collider;
+import bt.game.core.obj.col.BroadPhaseCollider;
+import bt.game.core.obj.col.ConstraintCollider;
+import bt.game.core.obj.col.ManifoldCollider;
+import bt.game.core.obj.col.NarrowPhaseCollider;
 import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.Scene;
@@ -39,9 +42,10 @@ import bt.utils.log.Logger;
  * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
  * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
  * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
- * <li>{@link Collider}: Their
- * {@link Collider#onCollision(Body, org.dyn4j.dynamics.BodyFixture, Body, org.dyn4j.dynamics.BodyFixture, org.dyn4j.collision.narrowphase.Penetration)
- * onCollide} method is called whenever they collide with another body.</li>
+ * <li>{@link BroadPhaseCollider}: onCollide is called when collision events are received.</li>
+ * <li>{@link NarrowPhaseCollider}: onCollide is called when collision events are received.</li>
+ * <li>{@link ManifoldCollider}: onCollide is called when collision events are received.</li>
+ * <li>{@link ConstraintCollider}: onCollide is called when collision events are received.</li>
  * <li>{@link Body}: Added to the world object of the scene.</li>
  * <li>{@link Joint}: Added to the world object of the scene.</li>
  * </ul>
@@ -64,8 +68,17 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
     /** The list of killable objects. */
     protected List<Killable> killables;
 
-    /** The map of collider objects. */
-    protected Map<Body, Collider> colliders;
+    /** The map of BroadPhaseCollider objects. */
+    protected Map<Body, BroadPhaseCollider> broadColliders;
+
+    /** The map of NarrowPhaseCollider objects. */
+    protected Map<Body, NarrowPhaseCollider> narrowColliders;
+
+    /** The map of ManifoldCollider objects. */
+    protected Map<Body, ManifoldCollider> manifoldColliders;
+
+    /** The map of ConstraintCollider objects. */
+    protected Map<Body, ConstraintCollider> constraintColliders;
 
     /** The comparator to sort renderables after their Z value. */
     protected Comparator<Renderable> zComparator;
@@ -82,7 +95,10 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
         this.tickables = new CopyOnWriteArrayList<>();
         this.renderables = new CopyOnWriteArrayList<>();
         this.killables = new CopyOnWriteArrayList<>();
-        this.colliders = new Hashtable<>();
+        this.broadColliders = new Hashtable<>();
+        this.narrowColliders = new Hashtable<>();
+        this.manifoldColliders = new Hashtable<>();
+        this.constraintColliders = new Hashtable<>();
         this.zComparator = new Comparator<Renderable>() {
             @Override
             public int compare(Renderable o1, Renderable o2)
@@ -125,9 +141,10 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
      * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
      * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
      * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
-     * <li>{@link Collider}: Their
-     * {@link Collider#onCollision(Body, org.dyn4j.dynamics.BodyFixture, Body, org.dyn4j.dynamics.BodyFixture, org.dyn4j.collision.narrowphase.Penetration)
-     * onCollide} method is called whenever they collide with another body.</li>
+     * <li>{@link BroadPhaseCollider}: onCollide is called when collision events are received.</li>
+     * <li>{@link NarrowPhaseCollider}: onCollide is called when collision events are received.</li>
+     * <li>{@link ManifoldCollider}: onCollide is called when collision events are received.</li>
+     * <li>{@link ConstraintCollider}: onCollide is called when collision events are received.</li>
      * <li>{@link Body}: Added to the world object of the scene.</li>
      * <li>{@link Joint}: Added to the world object of the scene.</li>
      * </ul>
@@ -166,12 +183,39 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
             this.killables.add(Killable.class.cast(object));
         }
 
-        if (object instanceof Collider)
+        if (object instanceof BroadPhaseCollider)
         {
-            Collider collider = Collider.class.cast(object);
+            BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.colliders.put(collider.getBody(), collider);
+                this.broadColliders.put(collider.getBody(), collider);
+            }
+        }
+
+        if (object instanceof NarrowPhaseCollider)
+        {
+            NarrowPhaseCollider collider = NarrowPhaseCollider.class.cast(object);
+            if (collider.getBody() != null)
+            {
+                this.narrowColliders.put(collider.getBody(), collider);
+            }
+        }
+
+        if (object instanceof ManifoldCollider)
+        {
+            ManifoldCollider collider = ManifoldCollider.class.cast(object);
+            if (collider.getBody() != null)
+            {
+                this.manifoldColliders.put(collider.getBody(), collider);
+            }
+        }
+
+        if (object instanceof ConstraintCollider)
+        {
+            ConstraintCollider collider = ConstraintCollider.class.cast(object);
+            if (collider.getBody() != null)
+            {
+                this.constraintColliders.put(collider.getBody(), collider);
             }
         }
     }
@@ -209,10 +253,28 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
             this.killables.remove(object);
         }
 
-        if (object instanceof Collider)
+        if (object instanceof BroadPhaseCollider)
         {
-            Collider collider = Collider.class.cast(object);
-            this.colliders.remove(collider.getBody());
+            BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
+            this.broadColliders.remove(collider.getBody());
+        }
+
+        if (object instanceof NarrowPhaseCollider)
+        {
+            NarrowPhaseCollider collider = NarrowPhaseCollider.class.cast(object);
+            this.narrowColliders.remove(collider.getBody());
+        }
+
+        if (object instanceof ManifoldCollider)
+        {
+            ManifoldCollider collider = ManifoldCollider.class.cast(object);
+            this.manifoldColliders.remove(collider.getBody());
+        }
+
+        if (object instanceof ConstraintCollider)
+        {
+            ConstraintCollider collider = ConstraintCollider.class.cast(object);
+            this.constraintColliders.remove(collider.getBody());
         }
     }
 
@@ -268,6 +330,10 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
         this.tickables.clear();
         this.renderables.clear();
         this.killables.clear();
+        this.broadColliders.clear();
+        this.narrowColliders.clear();
+        this.manifoldColliders.clear();
+        this.constraintColliders.clear();
     }
 
     /**
@@ -293,7 +359,22 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
     @Override
     public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2)
     {
-        return true;
+        BroadPhaseCollider collider1 = this.broadColliders.get(body1);
+        BroadPhaseCollider collider2 = this.broadColliders.get(body2);
+
+        boolean proceed = true;
+
+        if (collider1 != null)
+        {
+            proceed = proceed && collider1.onCollision(body1, fixture1, body2, fixture2);
+        }
+
+        if (collider2 != null)
+        {
+            proceed = proceed && collider2.onCollision(body1, fixture1, body2, fixture2);
+        }
+
+        return proceed;
     }
 
     /**
@@ -304,8 +385,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
     public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2,
             Penetration penetration)
     {
-        Collider collider1 = this.colliders.get(body1);
-        Collider collider2 = this.colliders.get(body2);
+        NarrowPhaseCollider collider1 = this.narrowColliders.get(body1);
+        NarrowPhaseCollider collider2 = this.narrowColliders.get(body2);
 
         boolean proceed = true;
         
@@ -329,7 +410,22 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
     @Override
     public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Manifold manifold)
     {
-        return true;
+        ManifoldCollider collider1 = this.manifoldColliders.get(body1);
+        ManifoldCollider collider2 = this.manifoldColliders.get(body2);
+
+        boolean proceed = true;
+
+        if (collider1 != null)
+        {
+            proceed = proceed && collider1.onCollision(body1, fixture1, body2, fixture2, manifold);
+        }
+
+        if (collider2 != null)
+        {
+            proceed = proceed && collider2.onCollision(body1, fixture1, body2, fixture2, manifold);
+        }
+
+        return proceed;
     }
 
     /**
@@ -338,6 +434,21 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
     @Override
     public boolean collision(ContactConstraint contactConstraint)
     {
-        return true;
+        ConstraintCollider collider1 = this.constraintColliders.get(contactConstraint.getBody1());
+        ConstraintCollider collider2 = this.constraintColliders.get(contactConstraint.getBody2());
+
+        boolean proceed = true;
+
+        if (collider1 != null)
+        {
+            proceed = proceed && collider1.onCollision(contactConstraint);
+        }
+
+        if (collider2 != null)
+        {
+            proceed = proceed && collider2.onCollision(contactConstraint);
+        }
+
+        return proceed;
     }
 }
