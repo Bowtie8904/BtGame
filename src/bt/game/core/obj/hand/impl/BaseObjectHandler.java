@@ -14,10 +14,15 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.CollisionListener;
 import org.dyn4j.dynamics.contact.ContactConstraint;
+import org.dyn4j.dynamics.contact.ContactListener;
+import org.dyn4j.dynamics.contact.ContactPoint;
+import org.dyn4j.dynamics.contact.PersistedContactPoint;
+import org.dyn4j.dynamics.contact.SolvedContactPoint;
 import org.dyn4j.dynamics.joint.Joint;
 
 import bt.game.core.obj.col.BroadPhaseCollider;
 import bt.game.core.obj.col.ConstraintCollider;
+import bt.game.core.obj.col.Contacter;
 import bt.game.core.obj.col.ManifoldCollider;
 import bt.game.core.obj.col.NarrowPhaseCollider;
 import bt.game.core.obj.hand.ObjectHandler;
@@ -46,6 +51,7 @@ import bt.utils.log.Logger;
  * <li>{@link NarrowPhaseCollider}: onCollide is called when collision events are received.</li>
  * <li>{@link ManifoldCollider}: onCollide is called when collision events are received.</li>
  * <li>{@link ConstraintCollider}: onCollide is called when collision events are received.</li>
+ * <li>{@link Contacter}: onContactBegin and onContactEnd is called when contact events are received.</li>
  * <li>{@link Body}: Added to the world object of the scene.</li>
  * <li>{@link Joint}: Added to the world object of the scene.</li>
  * </ul>
@@ -57,7 +63,7 @@ import bt.utils.log.Logger;
  * 
  * @author &#8904
  */
-public class BaseObjectHandler implements ObjectHandler, CollisionListener
+public class BaseObjectHandler implements ObjectHandler, CollisionListener, ContactListener
 {
     /** The list of tickable objects. */
     protected List<Tickable> tickables;
@@ -80,6 +86,9 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
     /** The map of ConstraintCollider objects. */
     protected Map<Body, ConstraintCollider> constraintColliders;
 
+    /** The map of Contacter objects. */
+    protected Map<Body, Contacter> contacters;
+
     /** The comparator to sort renderables after their Z value. */
     protected Comparator<Renderable> zComparator;
 
@@ -99,6 +108,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
         this.narrowColliders = new Hashtable<>();
         this.manifoldColliders = new Hashtable<>();
         this.constraintColliders = new Hashtable<>();
+        this.contacters = new Hashtable<>();
         this.zComparator = new Comparator<Renderable>() {
             @Override
             public int compare(Renderable o1, Renderable o2)
@@ -145,6 +155,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
      * <li>{@link NarrowPhaseCollider}: onCollide is called when collision events are received.</li>
      * <li>{@link ManifoldCollider}: onCollide is called when collision events are received.</li>
      * <li>{@link ConstraintCollider}: onCollide is called when collision events are received.</li>
+     * <li>{@link Contacter}: onContactBegin and onContactEnd is called when contact events are received.</li>
      * <li>{@link Body}: Added to the world object of the scene.</li>
      * <li>{@link Joint}: Added to the world object of the scene.</li>
      * </ul>
@@ -218,6 +229,15 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
                 this.constraintColliders.put(collider.getBody(), collider);
             }
         }
+
+        if (object instanceof Contacter)
+        {
+            Contacter collider = Contacter.class.cast(object);
+            if (collider.getBody() != null)
+            {
+                this.contacters.put(collider.getBody(), collider);
+            }
+        }
     }
 
     /**
@@ -275,6 +295,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
         {
             ConstraintCollider collider = ConstraintCollider.class.cast(object);
             this.constraintColliders.remove(collider.getBody());
+        }
+
+        if (object instanceof Contacter)
+        {
+            Contacter collider = Contacter.class.cast(object);
+            this.contacters.remove(collider.getBody());
         }
     }
 
@@ -334,6 +360,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
         this.narrowColliders.clear();
         this.manifoldColliders.clear();
         this.constraintColliders.clear();
+        this.contacters.clear();
     }
 
     /**
@@ -450,5 +477,83 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener
         }
 
         return proceed;
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.contact.ContactListener#sensed(org.dyn4j.dynamics.contact.ContactPoint)
+     */
+    @Override
+    public void sensed(ContactPoint point)
+    {
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.contact.ContactListener#begin(org.dyn4j.dynamics.contact.ContactPoint)
+     */
+    @Override
+    public boolean begin(ContactPoint point)
+    {
+        Contacter contacter1 = this.contacters.get(point.getBody1());
+        Contacter contacter2 = this.contacters.get(point.getBody2());
+
+        boolean proceed = true;
+
+        if (contacter1 != null)
+        {
+            proceed = proceed && contacter1.onContactBegin(point);
+        }
+
+        if (contacter2 != null)
+        {
+            proceed = proceed && contacter2.onContactBegin(point);
+        }
+
+        return proceed;
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.contact.ContactListener#end(org.dyn4j.dynamics.contact.ContactPoint)
+     */
+    @Override
+    public void end(ContactPoint point)
+    {
+        Contacter contacter1 = this.contacters.get(point.getBody1());
+        Contacter contacter2 = this.contacters.get(point.getBody2());
+
+        if (contacter1 != null)
+        {
+            contacter1.onContactEnd(point);
+        }
+
+        if (contacter2 != null)
+        {
+            contacter2.onContactEnd(point);
+        }
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.contact.ContactListener#persist(org.dyn4j.dynamics.contact.PersistedContactPoint)
+     */
+    @Override
+    public boolean persist(PersistedContactPoint point)
+    {
+        return true;
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.contact.ContactListener#preSolve(org.dyn4j.dynamics.contact.ContactPoint)
+     */
+    @Override
+    public boolean preSolve(ContactPoint point)
+    {
+        return true;
+    }
+
+    /**
+     * @see org.dyn4j.dynamics.contact.ContactListener#postSolve(org.dyn4j.dynamics.contact.SolvedContactPoint)
+     */
+    @Override
+    public void postSolve(SolvedContactPoint point)
+    {
     }
 }
