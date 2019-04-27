@@ -32,6 +32,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 
+import org.dyn4j.collision.Fixture;
+import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Capsule;
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Ellipse;
@@ -41,6 +43,8 @@ import org.dyn4j.geometry.Segment;
 import org.dyn4j.geometry.Shape;
 import org.dyn4j.geometry.Slice;
 import org.dyn4j.geometry.Vector2;
+
+import bt.game.util.unit.Unit;
 
 /**
  * Graphics2D renderer for dyn4j shape types.
@@ -63,7 +67,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Shape shape, double scale, Color color)
+    public static final void render(Graphics2D g, Shape shape, Color color)
     {
         // no-op
         if (shape == null)
@@ -75,36 +79,53 @@ public final class ShapeRenderer
 
         if (shape instanceof Circle)
         {
-            ShapeRenderer.render(g, (Circle)shape, scale, color);
+            ShapeRenderer.render(g, (Circle)shape, color);
         }
         else if (shape instanceof Polygon)
         {
-            ShapeRenderer.render(g, (Polygon)shape, scale, color);
+            ShapeRenderer.render(g, (Polygon)shape, color);
         }
         else if (shape instanceof Segment)
         {
-            ShapeRenderer.render(g, (Segment)shape, scale, color);
+            ShapeRenderer.render(g, (Segment)shape, color);
         }
         else if (shape instanceof Capsule)
         {
-            ShapeRenderer.render(g, (Capsule)shape, scale, color);
+            ShapeRenderer.render(g, (Capsule)shape, color);
         }
         else if (shape instanceof Ellipse)
         {
-            ShapeRenderer.render(g, (Ellipse)shape, scale, color);
+            ShapeRenderer.render(g, (Ellipse)shape, color);
         }
         else if (shape instanceof Slice)
         {
-            ShapeRenderer.render(g, (Slice)shape, scale, color);
+            ShapeRenderer.render(g, (Slice)shape, color);
         }
         else if (shape instanceof HalfEllipse)
         {
-            ShapeRenderer.render(g, (HalfEllipse)shape, scale, color);
+            ShapeRenderer.render(g, (HalfEllipse)shape, color);
         }
         else
         {
             // unknown shape
         }
+    }
+
+    public static final void render(Graphics2D g, Body body, Color color)
+    {
+        AffineTransform ot = g.getTransform();
+        AffineTransform lt = new AffineTransform();
+        lt.translate(body.getTransform().getTranslationX() * Unit.getRatio(),
+                body.getTransform().getTranslationY() * Unit.getRatio());
+        lt.rotate(body.getTransform().getRotation());
+        g.transform(lt);
+
+        for (Fixture f : body.getFixtures())
+        {
+            ShapeRenderer.render(g, f.getShape(), color);
+        }
+
+        g.setTransform(ot);
     }
 
     /**
@@ -119,17 +140,17 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Circle circle, double scale, Color color)
+    public static final void render(Graphics2D g, Circle circle, Color color)
     {
         double radius = circle.getRadius();
         Vector2 center = circle.getCenter();
 
         double radius2 = 2.0 * radius;
         Ellipse2D.Double c = new Ellipse2D.Double(
-                (center.x - radius) * scale,
-                (center.y - radius) * scale,
-                radius2 * scale,
-                radius2 * scale);
+                (center.x - radius) * Unit.getRatio(),
+                (center.y - radius) * Unit.getRatio(),
+                radius2 * Unit.getRatio(),
+                radius2 * Unit.getRatio());
 
         // fill the shape
         g.setColor(color);
@@ -140,10 +161,10 @@ public final class ShapeRenderer
 
         // draw a line so that rotation is visible
         Line2D.Double l = new Line2D.Double(
-                center.x * scale,
-                center.y * scale,
-                (center.x + radius) * scale,
-                center.y * scale);
+                center.x * Unit.getRatio(),
+                center.y * Unit.getRatio(),
+                (center.x + radius) * Unit.getRatio(),
+                center.y * Unit.getRatio());
         g.draw(l);
     }
 
@@ -159,17 +180,17 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Polygon polygon, double scale, Color color)
+    public static final void render(Graphics2D g, Polygon polygon, Color color)
     {
         Vector2[] vertices = polygon.getVertices();
         int l = vertices.length;
 
         // create the awt polygon
         Path2D.Double p = new Path2D.Double();
-        p.moveTo(vertices[0].x * scale, vertices[0].y * scale);
+        p.moveTo(vertices[0].x * Unit.getRatio(), vertices[0].y * Unit.getRatio());
         for (int i = 1; i < l; i ++ )
         {
-            p.lineTo(vertices[i].x * scale, vertices[i].y * scale);
+            p.lineTo(vertices[i].x * Unit.getRatio(), vertices[i].y * Unit.getRatio());
         }
         p.closePath();
 
@@ -193,15 +214,15 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Segment segment, double scale, Color color)
+    public static final void render(Graphics2D g, Segment segment, Color color)
     {
         Vector2[] vertices = segment.getVertices();
 
         Line2D.Double l = new Line2D.Double(
-                vertices[0].x * scale,
-                vertices[0].y * scale,
-                vertices[1].x * scale,
-                vertices[1].y * scale);
+                vertices[0].x * Unit.getRatio(),
+                vertices[0].y * Unit.getRatio(),
+                vertices[1].x * Unit.getRatio(),
+                vertices[1].y * Unit.getRatio());
 
         // draw the outline
         g.setColor(getOutlineColor(color));
@@ -220,7 +241,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Capsule capsule, double scale, Color color)
+    public static final void render(Graphics2D g, Capsule capsule, Color color)
     {
         // get the local rotation and translation
         double rotation = capsule.getRotation();
@@ -229,7 +250,7 @@ public final class ShapeRenderer
         // save the old transform
         AffineTransform oTransform = g.getTransform();
         // translate and rotate
-        g.translate(center.x * scale, center.y * scale);
+        g.translate(center.x * Unit.getRatio(), center.y * Unit.getRatio());
         g.rotate(rotation);
 
         double width = capsule.getLength();
@@ -237,18 +258,18 @@ public final class ShapeRenderer
         double radius2 = radius * 2.0;
 
         Arc2D.Double arcL = new Arc2D.Double(
-                -(width * 0.5) * scale,
-                -radius * scale,
-                radius2 * scale,
-                radius2 * scale,
+                -(width * 0.5) * Unit.getRatio(),
+                -radius * Unit.getRatio(),
+                radius2 * Unit.getRatio(),
+                radius2 * Unit.getRatio(),
                 90.0,
                 180.0,
                 Arc2D.OPEN);
         Arc2D.Double arcR = new Arc2D.Double(
-                (width * 0.5 - radius2) * scale,
-                -radius * scale,
-                radius2 * scale,
-                radius2 * scale,
+                (width * 0.5 - radius2) * Unit.getRatio(),
+                -radius * Unit.getRatio(),
+                radius2 * Unit.getRatio(),
+                radius2 * Unit.getRatio(),
                 -90.0,
                 180.0,
                 Arc2D.OPEN);
@@ -285,7 +306,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Ellipse ellipse, double scale, Color color)
+    public static final void render(Graphics2D g, Ellipse ellipse, Color color)
     {
         // get the local rotation and translation
         double rotation = ellipse.getRotation();
@@ -293,16 +314,16 @@ public final class ShapeRenderer
 
         // save the old transform
         AffineTransform oTransform = g.getTransform();
-        g.translate(center.x * scale, center.y * scale);
+        g.translate(center.x * Unit.getRatio(), center.y * Unit.getRatio());
         g.rotate(rotation);
 
         double width = ellipse.getWidth();
         double height = ellipse.getHeight();
         Ellipse2D.Double c = new Ellipse2D.Double(
-                (-width * 0.5) * scale,
-                (-height * 0.5) * scale,
-                width * scale,
-                height * scale);
+                (-width * 0.5) * Unit.getRatio(),
+                (-height * 0.5) * Unit.getRatio(),
+                width * Unit.getRatio(),
+                height * Unit.getRatio());
 
         // fill the shape
         g.setColor(color);
@@ -327,7 +348,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Slice slice, double scale, Color color)
+    public static final void render(Graphics2D g, Slice slice, Color color)
     {
         double radius = slice.getSliceRadius();
         double theta2 = slice.getTheta() * 0.5;
@@ -339,15 +360,15 @@ public final class ShapeRenderer
         // save the old transform
         AffineTransform oTransform = g.getTransform();
         // translate and rotate
-        g.translate(circleCenter.x * scale, circleCenter.y * scale);
+        g.translate(circleCenter.x * Unit.getRatio(), circleCenter.y * Unit.getRatio());
         g.rotate(rotation);
 
         // to draw the arc, java2d wants the top left x,y
         // as if you were drawing a circle
-        Arc2D a = new Arc2D.Double(-radius * scale,
-                -radius * scale,
-                2.0 * radius * scale,
-                2.0 * radius * scale,
+        Arc2D a = new Arc2D.Double(-radius * Unit.getRatio(),
+                -radius * Unit.getRatio(),
+                2.0 * radius * Unit.getRatio(),
+                2.0 * radius * Unit.getRatio(),
                 -Math.toDegrees(theta2),
                 Math.toDegrees(2.0 * theta2),
                 Arc2D.PIE);
@@ -375,7 +396,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, HalfEllipse halfEllipse, double scale, Color color)
+    public static final void render(Graphics2D g, HalfEllipse halfEllipse, Color color)
     {
         double width = halfEllipse.getWidth();
         double height = halfEllipse.getHeight();
@@ -387,16 +408,16 @@ public final class ShapeRenderer
         // save the old transform
         AffineTransform oTransform = g.getTransform();
         // translate and rotate
-        g.translate(center.x * scale, center.y * scale);
+        g.translate(center.x * Unit.getRatio(), center.y * Unit.getRatio());
         g.rotate(rotation);
 
         // to draw the arc, java2d wants the top left x,y
         // as if you were drawing a circle
         Arc2D a = new Arc2D.Double(
-                (-width * 0.5) * scale,
-                -height * scale,
-                width * scale,
-                height * 2.0 * scale,
+                (-width * 0.5) * Unit.getRatio(),
+                -height * Unit.getRatio(),
+                width * Unit.getRatio(),
+                height * 2.0 * Unit.getRatio(),
                 0,
                 -180.0,
                 Arc2D.PIE);
