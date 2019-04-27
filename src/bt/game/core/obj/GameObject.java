@@ -32,14 +32,10 @@ public abstract class GameObject extends Body
      * 
      * @param scene
      *            The scene that this object is created for.
-     * @param x
-     *            The X position.
-     * @param y
-     *            The Y position.
      * @param z
      *            The Z position.
      */
-    public GameObject(Scene scene, Unit x, Unit y, Unit z)
+    public GameObject(Scene scene, Unit z)
     {
         this.scene = scene;
         this.z = z;
