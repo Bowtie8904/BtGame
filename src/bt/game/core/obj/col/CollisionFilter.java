@@ -60,13 +60,18 @@ public class CollisionFilter implements Filter
         {
             CollisionFilter colFilter = (CollisionFilter)filter;
 
-            allowed = Arrays.stream(colFilter.getClasses())
-                    .anyMatch(c -> c.isInstance(this.collider));
+            allowed = colFilter.getClasses().length == 0 && colFilter.getCollider() != null;
 
             if (!allowed)
             {
-                allowed = Arrays.stream(this.classes)
-                        .anyMatch(c -> c.isInstance(colFilter.getCollider()));
+                allowed = Arrays.stream(colFilter.getClasses())
+                        .anyMatch(c -> c.isInstance(this.collider));
+
+                if (!allowed)
+                {
+                    allowed = Arrays.stream(this.classes)
+                            .anyMatch(c -> c.isInstance(colFilter.getCollider()));
+                }
             }
         }
 
