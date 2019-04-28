@@ -8,7 +8,7 @@ import bt.utils.log.Logger;
 import bt.utils.thread.Threads;
 
 /**
- * A class to handle tick and render method calls at a (nearly) fix tick and frame rate.
+ * A class to handle tick and render method calls.
  * 
  * @author &#8904
  */
