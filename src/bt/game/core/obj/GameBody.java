@@ -7,8 +7,9 @@ import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 
 /**
+ * Super class to all objects in a game that should be involved in physics.
+ * 
  * @author &#8904
- *
  */
 public class GameBody extends Body implements GameObject
 {
@@ -21,6 +22,11 @@ public class GameBody extends Body implements GameObject
     /** The scene that this object is used in. */
     protected Scene scene;
 
+    /**
+     * Creates a new instance for the given scene.
+     * 
+     * @param scene
+     */
     public GameBody(Scene scene)
     {
         this.scene = scene;
@@ -28,9 +34,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * Gets the scene that this object was created for.
-     * 
-     * @return
+     * @see bt.game.core.obj.GameObject#getScene()
      */
     @Override
     public Scene getScene()
@@ -39,9 +43,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * Sets the width of this object.
-     * 
-     * @param w
+     * @see bt.game.core.obj.GameObject#setW(bt.game.util.unit.Unit)
      */
     @Override
     public void setW(Unit w)
@@ -50,9 +52,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * Sets the height of this object.
-     * 
-     * @param h
+     * @see bt.game.core.obj.GameObject#setH(bt.game.util.unit.Unit)
      */
     @Override
     public void setH(Unit h)
@@ -60,76 +60,22 @@ public class GameBody extends Body implements GameObject
         this.h = h;
     }
 
+    /**
+     * @see bt.game.core.obj.GameObject#getH()
+     */
     @Override
     public Unit getH()
     {
         return this.h;
     }
 
+    /**
+     * @see bt.game.core.obj.GameObject#getW()
+     */
     @Override
     public Unit getW()
     {
         return this.w;
-    }
-
-    @Override
-    public Unit getX()
-    {
-        return Unit.forUnits(this.transform.getTranslationX() * Unit.getRatio());
-    }
-
-    @Override
-    public Unit getY()
-    {
-        return Unit.forUnits(this.transform.getTranslationY() * Unit.getRatio());
-    }
-
-    @Override
-    public Unit getCenterX()
-    {
-        return Unit.forUnits(this.getWorldCenter().x * Unit.getRatio());
-    }
-
-    @Override
-    public Unit getCenterY()
-    {
-        return Unit.forUnits(this.getWorldCenter().y * Unit.getRatio());
-    }
-
-    public Unit getLocalCenterX()
-    {
-        return Unit.forUnits(this.getLocalCenter().x * Unit.getRatio());
-    }
-
-    public Unit getLocalCenterY()
-    {
-        return Unit.forUnits(this.getLocalCenter().y * Unit.getRatio());
-    }
-
-    public double getRotation()
-    {
-        return this.transform.getRotation();
-    }
-
-    public void setVelocity(double x, double y)
-    {
-        setLinearVelocity(x, y);
-        setAsleep(false);
-    }
-
-    public void setVelocity(Vector2 v)
-    {
-        setVelocity(v.x, v.y);
-    }
-
-    public void setVelocityX(double x)
-    {
-        setVelocity(x, getLinearVelocity().y);
-    }
-
-    public void setVelocityY(double y)
-    {
-        setVelocity(getLinearVelocity().x, y);
     }
 
     /**
@@ -150,5 +96,129 @@ public class GameBody extends Body implements GameObject
     {
         y = y.subtractUnits(getX());
         translate(getX().units(), y.units());
+    }
+
+    /**
+     * @see bt.game.core.obj.GameObject#getX()
+     */
+    @Override
+    public Unit getX()
+    {
+        return Unit.forUnits(this.transform.getTranslationX() * Unit.getRatio());
+    }
+
+    /**
+     * @see bt.game.core.obj.GameObject#getY()
+     */
+    @Override
+    public Unit getY()
+    {
+        return Unit.forUnits(this.transform.getTranslationY() * Unit.getRatio());
+    }
+
+    /**
+     * @see bt.game.core.obj.GameObject#getCenterX()
+     */
+    @Override
+    public Unit getCenterX()
+    {
+        return Unit.forUnits(this.getWorldCenter().x * Unit.getRatio());
+    }
+
+    /**
+     * @see bt.game.core.obj.GameObject#getCenterY()
+     */
+    @Override
+    public Unit getCenterY()
+    {
+        return Unit.forUnits(this.getWorldCenter().y * Unit.getRatio());
+    }
+
+    /**
+     * Returns the x coordinate of the center relative to the body.
+     * 
+     * @return
+     */
+    public Unit getLocalCenterX()
+    {
+        return Unit.forUnits(this.getLocalCenter().x * Unit.getRatio());
+    }
+
+    /**
+     * Returns the y coordinate of the center relative to the body.
+     * 
+     * @return
+     */
+    public Unit getLocalCenterY()
+    {
+        return Unit.forUnits(this.getLocalCenter().y * Unit.getRatio());
+    }
+
+    /**
+     * Gets the current rotation of this body.
+     * 
+     * @return
+     */
+    public double getRotation()
+    {
+        return this.transform.getRotation();
+    }
+
+    /**
+     * Sets the velocity of this body.
+     * 
+     * <p>
+     * This will wake the body up.
+     * </p>
+     * 
+     * @param x
+     * @param y
+     */
+    public void setVelocity(double x, double y)
+    {
+        setLinearVelocity(x, y);
+        setAsleep(false);
+    }
+
+    /**
+     * Sets the velocity of this body.
+     * 
+     * <p>
+     * This will wake the body up.
+     * </p>
+     * 
+     * @param v
+     */
+    public void setVelocity(Vector2 v)
+    {
+        setVelocity(v.x, v.y);
+    }
+
+    /**
+     * Sets the x velocity of this body.
+     * 
+     * <p>
+     * This will wake the body up.
+     * </p>
+     * 
+     * @param x
+     */
+    public void setVelocityX(double x)
+    {
+        setVelocity(x, getLinearVelocity().y);
+    }
+
+    /**
+     * Sets the y velocity of this body.
+     * 
+     * <p>
+     * This will wake the body up.
+     * </p>
+     * 
+     * @param y
+     */
+    public void setVelocityY(double y)
+    {
+        setVelocity(getLinearVelocity().x, y);
     }
 }

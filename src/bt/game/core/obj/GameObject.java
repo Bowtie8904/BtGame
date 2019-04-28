@@ -31,19 +31,59 @@ public interface GameObject
      */
     public void setH(Unit h);
 
+    /**
+     * Gets the height of this object.
+     * 
+     * @return
+     */
     public Unit getH();
 
+    /**
+     * Gets the width of this object.
+     * 
+     * @return
+     */
     public Unit getW();
 
+    /**
+     * Gets the x position of this object.
+     * 
+     * @return
+     */
     public Unit getX();
 
+    /**
+     * Gets the y position of this object.
+     * 
+     * @return
+     */
     public Unit getY();
 
+    /**
+     * Sets the x position of this object.
+     * 
+     * @param x
+     */
     public void setX(Unit x);
 
+    /**
+     * Sets the y position of this object.
+     * 
+     * @param y
+     */
     public void setY(Unit y);
 
+    /**
+     * Gets the x position of the center of this object.
+     * 
+     * @return
+     */
     public Unit getCenterX();
 
+    /**
+     * Gets the x position of the center of this object.
+     * 
+     * @return
+     */
     public Unit getCenterY();
 }
