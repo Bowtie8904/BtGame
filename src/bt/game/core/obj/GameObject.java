@@ -1,8 +1,5 @@
 package bt.game.core.obj;
 
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.geometry.Vector2;
-
 import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
@@ -13,10 +10,13 @@ import bt.game.util.unit.Unit;
  * 
  * @author &#8904
  */
-public abstract class GameObject extends Body
+public abstract class GameObject
 {
-    /** The unit Z position of this object. */
-    protected Unit z;
+    /** The unit X position of this object. */
+    protected Unit x;
+
+    /** The unit Y position of this object. */
+    protected Unit y;
 
     /** The unit width of this object. */
     protected Unit w;
@@ -35,11 +35,11 @@ public abstract class GameObject extends Body
      * @param z
      *            The Z position.
      */
-    public GameObject(Scene scene, Unit z)
+    public GameObject(Scene scene, Unit x, Unit y)
     {
         this.scene = scene;
-        this.z = z;
-        translateToOrigin();
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -50,16 +50,6 @@ public abstract class GameObject extends Body
     public Scene getScene()
     {
         return this.scene;
-    }
-
-    /**
-     * Sets the Z position.
-     * 
-     * @param z
-     */
-    public void setZ(Unit z)
-    {
-        this.z = z;
     }
 
     /**
@@ -94,62 +84,21 @@ public abstract class GameObject extends Body
 
     public Unit getX()
     {
-        return Unit.forUnits(this.transform.getTranslationX() * Unit.getRatio());
+        return this.x;
     }
 
     public Unit getY()
     {
-        return Unit.forUnits(this.transform.getTranslationY() * Unit.getRatio());
+        return this.y;
     }
 
-    public Unit getCenterX()
+    public void setX(Unit x)
     {
-        return Unit.forUnits(this.getWorldCenter().x * Unit.getRatio());
+        this.x = x;
     }
 
-    public Unit getCenterY()
+    public void setY(Unit y)
     {
-        return Unit.forUnits(this.getWorldCenter().y * Unit.getRatio());
-    }
-
-    public Unit getLocalCenterX()
-    {
-        return Unit.forUnits(this.getLocalCenter().x * Unit.getRatio());
-    }
-
-    public Unit getLocalCenterY()
-    {
-        return Unit.forUnits(this.getLocalCenter().y * Unit.getRatio());
-    }
-
-    public double getRotation()
-    {
-        return this.transform.getRotation();
-    }
-
-    public void setVelocity(double x, double y)
-    {
-        setLinearVelocity(x, y);
-        setAsleep(false);
-    }
-
-    public void setVelocity(Vector2 v)
-    {
-        setVelocity(v.x, v.y);
-    }
-
-    public void setVelocityX(double x)
-    {
-        setVelocity(x, getLinearVelocity().y);
-    }
-
-    public void setVelocityY(double y)
-    {
-        setVelocity(getLinearVelocity().x, y);
-    }
-
-    public Unit getZ()
-    {
-        return this.z;
+        this.y = y;
     }
 }
