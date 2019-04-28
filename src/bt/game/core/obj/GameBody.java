@@ -10,7 +10,7 @@ import bt.game.util.unit.Unit;
  * @author &#8904
  *
  */
-public class GameBody extends Body
+public class GameBody extends Body implements GameObject
 {
     /** The unit width of this object. */
     protected Unit w;
@@ -32,6 +32,7 @@ public class GameBody extends Body
      * 
      * @return
      */
+    @Override
     public Scene getScene()
     {
         return this.scene;
@@ -42,6 +43,7 @@ public class GameBody extends Body
      * 
      * @param w
      */
+    @Override
     public void setW(Unit w)
     {
         this.w = w;
@@ -52,36 +54,43 @@ public class GameBody extends Body
      * 
      * @param h
      */
+    @Override
     public void setH(Unit h)
     {
         this.h = h;
     }
 
+    @Override
     public Unit getH()
     {
         return this.h;
     }
 
+    @Override
     public Unit getW()
     {
         return this.w;
     }
 
+    @Override
     public Unit getX()
     {
         return Unit.forUnits(this.transform.getTranslationX() * Unit.getRatio());
     }
 
+    @Override
     public Unit getY()
     {
         return Unit.forUnits(this.transform.getTranslationY() * Unit.getRatio());
     }
 
+    @Override
     public Unit getCenterX()
     {
         return Unit.forUnits(this.getWorldCenter().x * Unit.getRatio());
     }
 
+    @Override
     public Unit getCenterY()
     {
         return Unit.forUnits(this.getWorldCenter().y * Unit.getRatio());
@@ -121,5 +130,25 @@ public class GameBody extends Body
     public void setVelocityY(double y)
     {
         setVelocity(getLinearVelocity().x, y);
+    }
+
+    /**
+     * @see bt.game.core.obj.GameObject#setX(bt.game.util.unit.Unit)
+     */
+    @Override
+    public void setX(Unit x)
+    {
+        x = x.subtractUnits(getX());
+        translate(x.units(), getY().units());
+    }
+
+    /**
+     * @see bt.game.core.obj.GameObject#setY(bt.game.util.unit.Unit)
+     */
+    @Override
+    public void setY(Unit y)
+    {
+        y = y.subtractUnits(getX());
+        translate(getX().units(), y.units());
     }
 }
