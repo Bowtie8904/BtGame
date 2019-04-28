@@ -9,7 +9,7 @@ import org.dyn4j.dynamics.contact.ContactPoint;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.MassType;
 
-import bt.game.core.obj.GameObject;
+import bt.game.core.obj.GameBody;
 import bt.game.core.obj.col.CollisionFilter;
 import bt.game.core.obj.col.Contacter;
 import bt.game.core.scene.Scene;
@@ -21,47 +21,13 @@ import bt.game.util.unit.Unit;
  * 
  * @author &#8904
  */
-public abstract class LocationTrigger extends GameObject implements Contacter
+public abstract class LocationTrigger extends GameBody implements Contacter
 {
     /** A list containing all objects that should currently not trigger an action. */
     protected List<Body> inContact;
 
     /** Indicates whether objects that leave the area and enter it again should trigger the action again. */
     protected boolean repeat;
-
-    /**
-     * Creates a new instance.
-     * 
-     * @param scene
-     *            The scene that uses this trigger.
-     * @param x
-     *            The x position.
-     * @param y
-     *            The y position.
-     * @param z
-     *            The z position.
-     * @param shape
-     *            The area of the trigger.
-     * @param acceptedCollisions
-     *            The class types that are allowed to trigger this instance. Note that this trigger uses a
-     *            {@link CollisionFilter} to filter for those types. Due to the implementation of that filter it might
-     *            be needed that the triggering object also allows collisions with this trigger type.
-     */
-    public LocationTrigger(Scene scene, Unit x, Unit y, Unit z, Convex shape, Class<?>... acceptedCollisions)
-    {
-        super(scene, z);
-        this.inContact = new CopyOnWriteArrayList<>();
-        this.repeat = true;
-
-        BodyFixture bf = new BodyFixture(shape);
-        bf.setFilter(new CollisionFilter(this, acceptedCollisions));
-        bf.setSensor(true);
-        addFixture(bf);
-        setMass(MassType.NORMAL);
-        translate(x.units(), y.units());
-
-        scene.getGameObjectHandler().addObject(this);
-    }
 
     /**
      * Creates a new instance.
@@ -81,7 +47,18 @@ public abstract class LocationTrigger extends GameObject implements Contacter
      */
     public LocationTrigger(Scene scene, Unit x, Unit y, Convex shape, Class<?>... acceptedCollisions)
     {
-        this(scene, x, y, Unit.zero(), shape, acceptedCollisions);
+        super(scene);
+        this.inContact = new CopyOnWriteArrayList<>();
+        this.repeat = true;
+
+        BodyFixture bf = new BodyFixture(shape);
+        bf.setFilter(new CollisionFilter(this, acceptedCollisions));
+        bf.setSensor(true);
+        addFixture(bf);
+        setMass(MassType.NORMAL);
+        translate(x.units(), y.units());
+
+        scene.getObjectHandler().addObject(this);
     }
 
     /**
