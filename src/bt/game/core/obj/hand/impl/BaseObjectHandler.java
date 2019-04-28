@@ -47,10 +47,10 @@ import bt.utils.log.Logger;
  * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
  * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
  * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
- * <li>{@link BroadPhaseCollider}: onCollide is called when collision events are received.</li>
- * <li>{@link NarrowPhaseCollider}: onCollide is called when collision events are received.</li>
- * <li>{@link ManifoldCollider}: onCollide is called when collision events are received.</li>
- * <li>{@link ConstraintCollider}: onCollide is called when collision events are received.</li>
+ * <li>{@link BroadPhaseCollider}: onCollision is called when collision events are received.</li>
+ * <li>{@link NarrowPhaseCollider}: onCollision is called when collision events are received.</li>
+ * <li>{@link ManifoldCollider}: onCollision is called when collision events are received.</li>
+ * <li>{@link ConstraintCollider}: onCollision is called when collision events are received.</li>
  * <li>{@link Contacter}: onContactBegin and onContactEnd is called when contact events are received.</li>
  * <li>{@link Body}: Added to the world object of the scene.</li>
  * <li>{@link Joint}: Added to the world object of the scene.</li>
@@ -151,10 +151,10 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
      * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
      * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
-     * <li>{@link BroadPhaseCollider}: onCollide is called when collision events are received.</li>
-     * <li>{@link NarrowPhaseCollider}: onCollide is called when collision events are received.</li>
-     * <li>{@link ManifoldCollider}: onCollide is called when collision events are received.</li>
-     * <li>{@link ConstraintCollider}: onCollide is called when collision events are received.</li>
+     * <li>{@link BroadPhaseCollider}: onCollision is called when collision events are received.</li>
+     * <li>{@link NarrowPhaseCollider}: onCollision is called when collision events are received.</li>
+     * <li>{@link ManifoldCollider}: onCollision is called when collision events are received.</li>
+     * <li>{@link ConstraintCollider}: onCollision is called when collision events are received.</li>
      * <li>{@link Contacter}: onContactBegin and onContactEnd is called when contact events are received.</li>
      * <li>{@link Body}: Added to the world object of the scene.</li>
      * <li>{@link Joint}: Added to the world object of the scene.</li>

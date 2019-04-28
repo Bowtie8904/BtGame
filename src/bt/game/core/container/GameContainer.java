@@ -337,6 +337,8 @@ public abstract class GameContainer extends Canvas
         g.dispose();
         bs.show();
 
+        // if a new scene was requested switch now
+        // to avoid complications during the current render process and the killing of the old scene at the same time
         if (this.sceneRequested)
         {
             setScene(this.currentSceneName);

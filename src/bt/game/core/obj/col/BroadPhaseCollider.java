@@ -4,8 +4,9 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 
 /**
+ * Allows an object to receive collision information during the broad phase.
+ * 
  * @author &#8904
- *
  */
 public interface BroadPhaseCollider extends Collider
 {

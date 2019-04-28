@@ -5,8 +5,9 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 
 /**
+ * Allows an object to receive collision information during the narrow phase.
+ * 
  * @author &#8904
- *
  */
 public interface NarrowPhaseCollider extends Collider
 {
