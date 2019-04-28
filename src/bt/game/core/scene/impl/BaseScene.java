@@ -60,10 +60,10 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#getGameObjectHandler()
+     * @see bt.game.core.scene.Scene#getObjectHandler()
      */
     @Override
-    public ObjectHandler getGameObjectHandler()
+    public ObjectHandler getObjectHandler()
     {
         return this.gameObjectHandler;
     }
