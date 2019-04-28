@@ -16,7 +16,7 @@ import bt.runtime.Killable;
  */
 public interface Scene extends Killable
 {
-    public ObjectHandler getGameObjectHandler();
+    public ObjectHandler getObjectHandler();
 
     public ResourceLoader getResourceLoader();
 
