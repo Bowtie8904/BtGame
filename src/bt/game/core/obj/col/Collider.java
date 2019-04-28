@@ -9,5 +9,10 @@ import org.dyn4j.dynamics.Body;
  */
 public interface Collider
 {
+    /**
+     * Gets the body that is used during collision operations.
+     * 
+     * @return
+     */
     public Body getBody();
 }
