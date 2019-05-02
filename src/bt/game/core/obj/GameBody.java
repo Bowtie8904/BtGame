@@ -104,7 +104,7 @@ public class GameBody extends Body implements GameObject
     @Override
     public Unit getX()
     {
-        return Unit.forUnits(this.transform.getTranslationX() * Unit.getRatio());
+        return Unit.forUnits(this.transform.getTranslationX());
     }
 
     /**
@@ -113,7 +113,7 @@ public class GameBody extends Body implements GameObject
     @Override
     public Unit getY()
     {
-        return Unit.forUnits(this.transform.getTranslationY() * Unit.getRatio());
+        return Unit.forUnits(this.transform.getTranslationY());
     }
 
     /**
@@ -122,7 +122,7 @@ public class GameBody extends Body implements GameObject
     @Override
     public Unit getCenterX()
     {
-        return Unit.forUnits(this.getWorldCenter().x * Unit.getRatio());
+        return Unit.forUnits(this.getWorldCenter().x);
     }
 
     /**
@@ -131,7 +131,7 @@ public class GameBody extends Body implements GameObject
     @Override
     public Unit getCenterY()
     {
-        return Unit.forUnits(this.getWorldCenter().y * Unit.getRatio());
+        return Unit.forUnits(this.getWorldCenter().y);
     }
 
     /**
