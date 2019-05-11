@@ -2,165 +2,115 @@ package bt.game.core.ctrl.spec.key;
 
 import java.awt.Component;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
-
-import bt.key.KeyAction;
-import bt.key.KeyBoardHook;
-import bt.utils.log.Logger;
 
 /**
  * @author &#8904
  *
  */
-public class KeyController
+public class KeyController implements KeyListener
 {
-    private Map<Integer, KeyAction[]> keyMappings;
+    private static KeyController instance;
 
-    /**
-     * Sets the action that is executed when the key with the given key code is pressed without any modifiers (shift,
-     * ctrl or alt). This method will override any action that was set for this specific condition before.
-     * 
-     * <p>
-     * The action may be null which will lead to an empty runnable being bound to the key.
-     * </p>
-     * 
-     * @param keyCode
-     * @param action
-     */
-    public void onKeyPress(int keyCode, Runnable action)
+    public static KeyController get()
     {
-        onKeyPress(keyCode, KeyAction.NO_MODIFIER, action);
+        return instance;
+    }
+
+    private static final int KEY_NOT_DOWN = 0;
+    private static final int KEY_DOWN = 1;
+    private static final int KEY_RELEASED = 2;
+
+    private Map<Integer, Integer> keyValues;
+    private Map<Integer, Integer> keyChanges;
+
+    public KeyController(Component component)
+    {
+        instance = this;
+        this.keyValues = new HashMap<>();
+        this.keyChanges = new HashMap<>();
+        component.addKeyListener(this);
     }
 
     /**
-     * Sets the action that is executed when the key with the given key code is pressed together with the given modifier
-     * ({@link KeyAction#SHIFT_MODIFIER shift}, {@link KeyAction#CTRL_MODIFIER ctrl} or {@link KeyAction#ALT_MODIFIER
-     * alt}). This method will override any action that was set for this specific condition before.
+     * Indicates whether a key is currently being pressed.
      * 
-     * <p>
-     * The action may be null which will lead to an empty runnable being bound to the key.
-     * </p>
-     * 
-     * @param keyCode
-     * @param modifier
-     * @param action
+     * @param key
+     *            The key code (constant from {@link KeyEvent}) of the key to check.
+     * @return true if the key is being pressed.
      */
-    public void onKeyPress(int keyCode, int modifier, Runnable action)
+    public boolean isKeyDown(int key)
     {
-        KeyAction[] actions = this.keyMappings.get(keyCode);
+        Integer value = this.keyValues.get(key);
+        return value != null && value == 1;
+    }
 
-        if (actions == null)
+    /**
+     * Indicates whether a key was recently pressed and is now released.
+     * 
+     * @param key
+     *            The key code (constant from {@link KeyEvent}) of the key to check.
+     * @return true if the key has been pressed somewhere in the past and was released during the last tick.
+     */
+    public boolean isKeyReleased(int key)
+    {
+        Integer value = this.keyValues.get(key);
+        return value != null && value == 2;
+    }
+
+    /**
+     * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+     */
+    @Override
+    public void keyTyped(KeyEvent e)
+    {
+    }
+
+    /**
+     * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+     */
+    @Override
+    public void keyPressed(KeyEvent e)
+    {
+        synchronized (this.keyChanges)
         {
-            throw new IllegalArgumentException("No mapping possible for key code = " + keyCode);
+            this.keyChanges.put(e.getKeyCode(), 1);
         }
-
-        actions[modifier].setKeyPressedAction(action == null ? (e) -> {} : (e) -> action.run());
     }
 
     /**
-     * Sets the action that is executed when the key with the given key code is released without any modifiers (shift,
-     * ctrl or alt). This method will override any action that was set for this specific condition before.
-     * 
-     * <p>
-     * The action may be null which will lead to an empty runnable being bound to the key.
-     * </p>
-     * 
-     * @param keyCode
-     * @param action
+     * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
      */
-    public void onKeyRelease(int keyCode, Runnable action)
+    @Override
+    public void keyReleased(KeyEvent e)
     {
-        onKeyRelease(keyCode, KeyAction.NO_MODIFIER, action);
-    }
-
-    /**
-     * Sets the action that is executed when the key with the given key code is released together with the given
-     * modifier ({@link KeyAction#SHIFT_MODIFIER shift}, {@link KeyAction#CTRL_MODIFIER ctrl} or
-     * {@link KeyAction#ALT_MODIFIER alt}). This method will override any action that was set for this specific
-     * condition before.
-     * 
-     * <p>
-     * The action may be null which will lead to an empty runnable being bound to the key.
-     * </p>
-     * 
-     * @param keyCode
-     * @param modifier
-     * @param action
-     */
-    public void onKeyRelease(int keyCode, int modifier, Runnable action)
-    {
-        KeyAction[] actions = this.keyMappings.get(keyCode);
-
-        if (actions == null)
+        synchronized (this.keyChanges)
         {
-            throw new IllegalArgumentException("No mapping possible for key code = " + keyCode);
+            this.keyChanges.put(e.getKeyCode(), 2);
         }
-
-        actions[modifier].setKeyReleasedAction(action == null ? (e) -> {} : (e) -> action.run());
     }
 
-    public void doInitialMapping(Component comp)
+    public void checkKeyChanges()
     {
-        this.keyMappings = new HashMap<>();
-        int count = 0;
-        Field[] fields = KeyEvent.class.getDeclaredFields();
-
-        for (Field f : fields)
-        {
-            if (Modifier.isStatic(f.getModifiers())
-                    && Modifier.isPublic(f.getModifiers())
-                    && Modifier.isFinal(f.getModifiers())
-                    && f.getName().startsWith("VK_"))
+        // changing 'recently released' to 'not down'
+        this.keyValues.replaceAll((k, v) -> {
+            if (v == 2)
             {
-                try
-                {
-                    count ++ ;
-                    int code = f.getInt(null);
-
-                    KeyAction[] actions = new KeyAction[]
-                    {
-                            new KeyAction(comp, code, KeyAction.NO_MODIFIER, (e) -> {}, (e) -> {}),
-                            new KeyAction(comp, code, KeyAction.SHIFT_MODIFIER, (e) -> {}, (e) -> {}),
-                            new KeyAction(comp, code, KeyAction.ALT_MODIFIER, (e) -> {}, (e) -> {}),
-                            new KeyAction(comp, code, KeyAction.CTRL_MODIFIER, (e) -> {}, (e) -> {}),
-                    };
-
-                    this.keyMappings.put(code, actions);
-
-                    for (KeyAction a : actions)
-                    {
-                        KeyBoardHook.get().addKeyAction(a);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.global().print(e);
-                }
+                return 0;
             }
-        }
+            return v;
+        });
 
-        Logger.global().print("Mapped " + count + " keys.");
-    }
-
-    /**
-     * Resets all key mappings.
-     */
-    public void clearMappings()
-    {
-        for (Integer key : this.keyMappings.keySet())
+        synchronized (this.keyChanges)
         {
-            onKeyPress(key, KeyAction.NO_MODIFIER, null);
-            onKeyPress(key, KeyAction.ALT_MODIFIER, null);
-            onKeyPress(key, KeyAction.CTRL_MODIFIER, null);
-            onKeyPress(key, KeyAction.SHIFT_MODIFIER, null);
+            for (var key : this.keyChanges.keySet())
+            {
+                this.keyValues.put(key, this.keyChanges.get(key));
+            }
 
-            onKeyRelease(key, KeyAction.NO_MODIFIER, null);
-            onKeyRelease(key, KeyAction.ALT_MODIFIER, null);
-            onKeyRelease(key, KeyAction.CTRL_MODIFIER, null);
-            onKeyRelease(key, KeyAction.SHIFT_MODIFIER, null);
+            this.keyChanges.clear();
         }
     }
 }
