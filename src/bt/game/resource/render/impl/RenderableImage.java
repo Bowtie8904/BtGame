@@ -1,11 +1,15 @@
 package bt.game.resource.render.impl;
 
+import java.awt.AlphaComposite;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 
 import bt.game.resource.render.Renderable;
 import bt.game.util.unit.Unit;
 import bt.runtime.Killable;
+import bt.utils.num.NumberUtils;
 
 /**
  * 
@@ -15,10 +19,59 @@ import bt.runtime.Killable;
 public class RenderableImage implements Renderable, Killable
 {
     protected Image image;
+    protected float alpha;
+    protected AffineTransform transform;
 
     public RenderableImage(Image image)
     {
         this.image = image;
+        this.transform = new AffineTransform();
+        this.alpha = 0.5f;
+    }
+
+    /**
+     * Sets the alhpa value for this image.
+     * 
+     * @param alpha
+     *            A value between 0 and 1.
+     */
+    public void setAlpha(float alpha)
+    {
+        this.alpha = NumberUtils.clamp(alpha, 0, 1);
+    }
+
+    /**
+     * Gets the alpha value for this image.
+     * 
+     * @return
+     */
+    public float getAlpha()
+    {
+        return this.alpha;
+    }
+
+    /**
+     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
+     */
+    @Override
+    public void render(Graphics2D g)
+    {
+        render(g,
+                Unit.forUnits(0),
+                Unit.forUnits(0),
+                Unit.forUnits(this.image.getWidth(null)),
+                Unit.forUnits(this.image.getHeight(null)),
+                0);
+    }
+
+    public void render(Graphics2D g, double rotation)
+    {
+        render(g,
+                Unit.forUnits(0),
+                Unit.forUnits(0),
+                Unit.forUnits(this.image.getWidth(null)),
+                Unit.forUnits(this.image.getHeight(null)),
+                rotation);
     }
 
     /**
@@ -47,21 +100,19 @@ public class RenderableImage implements Renderable, Killable
      */
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation)
     {
-        if (rotation == 0 || rotation % 360 == 0)
-        {
-            g.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
-        }
-        else
-        {
-            Graphics2D g2 = (Graphics2D)g.create();
+        AffineTransform origTransform = g.getTransform();
+        Composite origComposite = g.getComposite();
 
-            g2.rotate(Math.toRadians(rotation),
-                    x.pixels() + w.pixels() / 2,
-                    y.pixels() + h.pixels() / 2);
+        this.transform.setToRotation(Math.toRadians(rotation),
+                x.pixels() + w.pixels() / 2,
+                y.pixels() + h.pixels() / 2);
+        g.transform(this.transform);
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
+        g.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
 
-            g2.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
-            g2.dispose();
-        }
+        this.transform.setToRotation(0);
+        g.setComposite(origComposite);
+        g.setTransform(origTransform);
     }
 
     /**
@@ -71,30 +122,6 @@ public class RenderableImage implements Renderable, Killable
     public void kill()
     {
         this.image.flush();
-    }
-
-    /**
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
-     */
-    @Override
-    public void render(Graphics2D g)
-    {
-        render(g,
-                Unit.forUnits(0),
-                Unit.forUnits(0),
-                Unit.forUnits(this.image.getWidth(null)),
-                Unit.forUnits(this.image.getHeight(null)),
-                0);
-    }
-
-    public void render(Graphics2D g, double rotation)
-    {
-        render(g,
-                Unit.forUnits(0),
-                Unit.forUnits(0),
-                Unit.forUnits(this.image.getWidth(null)),
-                Unit.forUnits(this.image.getHeight(null)),
-                rotation);
     }
 
     /**
