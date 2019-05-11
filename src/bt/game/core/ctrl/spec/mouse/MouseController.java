@@ -21,6 +21,13 @@ import bt.game.util.unit.Unit;
  */
 public class MouseController extends MouseAdapter
 {
+    private static MouseController instance;
+
+    public static MouseController get()
+    {
+        return instance;
+    }
+
     private Consumer<MouseTarget> onRightClick;
     private Consumer<MouseTarget> onLeftClick;
     private Comparator<MouseTarget> zComparator;
@@ -33,6 +40,7 @@ public class MouseController extends MouseAdapter
 
     public MouseController(Component component)
     {
+        instance = this;
         this.component = component;
         this.component.addMouseListener(this);
         this.component.addMouseMotionListener(this);
