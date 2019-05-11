@@ -17,7 +17,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
-import bt.game.core.ctrl.GameController;
+import bt.game.core.ctrl.spec.key.KeyController;
+import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 import bt.utils.thread.Threads;
@@ -117,12 +118,11 @@ public abstract class GameContainer extends Canvas
         }
 
         calculateRatio(this.frame);
-
-        GameController.get().init(this);
-
         setupFrame();
-
         createScenes();
+
+        new MouseController(this);
+        new KeyController(this);
     }
 
     /**
@@ -307,6 +307,8 @@ public abstract class GameContainer extends Canvas
         if (this.currentScene != null && this.currentScene.isLoaded())
         {
             this.currentScene.tick(delta);
+            MouseController.get().checkHover();
+            KeyController.get().checkKeyChanges();
         }
     }
 
