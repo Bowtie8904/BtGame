@@ -26,7 +26,7 @@ public class RenderableImage implements Renderable, Killable
     {
         this.image = image;
         this.transform = new AffineTransform();
-        this.alpha = 0.5f;
+        this.alpha = 1f;
     }
 
     /**
