@@ -11,6 +11,7 @@ import java.util.Map;
 
 import bt.game.core.obj.intf.Animated;
 import bt.game.resource.load.Loadable;
+import bt.game.resource.load.ResourceContainer;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.render.Renderable;
 import bt.runtime.InstanceKiller;
@@ -279,6 +280,8 @@ public class BaseResourceLoader implements ResourceLoader
 
         List<String> loadedClasses = new ArrayList<>();
 
+        ResourceContainer container;
+
         for (Loadable loadable : this.loadables)
         {
             if (loadedClasses.contains(loadable.getClass().getName()))
@@ -289,11 +292,14 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 loadedClasses.add(loadable.getClass().getName());
             }
+            
+            container = new ResourceContainer();
+            loadable.load(name, container);
 
             // images
-            loadedRenderables = loadable.loadRenderables(name);
+            loadedRenderables = container.getRenderables();
 
-            if (loadedRenderables != null)
+            if (loadedRenderables != null && !loadedRenderables.isEmpty())
             {
                 for (String resourceKey : loadedRenderables.keySet())
                 {
@@ -305,9 +311,9 @@ public class BaseResourceLoader implements ResourceLoader
             }
 
             // sounds
-            loadedSounds = loadable.loadSounds(name);
+            loadedSounds = container.getSounds();
 
-            if (loadedSounds != null)
+            if (loadedSounds != null && !loadedSounds.isEmpty())
             {
                 for (String resourceKey : loadedSounds.keySet())
                 {
@@ -318,9 +324,9 @@ public class BaseResourceLoader implements ResourceLoader
             }
 
             // files
-            loadedFiles = loadable.loadFiles(name);
+            loadedFiles = container.getFiles();
 
-            if (loadedFiles != null)
+            if (loadedFiles != null && !loadedFiles.isEmpty())
             {
                 for (String resourceKey : loadedFiles.keySet())
                 {
@@ -331,9 +337,9 @@ public class BaseResourceLoader implements ResourceLoader
             }
 
             // fonts
-            loadedFonts = loadable.loadFonts(name);
+            loadedFonts = container.getFonts();
 
-            if (loadedFonts != null)
+            if (loadedFonts != null && !loadedFonts.isEmpty())
             {
                 for (String resourceKey : loadedFonts.keySet())
                 {
@@ -344,9 +350,9 @@ public class BaseResourceLoader implements ResourceLoader
             }
 
             // objects
-            loadedObjects = loadable.loadObjects(name);
+            loadedObjects = container.getObjects();
 
-            if (loadedObjects != null)
+            if (loadedObjects != null && !loadedObjects.isEmpty())
             {
                 for (String resourceKey : loadedObjects.keySet())
                 {

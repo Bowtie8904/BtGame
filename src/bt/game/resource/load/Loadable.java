@@ -1,12 +1,5 @@
 package bt.game.resource.load;
 
-import java.awt.Font;
-import java.io.File;
-import java.util.Map;
-
-import bt.game.resource.render.Renderable;
-import bt.types.sound.SoundSupplier;
-
 /**
  * Interface to define a class that can load its own resources which can then be accessed by a {@link ResourceLoader}.
  * 
@@ -15,73 +8,12 @@ import bt.types.sound.SoundSupplier;
 public interface Loadable
 {
     /**
-     * Loads all renderable this implementation needs.
-     * 
-     * <p>
-     * The renderable need to be mapped to a (ResourceLoader)-unique resource name, so that they can be accessed by
-     * {@link ResourceLoader#getRenderable(String)}.
-     * </p>
+     * Loads all for the scene with the given name required resources into the given container.
      * 
      * @param name
-     *            The name of the resource context, i. e. a unique name for a scene, passed by the ResourceLoader.
-     * @return A map containing all loaded renderables or null if no images need to be loaded.
+     *            The name of the scene for which the resoueces should be loaded.
+     * @param container
+     *            The container that the resources are added to via its add methods.
      */
-    public Map<String, Renderable> loadRenderables(String name);
-
-    /**
-     * Loads all sounds this implementation needs.
-     * 
-     * <p>
-     * The sounds need to be mapped to a (ResourceLoader)-unique resource name, so that they can be accessed by
-     * {@link ResourceLoader#getSound(String)}.
-     * </p>
-     * 
-     * @param name
-     *            The name of the resource context, i. e. a unique name for a scene, passed by the ResourceLoader.
-     * @return A map containing all loaded sounds or null if no sounds need to be loaded.
-     */
-    public Map<String, SoundSupplier> loadSounds(String name);
-
-    /**
-     * Loads all files this implementation needs.
-     * 
-     * <p>
-     * The files need to be mapped to a (ResourceLoader)-unique resource name, so that they can be accessed by
-     * {@link ResourceLoader#getFile(String)}.
-     * </p>
-     * 
-     * @param name
-     *            The name of the resource context, i. e. a unique name for a scene, passed by the ResourceLoader.
-     * @return A map containing all loaded files or null if no files need to be loaded.
-     */
-    public Map<String, File> loadFiles(String name);
-
-    /**
-     * Loads all fonts this implementation needs.
-     * 
-     * <p>
-     * The fonts need to be mapped to a (ResourceLoader)-unique resource name, so that they can be accessed by
-     * {@link ResourceLoader#getFont(String)}.
-     * </p>
-     * 
-     * @param name
-     *            The name of the resource context, i. e. a unique name for a scene, passed by the ResourceLoader.
-     * @return A map containing all loaded fonts or null if no fonts need to be loaded.
-     */
-    public Map<String, Font> loadFonts(String name);
-
-    /**
-     * Loads all objects this implementation needs. (not including any objects that are already loaded by the other load
-     * implementations)
-     * 
-     * <p>
-     * The objects need to be mapped to a (ResourceLoader)-unique resource name, so that they can be accessed by
-     * {@link ResourceLoader#get(String)}.
-     * </p>
-     * 
-     * @param name
-     *            The name of the resource context, i. e. a unique name for a scene, passed by the ResourceLoader.
-     * @return A map containing all loaded objects or null if no objects need to be loaded.
-     */
-    public Map<String, Object> loadObjects(String name);
+    public void load(String name, ResourceContainer container);
 }
