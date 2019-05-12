@@ -197,6 +197,7 @@ public class GameBody extends Body implements GameObject
     {
         getLinearVelocity().x = v.x * 10;
         getLinearVelocity().y = v.y * 10;
+        setAsleep(false);
     }
 
     /**
@@ -212,6 +213,7 @@ public class GameBody extends Body implements GameObject
     public void setVelocityX(double x)
     {
         getLinearVelocity().x = x * 10;
+        setAsleep(false);
     }
 
     /**
@@ -227,5 +229,6 @@ public class GameBody extends Body implements GameObject
     public void setVelocityY(double y)
     {
         getLinearVelocity().y = y * 10;
+        setAsleep(false);
     }
 }
