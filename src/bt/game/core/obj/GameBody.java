@@ -172,11 +172,14 @@ public class GameBody extends Body implements GameObject
      * </p>
      * 
      * @param x
+     *            x-axis Velocity in Units per second.
      * @param y
+     *            y-axis Velocity in Units per second.
      */
     public void setVelocity(double x, double y)
     {
-        setLinearVelocity(x, y);
+        getLinearVelocity().x = x * 10;
+        getLinearVelocity().y = y * 10;
         setAsleep(false);
     }
 
@@ -188,10 +191,12 @@ public class GameBody extends Body implements GameObject
      * </p>
      * 
      * @param v
+     *            Velocity in Units per second.
      */
     public void setVelocity(Vector2 v)
     {
-        setVelocity(v.x, v.y);
+        getLinearVelocity().x = v.x * 10;
+        getLinearVelocity().y = v.y * 10;
     }
 
     /**
@@ -202,10 +207,11 @@ public class GameBody extends Body implements GameObject
      * </p>
      * 
      * @param x
+     *            x-axis Velocity in Units per second.
      */
     public void setVelocityX(double x)
     {
-        setVelocity(x, getLinearVelocity().y);
+        getLinearVelocity().x = x * 10;
     }
 
     /**
@@ -216,9 +222,10 @@ public class GameBody extends Body implements GameObject
      * </p>
      * 
      * @param y
+     *            y-axis Velocity in Units per second.
      */
     public void setVelocityY(double y)
     {
-        setVelocity(getLinearVelocity().x, y);
+        getLinearVelocity().y = y * 10;
     }
 }
