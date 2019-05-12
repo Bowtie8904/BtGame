@@ -21,7 +21,8 @@ public class KeyController implements KeyListener
 
     private static final int KEY_NOT_DOWN = 0;
     private static final int KEY_DOWN = 1;
-    private static final int KEY_RELEASED = 2;
+    private static final int KEY_JUST_DOWN = 2;
+    private static final int KEY_RELEASED = 3;
 
     private Map<Integer, Integer> keyValues;
     private Map<Integer, Integer> keyChanges;
@@ -35,6 +36,19 @@ public class KeyController implements KeyListener
     }
 
     /**
+     * Indicates whether a key is just now being pressed. This state does not last longer than one tick.
+     * 
+     * @param key
+     *            The key code (constant from {@link KeyEvent}) of the key to check.
+     * @return true if the key was just pressed.
+     */
+    public boolean isKeyJustDown(int key)
+    {
+        Integer value = this.keyValues.get(key);
+        return value != null && value == KEY_JUST_DOWN;
+    }
+
+    /**
      * Indicates whether a key is currently being pressed.
      * 
      * @param key
@@ -44,7 +58,7 @@ public class KeyController implements KeyListener
     public boolean isKeyDown(int key)
     {
         Integer value = this.keyValues.get(key);
-        return value != null && value == 1;
+        return value != null && (value == KEY_DOWN || value == KEY_JUST_DOWN);
     }
 
     /**
@@ -57,7 +71,7 @@ public class KeyController implements KeyListener
     public boolean isKeyReleased(int key)
     {
         Integer value = this.keyValues.get(key);
-        return value != null && value == 2;
+        return value != null && value == KEY_RELEASED;
     }
 
     /**
@@ -76,7 +90,10 @@ public class KeyController implements KeyListener
     {
         synchronized (this.keyChanges)
         {
-            this.keyChanges.put(e.getKeyCode(), 1);
+            if (!isKeyDown(e.getKeyCode()))
+            {
+                this.keyChanges.put(e.getKeyCode(), KEY_JUST_DOWN);
+            }
         }
     }
 
@@ -88,18 +105,24 @@ public class KeyController implements KeyListener
     {
         synchronized (this.keyChanges)
         {
-            this.keyChanges.put(e.getKeyCode(), 2);
+            this.keyChanges.put(e.getKeyCode(), KEY_RELEASED);
         }
     }
 
     public void checkKeyChanges()
     {
-        // changing 'recently released' to 'not down'
+        // changing 'recently released' to 'not down' and 'just down' to 'down'
         this.keyValues.replaceAll((k, v) -> {
-            if (v == 2)
+            if (v == KEY_RELEASED)
             {
-                return 0;
+                return KEY_NOT_DOWN;
             }
+
+            if (v == KEY_JUST_DOWN)
+            {
+                return KEY_DOWN;
+            }
+
             return v;
         });
 
