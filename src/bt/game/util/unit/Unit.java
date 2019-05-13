@@ -9,6 +9,7 @@ package bt.game.util.unit;
 public class Unit
 {
     private static double ratio = 1;
+    private static final Unit ZERO = Unit.forUnits(0);
     private double units;
 
     /**
@@ -34,7 +35,7 @@ public class Unit
      */
     public static Unit zero()
     {
-        return forUnits(0);
+        return ZERO;
     }
 
     /**
