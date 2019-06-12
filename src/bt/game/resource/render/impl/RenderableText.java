@@ -84,11 +84,16 @@ public class RenderableText implements Renderable
             double width = font.getStringBounds(this.text, renderContext).getWidth();
             double xScale = w.pixels() / width;
             double yScale = (double)(h.pixels() / height);
-            double xPos = (w.pixels() - xScale * width) / 2;
-            double yPos = (h.pixels() + yScale * height) / 2 - yScale * metrics.getDescent();
+
+            // keeping aspect ration by using the lowest scaling factor
+            // keeps text within bounds
+            double trueScale = yScale < xScale ? yScale : xScale;
+
+            double xPos = (w.pixels() - trueScale * width) / 2;
+            double yPos = (h.pixels() + trueScale * height) / 2 - trueScale * metrics.getDescent();
 
             this.transform = AffineTransform.getTranslateInstance(xPos, yPos);
-            this.transform.scale(xScale, yScale);
+            this.transform.scale(trueScale, trueScale);
 
             this.lastHeight = h;
             this.lastWidth = w;
