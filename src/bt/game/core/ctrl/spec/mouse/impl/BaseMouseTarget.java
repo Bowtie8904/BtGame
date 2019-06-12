@@ -1,7 +1,9 @@
 package bt.game.core.ctrl.spec.mouse.impl;
 
+import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Shape;
 
+import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.ctrl.spec.mouse.MouseTarget;
 import bt.game.util.unit.Unit;
 
@@ -16,6 +18,7 @@ public class BaseMouseTarget implements MouseTarget
     protected Unit z;
     protected Unit w;
     protected Unit h;
+    protected Shape shape;
 
     public BaseMouseTarget(Unit x, Unit y, Unit z, Unit w, Unit h)
     {
@@ -23,6 +26,10 @@ public class BaseMouseTarget implements MouseTarget
         this.y = y;
         this.w = w;
         this.h = h;
+        this.z = z;
+        this.shape = Geometry.createRectangle(w.units(), h.units());
+        this.shape.translate(x.pixels(), y.pixels());
+        MouseController.get().addMouseTarget(this);
     }
 
     /**
@@ -79,7 +86,7 @@ public class BaseMouseTarget implements MouseTarget
     @Override
     public Unit getZ()
     {
-        return null;
+        return this.z;
     }
 
     /**
@@ -88,6 +95,6 @@ public class BaseMouseTarget implements MouseTarget
     @Override
     public Shape getShape()
     {
-        return null;
+        return this.shape;
     }
 }
