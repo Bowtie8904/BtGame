@@ -27,8 +27,8 @@ public class BaseMouseTarget implements MouseTarget
         this.w = w;
         this.h = h;
         this.z = z;
-        this.shape = Geometry.createRectangle(w.units(), h.units());
-        this.shape.translate(x.pixels(), y.pixels());
+        this.shape = Geometry.createRectangle(w.pixels(), h.pixels());
+        this.shape.translate(x.pixels() + (w.pixels() / 2), y.pixels() + (h.pixels() / 2));
         MouseController.get().addMouseTarget(this);
     }
 
