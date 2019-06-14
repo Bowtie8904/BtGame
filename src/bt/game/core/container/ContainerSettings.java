@@ -1,7 +1,7 @@
 package bt.game.core.container;
 
 /**
- * A configuration class for {@link GameContainers}.
+ * A configuration class for {@link GameContainer}s.
  * 
  * @author &#8904
  */
