@@ -49,13 +49,22 @@ public abstract class GameContainer extends Canvas
     private Map<String, Entry<Scene, Scene>> scenes;
 
     /** The pixel to {@link Unit} ratio that is calcualted when the frame is set up. */
-    protected float ratio;
+    protected double ratio;
 
     /** The width in units. */
-    private float unitWidth;
+    protected double unitWidth;
 
     /** The height in units. */
-    private float unitHeight;
+    protected double unitHeight;
+
+    /** Indicates whether this container was set to fullscreen. */
+    protected boolean isFullScreen;
+
+    /** The settings used to intitialize this container. */
+    protected ContainerSettings settings;
+
+    /** Indicates whether this container is in a valid state to perfom rendering. */
+    protected boolean canRender;
 
     /** The width in units. */
     private static Unit width;
@@ -92,33 +101,12 @@ public abstract class GameContainer extends Canvas
      */
     public GameContainer(ContainerSettings settings)
     {
+        this.settings = settings;
         this.unitWidth = settings.getUnitWidth();
         this.unitHeight = settings.getUnitHeight();
         this.scenes = new HashMap<>();
-        this.frame = new JFrame();
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setUndecorated(settings.isUndecorated());
-        this.frame.setResizable(false);
 
-        if (!settings.isFullscreen())
-        {
-            this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
-            this.frame.setLocationRelativeTo(null);
-        }
-
-        if (settings.isFullscreen())
-        {
-            this.frame.setVisible(true);
-            this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        }
-        else
-        {
-            this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
-            this.frame.setLocationRelativeTo(null);
-        }
-
-        calculateRatio(this.frame);
-        setupFrame();
+        createFrame();
         createScenes();
 
         new MouseController(this);
@@ -135,14 +123,14 @@ public abstract class GameContainer extends Canvas
      */
     private void calculateRatio(Component comp)
     {
-        if (((float)comp.getWidth() / (float)comp.getHeight()) / (this.unitWidth / this.unitHeight) == 1f)
+        if ((comp.getWidth() / comp.getHeight()) / (this.settings.getUnitWidth() / this.settings.getUnitHeight()) == 1f)
         {
-            this.ratio = (float)comp.getWidth() / this.unitWidth;
+            this.ratio = comp.getWidth() / this.settings.getUnitWidth();
         }
         else
         {
-            float difX = (float)comp.getWidth() / this.unitWidth;
-            float difY = (float)comp.getHeight() / this.unitHeight;
+            double difX = comp.getWidth() / this.settings.getUnitWidth();
+            double difY = comp.getHeight() / this.settings.getUnitHeight();
             this.ratio = difX < difY ? difX : difY;
         }
 
@@ -150,15 +138,15 @@ public abstract class GameContainer extends Canvas
     }
 
     /**
-     * Sets up the frame abd the canvas. This will set the frame background color to black and position the canvas in
+     * Sets up the frame and the canvas. This will set the frame background color to black and position the canvas in
      * the middle of the frame. At the end of this method the frame will be made visible.
      */
     private void setupFrame()
     {
         this.frame.getContentPane().setBackground(Color.BLACK);
 
-        width = Unit.forUnits(this.unitWidth);
-        height = Unit.forUnits(this.unitHeight);
+        width = Unit.forUnits(this.settings.getUnitWidth());
+        height = Unit.forUnits(this.settings.getUnitHeight());
 
         setSize(new Dimension((int)width.pixels(), (int)height.pixels()));
         setPreferredSize(new Dimension((int)width.pixels(), (int)height.pixels()));
@@ -197,6 +185,89 @@ public abstract class GameContainer extends Canvas
     public JFrame getFrame()
     {
         return this.frame;
+    }
+
+    /**
+     * Gets whether this container is currently in full screen mode.
+     * 
+     * @return true if the container is in full screen.
+     */
+    public boolean isFullScreen()
+    {
+        return this.isFullScreen;
+    }
+
+    /**
+     * Creates a new frame and sets it up correctly corresponding to the held {@link ContainerSettings} object.
+     */
+    private synchronized void createFrame()
+    {
+        if (this.frame != null)
+        {
+            this.frame.dispose();
+        }
+
+        this.frame = new JFrame();
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setUndecorated(settings.isUndecorated());
+        this.frame.setResizable(false);
+
+        if (!this.settings.isFullscreen())
+        {
+            this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
+            this.frame.setLocationRelativeTo(null);
+            this.isFullScreen = false;
+        }
+
+        if (this.settings.isFullscreen())
+        {
+            this.frame.setVisible(true);
+            this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            this.isFullScreen = true;
+        }
+        else
+        {
+            this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
+            this.frame.setLocationRelativeTo(null);
+        }
+
+        calculateRatio(this.frame);
+        setupFrame();
+        this.createBufferStrategy(4);
+        this.canRender = true;
+    }
+
+    /**
+     * Sets this container to full screen.
+     * 
+     * <p>
+     * A new frame will be created.
+     * </p>
+     * 
+     * @param fullscreen
+     */
+    public void setFullScreen(boolean fullscreen)
+    {
+        this.canRender = false;
+        this.settings.fullscreen(fullscreen);
+        createFrame();
+    }
+
+    /**
+     * Sets the size of this container in pixels.
+     * 
+     * <p>
+     * A new frame will be created.
+     * </p>
+     * 
+     * @param frameWidth
+     * @param frameHeight
+     */
+    public void setFrameSize(int frameWidth, int frameHeight)
+    {
+        this.canRender = false;
+        this.settings.frameSize(frameWidth, frameHeight);
+        createFrame();
     }
 
     /**
@@ -316,8 +387,13 @@ public abstract class GameContainer extends Canvas
      * Calls {@link Scene#render(Graphics) render} of the current scene as soon as {@link Scene#isLoaded() isLoaded}
      * returns true.
      */
-    public void render()
+    public synchronized void render()
     {
+        if (!this.canRender)
+        {
+            return;
+        }
+
         BufferStrategy bs = this.getBufferStrategy();
 
         if (bs == null)
