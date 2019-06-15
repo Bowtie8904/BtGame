@@ -234,6 +234,7 @@ public abstract class GameContainer extends Canvas
         calculateRatio(this.frame);
         setupFrame();
         this.createBufferStrategy(4);
+        this.requestFocus();
         this.canRender = true;
     }
 
