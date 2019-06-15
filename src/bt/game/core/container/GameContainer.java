@@ -251,6 +251,11 @@ public abstract class GameContainer extends Canvas
         this.canRender = false;
         this.settings.fullscreen(fullscreen);
         createFrame();
+
+        if (this.currentScene != null)
+        {
+            this.currentScene.refresh();
+        }
     }
 
     /**
@@ -268,6 +273,11 @@ public abstract class GameContainer extends Canvas
         this.canRender = false;
         this.settings.frameSize(frameWidth, frameHeight);
         createFrame();
+
+        if (this.currentScene != null)
+        {
+            this.currentScene.refresh();
+        }
     }
 
     /**
