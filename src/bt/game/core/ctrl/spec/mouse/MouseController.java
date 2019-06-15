@@ -243,7 +243,7 @@ public class MouseController extends MouseAdapter
     {
         if (this.lastClickedTarget != null)
         {
-            this.lastClickedTarget.onDrag(
+            this.lastClickedTarget.onDrag(e,
                     Unit.forPixels(e.getX() - this.mouseX),
                     Unit.forPixels(e.getY() - this.mouseY));
 

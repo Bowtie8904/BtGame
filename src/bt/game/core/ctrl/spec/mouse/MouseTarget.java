@@ -1,5 +1,7 @@
 package bt.game.core.ctrl.spec.mouse;
 
+import java.awt.event.MouseEvent;
+
 import org.dyn4j.geometry.Shape;
 
 import bt.game.util.unit.Unit;
@@ -22,12 +24,14 @@ public interface MouseTarget
     /**
      * Called when this instance was dragged with the mouse.
      * 
+     * @param e
+     *            The event that caused this call.
      * @param xOffset
      *            The offset on the x axis from this instances old position to its new one.
      * @param yOffset
      *            The offset on the y axis from this instances old position to its new one.
      */
-    public void onDrag(Unit xOffset, Unit yOffset);
+    public void onDrag(MouseEvent e, Unit xOffset, Unit yOffset);
 
     /**
      * Called when the mouse is hovering over this instance.

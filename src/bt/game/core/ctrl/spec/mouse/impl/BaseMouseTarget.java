@@ -1,5 +1,7 @@
 package bt.game.core.ctrl.spec.mouse.impl;
 
+import java.awt.event.MouseEvent;
+
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Shape;
 
@@ -52,7 +54,7 @@ public class BaseMouseTarget implements MouseTarget
      * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onDrag(bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
-    public void onDrag(Unit xOffset, Unit yOffset)
+    public void onDrag(MouseEvent e, Unit xOffset, Unit yOffset)
     {
     }
 
