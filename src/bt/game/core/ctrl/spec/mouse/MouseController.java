@@ -14,6 +14,7 @@ import org.dyn4j.geometry.Vector2;
 
 import bt.game.core.scene.cam.Camera;
 import bt.game.util.unit.Unit;
+import bt.utils.thread.Threads;
 
 /**
  * @author &#8904
@@ -201,12 +202,17 @@ public class MouseController extends MouseAdapter
                     {
                         this.lastClickedTarget = target; // used for dragging. only used with left mouse button
                         onLeftClick(target);
-                        target.onLeftClick();
+
+                        Threads.get().executeCached(() -> {
+                            target.onLeftClick();
+                        });
                     }
                     else if (e.getButton() == MouseEvent.BUTTON3)
                     {
                         onRightClick(target);
-                        target.onRightClick();
+                        Threads.get().executeCached(() -> {
+                            target.onRightClick();
+                        });
                     }
                     return;
                 }
