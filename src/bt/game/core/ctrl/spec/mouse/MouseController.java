@@ -272,4 +272,19 @@ public class MouseController extends MouseAdapter
             this.onLeftClick.accept(target);
         }
     }
+
+    /**
+     * Sets the comparator that is used to sort mousetargets before checking hoverring.
+     * 
+     * <p>
+     * If the cursor is hovering over multiple targets, the one with the lowest index in the list after applying the
+     * comparator will be used.
+     * </p>
+     * 
+     * @param comp
+     */
+    public void setTargetComparator(Comparator<MouseTarget> comp)
+    {
+        this.zComparator = comp;
+    }
 }
