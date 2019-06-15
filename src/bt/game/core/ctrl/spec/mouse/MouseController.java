@@ -68,6 +68,26 @@ public class MouseController extends MouseAdapter
         }.reversed();
     }
 
+    /**
+     * Gets the X position of the cursor during the last click event.
+     * 
+     * @return
+     */
+    public int getLastMouseX()
+    {
+        return this.mouseX;
+    }
+
+    /**
+     * Gets the Y position of the cursor during the last click event.
+     * 
+     * @return
+     */
+    public int getLastMouseY()
+    {
+        return this.mouseY;
+    }
+
     public synchronized void addMouseTarget(MouseTarget target)
     {
         this.mouseTargets.add(target);
