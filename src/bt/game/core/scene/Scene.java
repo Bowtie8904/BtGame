@@ -37,4 +37,6 @@ public interface Scene extends Killable
     public void tick(double delta);
 
     public void render(Graphics2D g);
+
+    public void refresh();
 }

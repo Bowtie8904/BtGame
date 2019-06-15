@@ -132,4 +132,13 @@ public class LoadingScene extends BaseScene
     {
         return null;
     }
+
+    /**
+     * @see bt.game.core.scene.Scene#refresh()
+     */
+    @Override
+    public void refresh()
+    {
+        this.gameObjectHandler.refresh();
+    }
 }

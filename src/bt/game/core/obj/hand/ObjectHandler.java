@@ -45,4 +45,9 @@ public interface ObjectHandler extends Killable
      * Forwards the render call to all held objects.
      */
     public void render(Graphics2D g);
+
+    /**
+     * Indicates that all objects should refresh their data.
+     */
+    public void refresh();
 }

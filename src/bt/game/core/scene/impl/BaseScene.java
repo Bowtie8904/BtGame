@@ -112,6 +112,15 @@ public abstract class BaseScene implements Scene
     }
 
     /**
+     * @see bt.game.core.scene.Scene#refresh()
+     */
+    @Override
+    public void refresh()
+    {
+        this.gameObjectHandler.refresh();
+    }
+
+    /**
      * @see bt.runtime.Killable#kill()
      */
     @Override

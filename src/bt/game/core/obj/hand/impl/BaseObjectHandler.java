@@ -26,6 +26,7 @@ import bt.game.core.obj.col.Contacter;
 import bt.game.core.obj.col.ManifoldCollider;
 import bt.game.core.obj.col.NarrowPhaseCollider;
 import bt.game.core.obj.hand.ObjectHandler;
+import bt.game.core.obj.intf.Refreshable;
 import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.Scene;
 import bt.game.resource.render.Renderable;
@@ -68,6 +69,9 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /** The list of tickable objects. */
     protected List<Tickable> tickables;
 
+    /** The list of refreshable objects. */
+    protected List<Refreshable> refreshables;
+
     /** The list of renderable objects. */
     protected List<Renderable> renderables;
 
@@ -102,6 +106,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     {
         this.scene = scene;
         this.tickables = new CopyOnWriteArrayList<>();
+        this.refreshables = new CopyOnWriteArrayList<>();
         this.renderables = new CopyOnWriteArrayList<>();
         this.killables = new CopyOnWriteArrayList<>();
         this.broadColliders = new Hashtable<>();
@@ -184,6 +189,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             this.tickables.add(Tickable.class.cast(object));
         }
 
+        if (object instanceof Refreshable)
+        {
+            this.refreshables.add(Refreshable.class.cast(object));
+        }
+
         if (object instanceof Renderable)
         {
             this.renderables.add(Renderable.class.cast(object));
@@ -261,6 +271,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         if (object instanceof Tickable)
         {
             this.tickables.remove(object);
+        }
+
+        if (object instanceof Refreshable)
+        {
+            this.refreshables.remove(object);
         }
 
         if (object instanceof Renderable)
@@ -354,6 +369,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         }
 
         this.tickables.clear();
+        this.refreshables.clear();
         this.renderables.clear();
         this.killables.clear();
         this.broadColliders.clear();
@@ -555,5 +571,17 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void postSolve(SolvedContactPoint point)
     {
+    }
+
+    /**
+     * @see bt.game.core.obj.hand.ObjectHandler#refresh()
+     */
+    @Override
+    public void refresh()
+    {
+        for (Refreshable refr : this.refreshables)
+        {
+            refr.refresh();
+        }
     }
 }
