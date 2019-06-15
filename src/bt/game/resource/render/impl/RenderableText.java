@@ -19,6 +19,7 @@ public class RenderableText implements Renderable
 {
     private Unit lastWidth;
     private Unit lastHeight;
+    private double lastUnitRatio = Unit.getRatio();
     private AffineTransform transform;
     private String text;
     private double rotationAngle;
@@ -66,20 +67,19 @@ public class RenderableText implements Renderable
     @Override
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
-        Graphics2D g2 = (Graphics2D)g.create();
-
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
+        g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
                 RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
-        Font font = g2.getFont();
-        FontRenderContext renderContext = g2.getFontRenderContext();
+        Font font = g.getFont();
+        FontRenderContext renderContext = g.getFontRenderContext();
         LineMetrics metrics = font.getLineMetrics(this.text, renderContext);
 
         // only do this if the scaling really needs to be adjusted
-        if (!w.equals(this.lastWidth) || !h.equals(this.lastHeight))
+        if (!w.equals(this.lastWidth) || !h.equals(this.lastHeight) || this.lastUnitRatio != Unit.getRatio())
         {
+            this.lastUnitRatio = Unit.getRatio();
             float height = metrics.getAscent() + metrics.getDescent();
             double width = font.getStringBounds(this.text, renderContext).getWidth();
             double xScale = w.pixels() / width;
@@ -99,14 +99,16 @@ public class RenderableText implements Renderable
             this.lastWidth = w;
         }
 
-        g2.rotate(Math.toRadians(this.rotationAngle),
+        g.rotate(Math.toRadians(this.rotationAngle),
                 x.pixels() + w.pixels() / 2,
                 y.pixels() + h.pixels() / 2);
 
-        g2.setFont(font.deriveFont(this.transform));
+        g.setFont(font.deriveFont(this.transform));
+        g.drawString(this.text, (int)x.pixels(), (int)y.pixels());
 
-        g2.drawString(this.text, (int)x.pixels(), (int)y.pixels());
-        g2.dispose();
+        g.rotate(Math.toRadians(-this.rotationAngle),
+                x.pixels() + w.pixels() / 2,
+                y.pixels() + h.pixels() / 2);
     }
 
     /**
