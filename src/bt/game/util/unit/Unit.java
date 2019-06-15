@@ -18,7 +18,7 @@ public class Unit
      * 
      * @param pixelsPerUnit
      */
-    public static void setRatio(float pixelsPerUnit)
+    public static void setRatio(double pixelsPerUnit)
     {
         Unit.ratio = pixelsPerUnit;
     }
