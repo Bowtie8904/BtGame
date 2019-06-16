@@ -212,6 +212,16 @@ public abstract class GameContainer extends Canvas
         this.frame.setUndecorated(settings.isUndecorated());
         this.frame.setResizable(false);
 
+        if (this.settings.getTitle() != null)
+        {
+            this.frame.setTitle(this.settings.getTitle());
+        }
+
+        if (this.settings.getIcon() != null)
+        {
+            this.frame.setIconImage(this.settings.getIcon());
+        }
+
         if (!this.settings.isFullscreen())
         {
             this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
