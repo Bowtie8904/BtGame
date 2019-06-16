@@ -1,6 +1,5 @@
 package bt.game.core.ctrl.spec.mouse;
 
-import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,6 +11,8 @@ import java.util.function.Consumer;
 
 import org.dyn4j.geometry.Vector2;
 
+import bt.game.core.container.GameContainer;
+import bt.game.core.scene.Scene;
 import bt.game.core.scene.cam.Camera;
 import bt.game.util.unit.Unit;
 import bt.utils.thread.Threads;
@@ -33,13 +34,13 @@ public class MouseController extends MouseAdapter
     private Consumer<MouseTarget> onLeftClick;
     private Comparator<MouseTarget> zComparator;
     private List<MouseTarget> mouseTargets;
-    private Component component;
+    private GameContainer component;
     private int mouseX;
     private int mouseY;
     private MouseTarget lastClickedTarget;
     private MouseTarget lastHoveredTarget;
 
-    public MouseController(Component component)
+    public MouseController(GameContainer component)
     {
         instance = this;
         this.component = component;
@@ -114,6 +115,14 @@ public class MouseController extends MouseAdapter
         this.mouseTargets.clear();
     }
 
+    public void clearMouseTargets(Scene scene)
+    {
+        this.mouseTargets
+                .stream()
+                .filter(m -> m.getScene().equals(scene))
+                .forEach(this.mouseTargets::remove);
+    }
+
     public void checkHover()
     {
         if (this.lastClickedTarget != null)
@@ -125,8 +134,6 @@ public class MouseController extends MouseAdapter
 
         if (this.component.getMousePosition() != null && this.component.getMousePosition() != null)
         {
-            sortTargets();
-
             Point p = this.component.getMousePosition();
             if (p != null)
             {
@@ -141,6 +148,8 @@ public class MouseController extends MouseAdapter
 
                 boolean foundOne = false;
 
+                sortTargets();
+                
                 for (MouseTarget target : this.mouseTargets)
                 {
                     if (target.getShape().contains(new Vector2(mx, my)))
