@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 
 import org.dyn4j.geometry.Shape;
 
+import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 
 /**
@@ -71,4 +72,11 @@ public interface MouseTarget
      * @return
      */
     public Shape getShape();
+
+    /**
+     * Gets the scene object that this target was created for.
+     * 
+     * @return
+     */
+    public Scene getScene();
 }

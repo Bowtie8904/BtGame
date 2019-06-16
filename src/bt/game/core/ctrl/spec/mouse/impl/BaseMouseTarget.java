@@ -7,6 +7,7 @@ import org.dyn4j.geometry.Shape;
 
 import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.ctrl.spec.mouse.MouseTarget;
+import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 
 /**
@@ -21,9 +22,11 @@ public class BaseMouseTarget implements MouseTarget
     protected Unit w;
     protected Unit h;
     protected Shape shape;
+    protected Scene scene;
 
-    public BaseMouseTarget(Unit x, Unit y, Unit z, Unit w, Unit h)
+    public BaseMouseTarget(Scene scene, Unit x, Unit y, Unit z, Unit w, Unit h)
     {
+        this.scene = scene;
         this.x = x;
         this.y = y;
         this.w = w;
@@ -98,5 +101,14 @@ public class BaseMouseTarget implements MouseTarget
     public Shape getShape()
     {
         return this.shape;
+    }
+
+    /**
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getScene()
+     */
+    @Override
+    public Scene getScene()
+    {
+        return this.scene;
     }
 }
