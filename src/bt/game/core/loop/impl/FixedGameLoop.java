@@ -41,10 +41,13 @@ public class FixedGameLoop extends GameLoop
             delta += (now - lastTime) / ns;
             lastTime = now;
 
-            while (delta >= 1)
+            if (!this.isPaused)
             {
-                runTick(1);
-                delta -- ;
+                while (delta >= 1)
+                {
+                    runTick(1);
+                    delta -- ;
+                }
             }
 
             runRender();

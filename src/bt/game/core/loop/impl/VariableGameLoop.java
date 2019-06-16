@@ -48,7 +48,11 @@ public class VariableGameLoop extends GameLoop
             delta = (now - lastTime) / ns;
             lastTime = now;
 
-            runTick(this.delta);
+            if (!this.isPaused)
+            {
+                runTick(this.delta);
+            }
+
             runRender();
             frames ++ ;
 

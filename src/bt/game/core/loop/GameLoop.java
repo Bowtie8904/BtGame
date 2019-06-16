@@ -19,6 +19,9 @@ public abstract class GameLoop implements Runnable, Killable
      */
     protected volatile boolean running;
 
+    /** Indictaes whether this loop is currently paused. */
+    protected volatile boolean isPaused;
+
     /** The current frames per second. */
     protected int framesPerSecond = -1;
 
@@ -189,5 +192,33 @@ public abstract class GameLoop implements Runnable, Killable
         {
             this.tick.accept(delta);
         }
+    }
+
+    /**
+     * Sets the paused state of this loop.
+     * 
+     * <p>
+     * Loops that are paused will no longer call tick methods.
+     * </p>
+     * 
+     * @param paused
+     */
+    public void setPaused(boolean paused)
+    {
+        this.isPaused = paused;
+    }
+
+    /**
+     * Indictaes whether this loop is currently paused.
+     * 
+     * <p>
+     * Loops that are paused will no longer call tick methods.
+     * </p>
+     * 
+     * @param paused
+     */
+    public boolean isPaused()
+    {
+        return this.isPaused;
     }
 }
