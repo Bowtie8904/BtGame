@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Shape;
 
-import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.ctrl.spec.mouse.MouseTarget;
 import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
@@ -34,7 +33,6 @@ public class BaseMouseTarget implements MouseTarget
         this.z = z;
         this.shape = Geometry.createRectangle(w.pixels(), h.pixels());
         this.shape.translate(x.pixels() + (w.pixels() / 2), y.pixels() + (h.pixels() / 2));
-        MouseController.get().addMouseTarget(this);
     }
 
     /**
