@@ -257,6 +257,7 @@ public abstract class GameContainer extends Canvas
         {
             this.currentScene.refresh();
         }
+        refresh();
     }
 
     /**
@@ -279,6 +280,7 @@ public abstract class GameContainer extends Canvas
         {
             this.currentScene.refresh();
         }
+        refresh();
     }
 
     /**
@@ -381,6 +383,11 @@ public abstract class GameContainer extends Canvas
         this.scenes.put(name.toUpperCase(), new SimpleEntry<Scene, Scene>(mainScene, loadingScene));
     }
 
+    public Scene getCurrentScene()
+    {
+        return this.currentScene;
+    }
+
     /**
      * Calls {@link Scene#tick() tick} of the current scene as soon as {@link Scene#isLoaded() isLoaded} returns true.
      */
@@ -423,6 +430,8 @@ public abstract class GameContainer extends Canvas
             this.currentScene.render(g);
         }
 
+        render(g);
+
         g.dispose();
         bs.show();
 
@@ -433,6 +442,32 @@ public abstract class GameContainer extends Canvas
             setScene(this.currentSceneName);
             this.sceneRequested = false;
         }
+    }
+
+    /**
+     * A method called from inside the {@link #render()} method.
+     * 
+     * <p>
+     * This method is called AFTER the current scene was rendered.
+     * </p>
+     * 
+     * <p>
+     * This can be used to render stuff that will be globally used across scenes, i.e. frame decoration.
+     * </p>
+     * 
+     * @param g
+     */
+    protected void render(Graphics2D g)
+    {
+
+    }
+
+    /**
+     * Called after a change in frame size.
+     */
+    protected void refresh()
+    {
+
     }
 
     /**
