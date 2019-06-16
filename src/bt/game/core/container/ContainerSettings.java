@@ -1,5 +1,14 @@
 package bt.game.core.container;
 
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import bt.game.util.unit.Unit;
+import bt.utils.log.Logger;
+
 /**
  * A configuration class for {@link GameContainer}s.
  * 
@@ -13,6 +22,8 @@ public class ContainerSettings
     private int frameHeight;
     private boolean undecorated;
     private boolean fullscreen;
+    private Image imageIcon;
+    private String title;
 
     /**
      * Sets the measurements of the the game canvas in {@link Unit units}. This has no effect on the actual window size,
@@ -73,6 +84,52 @@ public class ContainerSettings
         return this;
     }
 
+    /**
+     * Sets the title of the game shown in the taskbar.
+     * 
+     * @param title
+     *            The title.
+     * @return This instance for chaining.
+     */
+    public ContainerSettings title(String title)
+    {
+        this.title = title;
+        return this;
+    }
+
+    /**
+     * Sets the icon of the game shown in the taskbar.
+     * 
+     * @param icon
+     *            The icon.
+     * @return This instance for chaining.
+     */
+    public ContainerSettings icon(Image icon)
+    {
+        this.imageIcon = icon;
+        return this;
+    }
+
+    /**
+     * Sets the icon of the game shown in the taskbar.
+     * 
+     * @param icon
+     *            The image file.
+     * @return This instance for chaining.
+     */
+    public ContainerSettings icon(File icon)
+    {
+        try
+        {
+            this.imageIcon = ImageIO.read(icon);
+        }
+        catch (IOException e)
+        {
+            Logger.global().print(e);
+        }
+        return this;
+    }
+
     protected float getUnitWidth()
     {
         return this.unitWidth;
@@ -101,5 +158,15 @@ public class ContainerSettings
     protected boolean isFullscreen()
     {
         return this.fullscreen;
+    }
+
+    public String getTitle()
+    {
+        return this.title;
+    }
+
+    public Image getIcon()
+    {
+        return this.imageIcon;
     }
 }
