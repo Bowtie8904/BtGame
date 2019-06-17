@@ -19,8 +19,12 @@ import bt.utils.num.NumberUtils;
 public class RenderableImage implements Renderable, Killable
 {
     protected Image image;
+    protected Image scaledImage;
     protected float alpha;
     protected AffineTransform transform;
+    protected Unit lastWidth;
+    protected Unit lastHeight;
+    protected double lastUnitRatio = Unit.getRatio();
 
     public RenderableImage(Image image)
     {
@@ -108,7 +112,16 @@ public class RenderableImage implements Renderable, Killable
                 y.pixels() + h.pixels() / 2);
         g.transform(this.transform);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
-        g.drawImage(this.image, (int)x.pixels(), (int)y.pixels(), (int)w.pixels(), (int)h.pixels(), null);
+
+        if (!w.equals(this.lastWidth) || !h.equals(this.lastHeight) || this.lastUnitRatio != Unit.getRatio())
+        {
+            this.lastUnitRatio = Unit.getRatio();
+            this.scaledImage = this.image.getScaledInstance((int)w.pixels(), (int)h.pixels(), Image.SCALE_SMOOTH);
+            this.lastHeight = h;
+            this.lastWidth = w;
+        }
+
+        g.drawImage(this.scaledImage, (int)x.pixels(), (int)y.pixels(), null);
 
         this.transform.setToRotation(0);
         g.setComposite(origComposite);
