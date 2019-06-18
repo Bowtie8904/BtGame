@@ -110,6 +110,7 @@ public class RenderableImage implements Renderable, Killable
         this.transform.setToRotation(Math.toRadians(rotation),
                 x.pixels() + w.pixels() / 2,
                 y.pixels() + h.pixels() / 2);
+
         g.transform(this.transform);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
 
@@ -135,6 +136,11 @@ public class RenderableImage implements Renderable, Killable
     public void kill()
     {
         this.image.flush();
+
+        if (this.scaledImage != null)
+        {
+            this.scaledImage.flush();
+        }
     }
 
     /**
