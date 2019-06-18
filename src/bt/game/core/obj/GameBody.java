@@ -94,7 +94,7 @@ public class GameBody extends Body implements GameObject
     @Override
     public void setY(Unit y)
     {
-        y = y.subtractUnits(getX());
+        y = y.subtractUnits(getY());
         translate(getX().units(), y.units());
     }
 
