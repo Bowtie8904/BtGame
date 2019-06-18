@@ -21,6 +21,7 @@ import bt.game.core.ctrl.spec.key.KeyController;
 import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
+import bt.utils.log.Logger;
 import bt.utils.thread.Threads;
 
 /**
@@ -417,33 +418,31 @@ public abstract class GameContainer extends Canvas
      */
     public synchronized void render()
     {
-        if (!this.canRender)
+        if (this.canRender)
         {
-            return;
+            BufferStrategy bs = this.getBufferStrategy();
+
+            if (bs == null)
+            {
+                this.createBufferStrategy(4);
+                return;
+            }
+
+            Graphics2D g = (Graphics2D)bs.getDrawGraphics();
+
+            g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            if (this.currentScene != null && this.currentScene.isLoaded())
+            {
+                this.currentScene.render(g);
+            }
+
+            render(g);
+
+            g.dispose();
+            bs.show();
         }
-
-        BufferStrategy bs = this.getBufferStrategy();
-
-        if (bs == null)
-        {
-            this.createBufferStrategy(4);
-            return;
-        }
-
-        Graphics2D g = (Graphics2D)bs.getDrawGraphics();
-
-        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        if (this.currentScene != null && this.currentScene.isLoaded())
-        {
-            this.currentScene.render(g);
-        }
-
-        render(g);
-
-        g.dispose();
-        bs.show();
 
         // if a new scene was requested switch now
         // to avoid complications during the current render process and the killing of the old scene at the same time
@@ -451,6 +450,11 @@ public abstract class GameContainer extends Canvas
         {
             setScene(this.currentSceneName);
             this.sceneRequested = false;
+        }
+
+        synchronized (this)
+        {
+            this.notifyAll();
         }
     }
 
@@ -478,6 +482,28 @@ public abstract class GameContainer extends Canvas
     protected void refresh()
     {
 
+    }
+
+    /**
+     * Exits the application after the next render call or after 500 ms.
+     */
+    public void exit()
+    {
+        this.canRender = false;
+
+        synchronized (this)
+        {
+            try
+            {
+                this.wait(500);
+            }
+            catch (InterruptedException e)
+            {
+                Logger.global().print(e);
+            }
+        }
+
+        System.exit(0);
     }
 
     /**
