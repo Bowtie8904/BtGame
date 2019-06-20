@@ -99,7 +99,6 @@ public abstract class RenderableText implements Renderable
         this.height = h;
         this.x = x;
         this.y = y;
-        this.color = Color.BLACK;
         this.shouldRecalculate = true;
     }
 
@@ -296,7 +295,11 @@ public abstract class RenderableText implements Renderable
                 this.y.pixels() + this.height.pixels() / 2);
 
         g.setFont(this.font.deriveFont(this.transform));
-        g.setColor(this.color);
+
+        if (this.color != null)
+        {
+            g.setColor(this.color);
+        }
 
         g.drawString(this.text, (int)this.x.pixels(), (int)this.y.pixels());
 
