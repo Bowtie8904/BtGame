@@ -48,6 +48,8 @@ import bt.utils.log.Logger;
  * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
  * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
  * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
+ * <li>{@link Refreshable}: This handlers {@link #refresh()} method is gonna forward the call to all registered
+ * refreshables.</li>
  * <li>{@link BroadPhaseCollider}: onCollision is called when collision events are received.</li>
  * <li>{@link NarrowPhaseCollider}: onCollision is called when collision events are received.</li>
  * <li>{@link ManifoldCollider}: onCollision is called when collision events are received.</li>
@@ -156,6 +158,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
      * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
      * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
+     * <li>{@link Refreshable}: This handlers {@link #refresh()} method is gonna forward the call to all registered
+     * refreshables.</li>
      * <li>{@link BroadPhaseCollider}: onCollision is called when collision events are received.</li>
      * <li>{@link NarrowPhaseCollider}: onCollision is called when collision events are received.</li>
      * <li>{@link ManifoldCollider}: onCollision is called when collision events are received.</li>
