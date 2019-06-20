@@ -263,11 +263,6 @@ public abstract class GameContainer extends Canvas
         this.canRender = false;
         this.settings.fullscreen(fullscreen);
         createFrame();
-
-        if (this.currentScene != null)
-        {
-            this.currentScene.refresh();
-        }
         refresh();
     }
 
@@ -286,11 +281,6 @@ public abstract class GameContainer extends Canvas
         this.canRender = false;
         this.settings.frameSize(frameWidth, frameHeight);
         createFrame();
-
-        if (this.currentScene != null)
-        {
-            this.currentScene.refresh();
-        }
         refresh();
     }
 
@@ -452,6 +442,7 @@ public abstract class GameContainer extends Canvas
             this.sceneRequested = false;
         }
 
+        // notifying to alert the wait call in exit()
         synchronized (this)
         {
             this.notifyAll();
@@ -478,10 +469,17 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Called after a change in frame size.
+     * 
+     * <p>
+     * Refreshes the current scene.
+     * </p>
      */
     protected void refresh()
     {
-
+        if (this.currentScene != null)
+        {
+            this.currentScene.refresh();
+        }
     }
 
     /**
