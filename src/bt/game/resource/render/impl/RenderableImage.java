@@ -61,8 +61,8 @@ public class RenderableImage implements Renderable, Killable
     public void render(Graphics2D g)
     {
         render(g,
-                Unit.forUnits(0),
-                Unit.forUnits(0),
+                Unit.zero(),
+                Unit.zero(),
                 Unit.forUnits(this.image.getWidth(null)),
                 Unit.forUnits(this.image.getHeight(null)),
                 0);
@@ -71,8 +71,8 @@ public class RenderableImage implements Renderable, Killable
     public void render(Graphics2D g, double rotation)
     {
         render(g,
-                Unit.forUnits(0),
-                Unit.forUnits(0),
+                Unit.zero(),
+                Unit.zero(),
                 Unit.forUnits(this.image.getWidth(null)),
                 Unit.forUnits(this.image.getHeight(null)),
                 rotation);
@@ -149,6 +149,6 @@ public class RenderableImage implements Renderable, Killable
     @Override
     public Unit getZ()
     {
-        return Unit.forUnits(0);
+        return Unit.zero();
     }
 }

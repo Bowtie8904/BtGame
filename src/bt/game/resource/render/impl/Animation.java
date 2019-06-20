@@ -236,6 +236,6 @@ public class Animation implements Renderable, Tickable
     @Override
     public Unit getZ()
     {
-        return Unit.forUnits(0);
+        return Unit.zero();
     }
 }

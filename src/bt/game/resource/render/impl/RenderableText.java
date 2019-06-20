@@ -27,8 +27,8 @@ public class RenderableText implements Renderable
     public RenderableText(String text)
     {
         this.text = text;
-        this.lastWidth = Unit.forUnits(0);
-        this.lastHeight = Unit.forUnits(0);
+        this.lastWidth = Unit.zero();
+        this.lastHeight = Unit.zero();
     }
 
     public String getText()
@@ -118,8 +118,8 @@ public class RenderableText implements Renderable
     public void render(Graphics2D g)
     {
         render(g,
-                Unit.forUnits(0),
-                Unit.forUnits(0),
+                Unit.zero(),
+                Unit.zero(),
                 this.lastWidth,
                 this.lastHeight);
     }
@@ -130,6 +130,6 @@ public class RenderableText implements Renderable
     @Override
     public Unit getZ()
     {
-        return Unit.forUnits(0);
+        return Unit.zero();
     }
 }
