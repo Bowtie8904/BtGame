@@ -72,8 +72,8 @@ public class ObjectCamera extends Camera
     @Override
     public void tick(double delta)
     {
-        double objectX = this.object.getCenterX().units() + this.object.getW().units() / 2;
-        double objectY = this.object.getCenterY().units() + this.object.getH().units() / 2;
+        double objectX = this.object.getCenterX().units();
+        double objectY = this.object.getCenterY().units();
         
         double camX = getX().units() + GameContainer.width().units() / 2;
         double camY = getY().units() + GameContainer.height().units() / 2;
