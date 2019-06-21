@@ -254,7 +254,6 @@ public class Animation implements Renderable, Tickable
      */
     public void reset()
     {
-        this.lastTime = 0;
         this.currentIndex = -1;
     }
 }
