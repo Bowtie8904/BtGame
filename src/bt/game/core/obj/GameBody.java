@@ -232,6 +232,15 @@ public class GameBody extends Body implements GameObject
         setAsleep(false);
     }
 
+    /**
+     * Indictaes whether this body is currently moving.
+     * 
+     * <p>
+     * It counts as moving when its linear velocity on either its x or y axis is not equal to 0.
+     * </p>
+     * 
+     * @return
+     */
     public boolean isMoving()
     {
         return getLinearVelocity().x != 0 || getLinearVelocity().y != 0;
