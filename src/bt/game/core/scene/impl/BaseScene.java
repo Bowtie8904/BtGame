@@ -150,7 +150,11 @@ public abstract class BaseScene implements Scene
 
         this.world.removeAllBodiesAndJoints();
         this.world.removeAllListeners();
-        Camera.currentCamera = null;
+
+        if (Camera.currentCamera != null && Camera.currentCamera.equals(this.camera))
+        {
+            Camera.currentCamera = null;
+        }
     }
 
     /**
