@@ -129,6 +129,16 @@ public class Animation implements Renderable, Tickable
     }
 
     /**
+     * Gets the rotation angle at which this animation will be drawn.
+     * 
+     * @return
+     */
+    public double getRotation()
+    {
+        return this.rotation;
+    }
+
+    /**
      * Sets whether this animation will play in a loop or just once.
      * 
      * @param loop
@@ -237,5 +247,14 @@ public class Animation implements Renderable, Tickable
     public Unit getZ()
     {
         return Unit.zero();
+    }
+
+    /**
+     * Resets the animation, meaning that it will start from the beginning again.
+     */
+    public void reset()
+    {
+        this.lastTime = 0;
+        this.currentIndex = -1;
     }
 }
