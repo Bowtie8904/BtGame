@@ -85,7 +85,7 @@ public class GameBody extends Body implements GameObject
     public void setX(Unit x)
     {
         x = x.subtractUnits(getX());
-        translate(x.units(), getY().units());
+        translate(x.units(), 0);
     }
 
     /**
@@ -95,7 +95,7 @@ public class GameBody extends Body implements GameObject
     public void setY(Unit y)
     {
         y = y.subtractUnits(getY());
-        translate(getX().units(), y.units());
+        translate(0, y.units());
     }
 
     /**
@@ -141,7 +141,7 @@ public class GameBody extends Body implements GameObject
      */
     public Unit getLocalCenterX()
     {
-        return Unit.forUnits(this.getLocalCenter().x * Unit.getRatio());
+        return Unit.forPixels(this.getLocalCenter().x);
     }
 
     /**
@@ -151,7 +151,7 @@ public class GameBody extends Body implements GameObject
      */
     public Unit getLocalCenterY()
     {
-        return Unit.forUnits(this.getLocalCenter().y * Unit.getRatio());
+        return Unit.forPixels(this.getLocalCenter().y);
     }
 
     /**
@@ -230,5 +230,10 @@ public class GameBody extends Body implements GameObject
     {
         getLinearVelocity().y = y * 10;
         setAsleep(false);
+    }
+
+    public boolean isMoving()
+    {
+        return getLinearVelocity().x != 0 || getLinearVelocity().y != 0;
     }
 }
