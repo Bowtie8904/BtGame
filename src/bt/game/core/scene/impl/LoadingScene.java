@@ -141,4 +141,12 @@ public class LoadingScene extends BaseScene
     {
         this.gameObjectHandler.refresh();
     }
+
+    /**
+     * @see bt.game.core.scene.impl.BaseScene#renderBackground(java.awt.Graphics2D)
+     */
+    @Override
+    public void renderBackground(Graphics2D g)
+    {
+    }
 }
