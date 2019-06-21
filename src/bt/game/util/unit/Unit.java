@@ -23,13 +23,18 @@ public class Unit
         Unit.ratio = pixelsPerUnit;
     }
 
+    /**
+     * Gets the pixel per unit ratio. The returned value is the amount of pixels one unit consist of.
+     * 
+     * @return
+     */
     public static double getRatio()
     {
         return ratio;
     }
 
     /**
-     * Creates a new instance with a unit and pixel value of zero.
+     * Returns a constant instance with a unit and pixel value of zero.
      * 
      * @return
      */
