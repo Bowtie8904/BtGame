@@ -79,4 +79,11 @@ public interface MouseTarget
      * @return
      */
     public Scene getScene();
+    
+    /**
+     * Indicates whether this target is affected by the camera translation, so that we offset is taken into account.
+     * 
+     * @return
+     */
+    public boolean affectedByCamera();
 }

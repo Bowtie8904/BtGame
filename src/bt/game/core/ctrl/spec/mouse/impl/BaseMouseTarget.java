@@ -109,4 +109,13 @@ public class BaseMouseTarget implements MouseTarget
     {
         return this.scene;
     }
+
+    /**
+     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#affectedByCamera()
+     */
+    @Override
+    public boolean affectedByCamera()
+    {
+        return true;
+    }
 }
