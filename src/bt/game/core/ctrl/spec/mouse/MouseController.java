@@ -217,6 +217,10 @@ public class MouseController extends MouseAdapter
             pCam = new Point((int)(this.mouseX + Camera.currentCamera.getX().pixels()),
                     (int)(this.mouseY + Camera.currentCamera.getY().pixels()));
         }
+        else
+        {
+            pCam = pBase;
+        }
 
         double camX = 0;
         double camY = 0;
