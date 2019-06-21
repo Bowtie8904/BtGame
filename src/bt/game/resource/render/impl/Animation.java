@@ -250,10 +250,10 @@ public class Animation implements Renderable, Tickable
     }
 
     /**
-     * Resets the animation, meaning that it will start from the beginning again.
+     * Resets the animation, meaning that it will start from the begining again.
      */
     public void reset()
     {
-        this.currentIndex = -1;
+        this.currentIndex = 0;
     }
 }
