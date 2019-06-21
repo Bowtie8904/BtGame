@@ -117,14 +117,6 @@ public class LoadingScene extends BaseScene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#start()
-     */
-    @Override
-    public void start()
-    {
-    }
-
-    /**
      * @see bt.game.core.scene.Scene#getWorld()
      */
     @Override
