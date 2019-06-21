@@ -8,6 +8,7 @@ import bt.game.core.container.GameContainer;
 import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.core.obj.hand.impl.BaseObjectHandler;
 import bt.game.core.scene.Scene;
+import bt.game.core.scene.cam.Camera;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
 import bt.game.util.unit.Unit;
@@ -149,6 +150,7 @@ public abstract class BaseScene implements Scene
 
         this.world.removeAllBodiesAndJoints();
         this.world.removeAllListeners();
+        Camera.currentCamera = null;
     }
 
     /**
@@ -161,6 +163,11 @@ public abstract class BaseScene implements Scene
         {
             this.gameObjectHandler.tick(delta);
             this.world.update(delta);
+
+            if (Camera.currentCamera != null)
+            {
+                Camera.currentCamera.tick(delta);
+            }
         }
     }
 
@@ -172,6 +179,13 @@ public abstract class BaseScene implements Scene
     {
         if (this.isLoaded)
         {
+            if (Camera.currentCamera != null)
+            {
+                Camera.currentCamera.render(g);
+            }
+
+            renderBackground(g);
+
             this.gameObjectHandler.render(g);
         }
     }
@@ -193,4 +207,15 @@ public abstract class BaseScene implements Scene
     {
         return GameContainer.height();
     }
+
+    /**
+     * Supposed to render the background.
+     * 
+     * <p>
+     * Called from inside the {@link #render(Graphics2D)} after the camera is translated.
+     * </p>
+     * 
+     * @param g
+     */
+    public abstract void renderBackground(Graphics2D g);
 }
