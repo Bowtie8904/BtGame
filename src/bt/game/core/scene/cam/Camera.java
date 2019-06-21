@@ -1,6 +1,6 @@
 package bt.game.core.scene.cam;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import bt.game.core.container.GameContainer;
 import bt.game.core.ctrl.spec.mouse.MouseController;
@@ -122,9 +122,14 @@ public class Camera implements Tickable
      * 
      * @param g
      */
-    public void render(Graphics g)
+    public void render(Graphics2D g)
     {
         g.translate((int)-this.x.pixels(), (int)-this.y.pixels());
+    }
+
+    public void resetTranslation(Graphics2D g)
+    {
+        g.translate((int)this.x.pixels(), (int)this.y.pixels());
     }
 
     /**
