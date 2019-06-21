@@ -140,10 +140,16 @@ public class MouseController extends MouseAdapter
                 double mx = p.getX();
                 double my = p.getY();
 
+                double camX = 0;
+                double camY = 0;
+
+                double x = 0;
+                double y = 0;
+
                 if (Camera.currentCamera != null)
                 {
-                    mx += Camera.currentCamera.getX().pixels();
-                    my += Camera.currentCamera.getY().pixels();
+                    camX = Camera.currentCamera.getX().pixels();
+                    camY = Camera.currentCamera.getY().pixels();
                 }
 
                 boolean foundOne = false;
@@ -152,7 +158,18 @@ public class MouseController extends MouseAdapter
                 
                 for (MouseTarget target : this.mouseTargets)
                 {
-                    if (target.getShape().contains(new Vector2(mx, my)))
+                    if (target.affectedByCamera())
+                    {
+                        x = mx + camX;
+                        y = my + camY;
+                    }
+                    else
+                    {
+                        x = mx;
+                        y = my;
+                    }
+
+                    if (target.getShape().contains(new Vector2(x, y)))
                     {
                         if (!target.equals(this.lastHoveredTarget))
                         {
@@ -191,12 +208,23 @@ public class MouseController extends MouseAdapter
         this.mouseX = e.getX();
         this.mouseY = e.getY();
 
-        Point p = new Point(this.mouseX, this.mouseY);
+        Point pBase = new Point(this.mouseX, this.mouseY);
+        Point p = null;
+        Point pCam = null;
 
         if (Camera.currentCamera != null)
         {
-            p = new Point((int)(this.mouseX + Camera.currentCamera.getX().pixels()),
+            pCam = new Point((int)(this.mouseX + Camera.currentCamera.getX().pixels()),
                     (int)(this.mouseY + Camera.currentCamera.getY().pixels()));
+        }
+
+        double camX = 0;
+        double camY = 0;
+
+        if (Camera.currentCamera != null)
+        {
+            camX = Camera.currentCamera.getX().pixels();
+            camY = Camera.currentCamera.getY().pixels();
         }
 
         if (e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON3)
@@ -205,6 +233,15 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
+                if (target.affectedByCamera())
+                {
+                    p = pCam;
+                }
+                else
+                {
+                    p = pBase;
+                }
+
                 if (target.getShape().contains(new Vector2(p.x, p.y)))
                 {
                     if (e.getButton() == MouseEvent.BUTTON1)
