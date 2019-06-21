@@ -6,6 +6,7 @@ import org.dyn4j.dynamics.World;
 
 import bt.game.core.container.GameContainer;
 import bt.game.core.obj.hand.ObjectHandler;
+import bt.game.core.scene.cam.Camera;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.util.unit.Unit;
 import bt.runtime.Killable;
@@ -39,4 +40,6 @@ public interface Scene extends Killable
     public void render(Graphics2D g);
 
     public void refresh();
+
+    public void setCamera(Camera camera);
 }

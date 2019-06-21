@@ -17,7 +17,6 @@ import bt.utils.log.Logger;
 
 /**
  * @author &#8904
- *
  */
 public abstract class BaseScene implements Scene
 {
@@ -27,6 +26,7 @@ public abstract class BaseScene implements Scene
     protected boolean isLoaded;
     protected String name;
     protected World world;
+    protected Camera camera;
 
     public BaseScene(GameContainer gameContainer, ResourceLoader resourceLoader)
     {
@@ -164,9 +164,9 @@ public abstract class BaseScene implements Scene
             this.gameObjectHandler.tick(delta);
             this.world.update(delta);
 
-            if (Camera.currentCamera != null)
+            if (this.camera != null)
             {
-                Camera.currentCamera.tick(delta);
+                this.camera.tick(delta);
             }
         }
     }
@@ -179,9 +179,9 @@ public abstract class BaseScene implements Scene
     {
         if (this.isLoaded)
         {
-            if (Camera.currentCamera != null)
+            if (this.camera != null)
             {
-                Camera.currentCamera.render(g);
+                this.camera.render(g);
             }
 
             renderBackground(g);
@@ -206,6 +206,18 @@ public abstract class BaseScene implements Scene
     public Unit getHeight()
     {
         return GameContainer.height();
+    }
+
+    @Override
+    public void setCamera(Camera camera)
+    {
+        this.camera = camera;
+    }
+
+    @Override
+    public void start()
+    {
+        Camera.currentCamera = this.camera;
     }
 
     /**
