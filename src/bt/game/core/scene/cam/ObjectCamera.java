@@ -2,7 +2,6 @@ package bt.game.core.scene.cam;
 
 import bt.game.core.container.GameContainer;
 import bt.game.core.obj.GameObject;
-import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 
@@ -11,7 +10,7 @@ import bt.game.util.unit.Unit;
  * 
  * @author &#8904
  */
-public class ObjectCamera extends Camera implements Tickable
+public class ObjectCamera extends Camera
 {
     /** The object to follow. */
     protected GameObject object;

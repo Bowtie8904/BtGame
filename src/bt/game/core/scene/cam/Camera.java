@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import bt.game.core.container.GameContainer;
 import bt.game.core.ctrl.spec.mouse.MouseController;
+import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.Scene;
 import bt.game.util.unit.Unit;
 
@@ -12,7 +13,7 @@ import bt.game.util.unit.Unit;
  * 
  * @author &#8904
  */
-public class Camera
+public class Camera implements Tickable
 {
     /** The scene that this instance is used for. */
     protected Scene scene;
@@ -124,5 +125,14 @@ public class Camera
     public void render(Graphics g)
     {
         g.translate((int)-this.x.pixels(), (int)-this.y.pixels());
+    }
+
+    /**
+     * @see bt.game.core.obj.intf.Tickable#tick(double)
+     */
+    @Override
+    public void tick(double delta)
+    {
+        moveTo(this.x, this.y);
     }
 }
