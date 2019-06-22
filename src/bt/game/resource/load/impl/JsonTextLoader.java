@@ -112,10 +112,6 @@ public class JsonTextLoader extends BaseTextLoader
         ]
      }
      * </pre>
-     * 
-     * @see bt.game.resource.load.TextLoader#load(java.lang.String, java.lang.String, int[])
-     * 
-     * @see bt.game.resource.load.TextLoader#load(java.lang.String)
      */
     @Override
     public void load(String name)
