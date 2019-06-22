@@ -10,7 +10,9 @@ import bt.game.core.obj.hand.impl.BaseObjectHandler;
 import bt.game.core.scene.Scene;
 import bt.game.core.scene.cam.Camera;
 import bt.game.resource.load.ResourceLoader;
+import bt.game.resource.load.TextLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
+import bt.game.resource.load.impl.BaseTextLoader;
 import bt.game.util.unit.Unit;
 import bt.runtime.InstanceKiller;
 import bt.utils.log.Logger;
@@ -21,6 +23,7 @@ import bt.utils.log.Logger;
 public abstract class BaseScene implements Scene
 {
     protected ResourceLoader resourceLoader;
+    protected TextLoader textLoader;
     protected ObjectHandler gameObjectHandler;
     protected GameContainer gameContainer;
     protected boolean isLoaded;
@@ -40,6 +43,8 @@ public abstract class BaseScene implements Scene
         {
             this.resourceLoader = resourceLoader;
         }
+
+        this.textLoader = new BaseTextLoader();
 
         this.world = new World();
         this.world.setGravity(World.ZERO_GRAVITY);
@@ -80,6 +85,15 @@ public abstract class BaseScene implements Scene
     }
 
     /**
+     * @see bt.game.core.scene.Scene#getTextLoader()
+     */
+    @Override
+    public TextLoader getTextLoader()
+    {
+        return this.textLoader;
+    }
+
+    /**
      * @see bt.game.core.scene.Scene#getGameContainer()
      */
     @Override
@@ -98,6 +112,8 @@ public abstract class BaseScene implements Scene
         this.gameObjectHandler.init();
         InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
         this.name = name;
+        this.textLoader.load(name);
+        load();
         this.resourceLoader.load(name);
         this.resourceLoader.finishLoad();
         this.isLoaded = true;
@@ -118,6 +134,7 @@ public abstract class BaseScene implements Scene
     @Override
     public void refresh()
     {
+        this.textLoader.load(this.name);
         this.gameObjectHandler.refresh();
     }
 
@@ -147,6 +164,8 @@ public abstract class BaseScene implements Scene
             InstanceKiller.unregister(this.gameObjectHandler);
             InstanceKiller.unregister(this);
         }
+
+        this.textLoader.kill();
 
         this.world.removeAllBodiesAndJoints();
         this.world.removeAllListeners();
@@ -234,4 +253,14 @@ public abstract class BaseScene implements Scene
      * @param g
      */
     public abstract void renderBackground(Graphics2D g);
+
+    /**
+     * Supposed to setup/register additional resources.
+     * 
+     * <p>
+     * This method is called from inside the {@link #load(String)} method after the TextLoader and before the
+     * ResourceLoader.
+     * </p>
+     */
+    public abstract void load();
 }
