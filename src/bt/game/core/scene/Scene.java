@@ -8,6 +8,7 @@ import bt.game.core.container.GameContainer;
 import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.core.scene.cam.Camera;
 import bt.game.resource.load.ResourceLoader;
+import bt.game.resource.load.TextLoader;
 import bt.game.util.unit.Unit;
 import bt.runtime.Killable;
 
@@ -20,6 +21,8 @@ public interface Scene extends Killable
     public ObjectHandler getObjectHandler();
 
     public ResourceLoader getResourceLoader();
+
+    public TextLoader getTextLoader();
 
     public GameContainer getGameContainer();
 
