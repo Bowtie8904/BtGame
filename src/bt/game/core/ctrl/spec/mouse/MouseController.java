@@ -132,7 +132,7 @@ public class MouseController extends MouseAdapter
             return;
         }
 
-        if (this.component.getMousePosition() != null && this.component.getMousePosition() != null)
+        if (this.component.getMousePosition() != null)
         {
             Point p = this.component.getMousePosition();
             if (p != null)
