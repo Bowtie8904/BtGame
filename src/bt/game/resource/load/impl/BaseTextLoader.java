@@ -131,6 +131,7 @@ public class BaseTextLoader implements TextLoader
     @Override
     public void kill()
     {
+        Logger.global().print("Clearing texts.");
         this.loadables.clear();
         this.texts.clear();
     }
