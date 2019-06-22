@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bt.game.resource.render.Renderable;
+import bt.game.resource.text.Text;
 import bt.types.sound.SoundSupplier;
 
 /**
@@ -24,6 +25,7 @@ public class ResourceContainer
     private Map<String, File> files;
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
+    private Map<Integer, Text> texts;
 
     /**
      * Creates a new instance with empty maps.
@@ -35,6 +37,7 @@ public class ResourceContainer
         this.files = new HashMap<>();
         this.fonts = new HashMap<>();
         this.objects = new HashMap<>();
+        this.texts = new HashMap<>();
     }
 
     /**
@@ -103,6 +106,19 @@ public class ResourceContainer
     }
 
     /**
+     * Maps the given resource with the given name.
+     * 
+     * @param id
+     *            The id of the text.
+     * @param res
+     *            The text to map in the resouce loader.
+     */
+    public void add(int id, Text res)
+    {
+        this.texts.put(id, res);
+    }
+
+    /**
      * Gets all mapped renderable resources.
      * 
      * @return
@@ -140,6 +156,16 @@ public class ResourceContainer
     public Map<String, Font> getFonts()
     {
         return this.fonts;
+    }
+
+    /**
+     * Gets all mapped text resources.
+     * 
+     * @return
+     */
+    public Map<Integer, Text> getTexts()
+    {
+        return this.texts;
     }
 
     /**
