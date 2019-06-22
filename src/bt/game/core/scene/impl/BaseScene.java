@@ -112,11 +112,21 @@ public abstract class BaseScene implements Scene
         this.gameObjectHandler.init();
         InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
         this.name = name;
-        this.textLoader.load(name);
+        loadTextLoader(name);
         load();
+        loadResourceLoader(name);
+        this.isLoaded = true;
+    }
+
+    protected void loadTextLoader(String name)
+    {
+        this.textLoader.load(name);
+    }
+
+    protected void loadResourceLoader(String name)
+    {
         this.resourceLoader.load(name);
         this.resourceLoader.finishLoad();
-        this.isLoaded = true;
     }
 
     /**
@@ -258,8 +268,8 @@ public abstract class BaseScene implements Scene
      * Supposed to setup/register additional resources.
      * 
      * <p>
-     * This method is called from inside the {@link #load(String)} method after the TextLoader and before the
-     * ResourceLoader.
+     * This method is called from inside the {@link #load(String)} method after {@link #loadTextLoader(String)} and
+     * before {@link #loadResourceLoader(String)}.
      * </p>
      */
     public abstract void load();
