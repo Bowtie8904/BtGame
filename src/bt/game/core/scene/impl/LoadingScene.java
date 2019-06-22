@@ -141,4 +141,10 @@ public class LoadingScene extends BaseScene
     public void renderBackground(Graphics2D g)
     {
     }
+
+    @Override
+    public void load()
+    {
+
+    }
 }
