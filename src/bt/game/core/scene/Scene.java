@@ -7,6 +7,7 @@ import org.dyn4j.dynamics.World;
 import bt.game.core.container.GameContainer;
 import bt.game.core.obj.hand.ObjectHandler;
 import bt.game.core.scene.cam.Camera;
+import bt.game.resource.load.Loader;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.load.TextLoader;
 import bt.game.util.unit.Unit;
@@ -16,7 +17,7 @@ import bt.runtime.Killable;
  * @author &#8904
  *
  */
-public interface Scene extends Killable
+public interface Scene extends Killable, Loader
 {
     public ObjectHandler getObjectHandler();
 
@@ -31,8 +32,6 @@ public interface Scene extends Killable
     public Unit getWidth();
 
     public Unit getHeight();
-
-    public void load(String name);
 
     public boolean isLoaded();
 

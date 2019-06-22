@@ -6,7 +6,7 @@ import bt.runtime.Killable;
 /**
  * @author &#8904
  */
-public interface TextLoader extends Killable
+public interface TextLoader extends Killable, Loader
 {
     public String getLanguage();
 
@@ -17,6 +17,4 @@ public interface TextLoader extends Killable
     public void add(int id, Text text);
 
     public void register(Loadable loadable);
-
-    public void load(String name);
 }

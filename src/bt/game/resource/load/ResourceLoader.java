@@ -13,16 +13,8 @@ import bt.types.sound.Sound;
  * 
  * @author &#8904
  */
-public interface ResourceLoader extends Killable
+public interface ResourceLoader extends Killable, Loader
 {
-    /**
-     * Loads all resources for the given context name (i. e. unique scene name).
-     * 
-     * @param name
-     *            The context name to load resources for.
-     */
-    public void load(String name);
-
     /**
      * Finishes the loading process. This method should be used for things like setting up animations after all
      * resources were loaded.
