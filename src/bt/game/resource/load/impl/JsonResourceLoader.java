@@ -23,9 +23,9 @@ import bt.utils.log.Logger;
 
 /**
  * An implementation of {@link ResourceLoader} which offers the same functionalities as {@link BaseResourceLoader} but
- * can additionally load resources that were defined in a json file.
+ * can additionally load resources that were defined in a json (.res) file.
  * 
- * <h3>The json file needs to be in the following format:</h3>
+ * <h3>The json (.res) file needs to be in the following format:</h3>
  * 
  * <p>
  * The arrays 'images', 'gifs', 'sounds', 'files' and 'fonts' are all optional. They can be empty, contain multiple
@@ -102,8 +102,8 @@ public class JsonResourceLoader extends BaseResourceLoader
      * </p>
      * 
      * @param resourceDir
-     *            The directory which contains the json files that define additional resources to load. If the directory
-     *            does not exist it will be created.
+     *            The directory which contains the json (.res) files that define additional resources to load. If the
+     *            directory does not exist it will be created.
      */
     public JsonResourceLoader(File resourceDir)
     {
@@ -133,10 +133,10 @@ public class JsonResourceLoader extends BaseResourceLoader
      * 
      * <p>
      * Additionally resources defined in a json file with the same name as the given context name and the file ending
-     * .json will be loaded.
+     * .res will be loaded.
      * </p>
      * 
-     * <h3>The json file needs to be in the following format:</h3>
+     * <h3>The json (.res) file needs to be in the following format:</h3>
      * 
      * <p>
      * The arrays 'images', 'gifs', 'sounds', 'files' and 'fonts' are all optional. They can be empty, contain multiple
@@ -299,18 +299,22 @@ public class JsonResourceLoader extends BaseResourceLoader
      * with the correct (case insensitive) name will be used. This method will try to parse the file content as json and
      * return the created {@link JSONObject}.
      * 
+     * <p>
+     * The resource filer needs to have the file extension .res.
+     * </p>
+     * 
      * @param name
      *            The context name = the name of the file (without file ending) to load from.
      * @return The parsed json from the file or null if parsing failed for any reason.
      */
     private JSONObject getJsonForName(String name)
     {
-        File[] files = FileUtils.getFiles(this.resourceDir.getAbsolutePath(), "json");
+        File[] files = FileUtils.getFiles(this.resourceDir.getAbsolutePath(), "res");
         File jsonFile = null;
 
         for (File file : files)
         {
-            if (file.getName().equalsIgnoreCase(name + ".json"))
+            if (file.getName().equalsIgnoreCase(name + ".res"))
             {
                 jsonFile = file;
                 break;
