@@ -187,9 +187,11 @@ public class Animation implements Renderable, Tickable
     @Override
     public void tick(double delta)
     {
-        if (System.currentTimeMillis() - this.lastTime >= this.interval || this.lastTime == 0)
+        if (this.currentIndex < this.images.length && System.currentTimeMillis() - this.lastTime >= this.interval
+                || this.lastTime == 0)
         {
             this.lastTime = System.currentTimeMillis();
+
             this.currentIndex ++ ;
 
             if (this.currentIndex >= this.images.length)
@@ -201,7 +203,6 @@ public class Animation implements Renderable, Tickable
                 else if (this.onEnd != null)
                 {
                     this.onEnd.run();
-                    this.currentIndex = 0;
                     return;
                 }
             }
