@@ -1,6 +1,7 @@
 package bt.game.core.ctrl.spec.mouse.impl;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Shape;
@@ -39,7 +40,7 @@ public class BaseMouseTarget implements MouseTarget
      * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onRightClick()
      */
     @Override
-    public void onRightClick()
+    public void onRightClick(MouseEvent e, Unit x, Unit y)
     {
     }
 
@@ -47,7 +48,7 @@ public class BaseMouseTarget implements MouseTarget
      * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onLeftClick()
      */
     @Override
-    public void onLeftClick()
+    public void onLeftClick(MouseEvent e, Unit x, Unit y)
     {
     }
 
@@ -79,7 +80,7 @@ public class BaseMouseTarget implements MouseTarget
      * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onMouseWheelMove(int)
      */
     @Override
-    public void onMouseWheelMove(int clicks)
+    public void onMouseWheelMove(MouseWheelEvent e, int clicks)
     {
     }
 

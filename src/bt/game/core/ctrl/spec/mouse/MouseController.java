@@ -209,7 +209,7 @@ public class MouseController extends MouseAdapter
         this.mouseY = e.getY();
 
         Point pBase = new Point(this.mouseX, this.mouseY);
-        Point p = null;
+        Point p;
         Point pCam = null;
 
         if (Camera.currentCamera != null)
@@ -248,20 +248,22 @@ public class MouseController extends MouseAdapter
 
                 if (target.getShape().contains(new Vector2(p.x, p.y)))
                 {
+                    final Point finalPoint = p;
+
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
                         this.lastClickedTarget = target; // used for dragging. only used with left mouse button
                         onLeftClick(target);
 
                         Threads.get().executeCached(() -> {
-                            target.onLeftClick();
+                            target.onLeftClick(e, Unit.forPixels(finalPoint.x), Unit.forPixels(finalPoint.y));
                         });
                     }
                     else if (e.getButton() == MouseEvent.BUTTON3)
                     {
                         onRightClick(target);
                         Threads.get().executeCached(() -> {
-                            target.onRightClick();
+                            target.onRightClick(e, Unit.forPixels(finalPoint.x), Unit.forPixels(finalPoint.y));
                         });
                     }
                     return;
@@ -286,7 +288,7 @@ public class MouseController extends MouseAdapter
         {
             // dont switch to another target if we havnt released our last click yet, i.e. are still dragging the
             // target around
-            this.lastClickedTarget.onMouseWheelMove(e.getWheelRotation());
+            this.lastClickedTarget.onMouseWheelMove(e, e.getWheelRotation());
         }
         else
         {
@@ -307,7 +309,7 @@ public class MouseController extends MouseAdapter
             {
                 if (target.getShape().contains(new Vector2(p.x, p.y)))
                 {
-                    target.onMouseWheelMove(e.getWheelRotation());
+                    target.onMouseWheelMove(e, e.getWheelRotation());
                     return;
                 }
             }

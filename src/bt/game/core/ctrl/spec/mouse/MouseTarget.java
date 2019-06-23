@@ -1,6 +1,7 @@
 package bt.game.core.ctrl.spec.mouse;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import org.dyn4j.geometry.Shape;
 
@@ -15,12 +16,12 @@ public interface MouseTarget
     /**
      * Called when a click with the right mouse button was performed on this instance.
      */
-    public void onRightClick();
+    public void onRightClick(MouseEvent e, Unit x, Unit y);
 
     /**
      * Called when a click with the left mouse button was performed on this instance.
      */
-    public void onLeftClick();
+    public void onLeftClick(MouseEvent e, Unit x, Unit y);
 
     /**
      * Called when this instance was dragged with the mouse.
@@ -51,7 +52,7 @@ public interface MouseTarget
      *            The number of clicks that were performed. Positive value if the wheel was rotated down/towards the
      *            user and negative value if the wheel was rotated up/away from the user.
      */
-    public void onMouseWheelMove(int clicks);
+    public void onMouseWheelMove(MouseWheelEvent e, int clicks);
 
     /**
      * Gets the Z position of this instance.
