@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.io.File;
 
 import bt.game.resource.render.Renderable;
+import bt.game.resource.render.impl.Animation;
 import bt.runtime.Killable;
 import bt.types.sound.Sound;
 
@@ -81,4 +82,13 @@ public interface ResourceLoader extends Killable, Loader
      * @return The object or null if no mapping for the recource name exists.
      */
     public Object get(String resourceName);
+
+    /**
+     * Gets the animation with tthe given resource name if such an animation has been set up before.
+     * 
+     * @param resourceName
+     *            The unique name that the animation was loaded with.
+     * @return The animation or null if no mapping for the recource name exists.
+     */
+    public Animation getAnimation(String resourceName);
 }

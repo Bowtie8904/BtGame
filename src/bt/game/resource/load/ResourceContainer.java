@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bt.game.resource.render.Renderable;
+import bt.game.resource.render.impl.Animation;
 import bt.game.resource.text.Text;
 import bt.types.sound.SoundSupplier;
 
@@ -25,6 +26,7 @@ public class ResourceContainer
     private Map<String, File> files;
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
+    private Map<String, Animation> animations;
     private Map<Integer, Text> texts;
 
     /**
@@ -37,6 +39,7 @@ public class ResourceContainer
         this.files = new HashMap<>();
         this.fonts = new HashMap<>();
         this.objects = new HashMap<>();
+        this.animations = new HashMap<>();
         this.texts = new HashMap<>();
     }
 
@@ -108,6 +111,19 @@ public class ResourceContainer
     /**
      * Maps the given resource with the given name.
      * 
+     * @param name
+     *            The name of the resource.
+     * @param res
+     *            The object to map in the resouce loader.
+     */
+    public void add(String name, Animation res)
+    {
+        this.animations.put(name, res);
+    }
+
+    /**
+     * Maps the given resource with the given name.
+     * 
      * @param id
      *            The id of the text.
      * @param res
@@ -171,10 +187,24 @@ public class ResourceContainer
     /**
      * Gets all mapped object resources.
      * 
+     * <p>
+     * This does only include resources that where specifically added via {@link #add(String, Object)}.
+     * </p>
+     * 
      * @return
      */
     public Map<String, Object> getObjects()
     {
         return this.objects;
+    }
+
+    /**
+     * Gets all mapped animation resources.
+     * 
+     * @return
+     */
+    public Map<String, Animation> getAnimations()
+    {
+        return this.animations;
     }
 }

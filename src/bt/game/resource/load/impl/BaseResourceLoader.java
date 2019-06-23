@@ -14,6 +14,7 @@ import bt.game.resource.load.Loadable;
 import bt.game.resource.load.ResourceContainer;
 import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.render.Renderable;
+import bt.game.resource.render.impl.Animation;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.types.sound.Sound;
@@ -34,6 +35,7 @@ public class BaseResourceLoader implements ResourceLoader
     private Map<String, File> files;
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
+    private Map<String, Animation> animations;
     private List<Loadable> loadables;
     private List<Animated> animated;
     private List<Runnable> closingOpeartions;
@@ -56,6 +58,7 @@ public class BaseResourceLoader implements ResourceLoader
         this.files = new HashMap<>();
         this.fonts = new HashMap<>();
         this.objects = new HashMap<>();
+        this.animations = new HashMap<>();
         this.loadables = new ArrayList<>();
         this.animated = new ArrayList<>();
         this.closingOpeartions = new ArrayList<>();
@@ -115,6 +118,7 @@ public class BaseResourceLoader implements ResourceLoader
         this.files.clear();
         this.fonts.clear();
         this.objects.clear();
+        this.animations.clear();
         this.loadables.clear();
         this.animated.clear();
         this.closingOpeartions.clear();
@@ -174,6 +178,20 @@ public class BaseResourceLoader implements ResourceLoader
     protected void add(String resourceName, Font value)
     {
         this.fonts.put(resourceName.toUpperCase(), value);
+    }
+
+    /**
+     * Maps the given animation by the given (case insensitive) resource name. Once the animation has been added it
+     * becomes accessible by {@link #getAnimation(String)}.
+     * 
+     * @param resourceName
+     *            The unique resource name for the given animation.
+     * @param value
+     *            The animation to map.
+     */
+    protected void add(String resourceName, Animation value)
+    {
+        this.animations.put(resourceName.toUpperCase(), value);
     }
 
     /**
@@ -248,6 +266,29 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
+     * Creates a new animation with the interval and images of the mapped one.
+     * 
+     * @see bt.game.resource.load.ResourceLoader#getAnimation(java.lang.String)
+     */
+    @Override
+    public Animation getAnimation(String resourceName)
+    {
+        if (this.killed)
+        {
+            throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
+        }
+        Animation mappedAnim = this.animations.get(resourceName.toUpperCase());
+        Animation createdAnim = null;
+
+        if (mappedAnim != null)
+        {
+            createdAnim = new Animation(this, mappedAnim.getTime(), mappedAnim.getImageNames());
+        }
+
+        return createdAnim;
+    }
+
+    /**
      * @see bt.game.resource.ResourceLoader#get(java.lang.String)
      */
     @Override
@@ -277,6 +318,7 @@ public class BaseResourceLoader implements ResourceLoader
         Map<String, File> loadedFiles;
         Map<String, Font> loadedFonts;
         Map<String, Object> loadedObjects;
+        Map<String, Animation> loadedAnimations;
 
         List<String> loadedClasses = new ArrayList<>();
 
@@ -359,6 +401,19 @@ public class BaseResourceLoader implements ResourceLoader
                     add(resourceKey, loadedObjects.get(resourceKey));
                     Logger.global()
                             .print("Loaded object '" + resourceKey + "' for " + loadable.getClass().getName() + ".");
+                }
+            }
+
+            // animations
+            loadedAnimations = container.getAnimations();
+
+            if (loadedAnimations != null && !loadedAnimations.isEmpty())
+            {
+                for (String resourceKey : loadedAnimations.keySet())
+                {
+                    add(resourceKey, loadedAnimations.get(resourceKey));
+                    Logger.global()
+                            .print("Loaded animation '" + resourceKey + "' for " + loadable.getClass().getName() + ".");
                 }
             }
         }

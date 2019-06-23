@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bt.game.core.obj.intf.Tickable;
-import bt.game.core.scene.Scene;
+import bt.game.resource.load.ResourceLoader;
 import bt.game.resource.render.Renderable;
 import bt.game.util.unit.Unit;
 
@@ -18,7 +18,7 @@ import bt.game.util.unit.Unit;
  */
 public class Animation implements Renderable, Tickable
 {
-    private Scene scene;
+    private ResourceLoader resourceLoader;
     private RenderableImage[] images;
     private String[] imageNames;
     private int currentIndex = -1;
@@ -50,21 +50,21 @@ public class Animation implements Renderable, Tickable
      * Before this animation can be used {@link #setup()} must be called.
      * </p>
      * 
-     * @param scene
-     *            The scene wichs resource loader is used to gather the images.
+     * @param resourceLoader
+     *            The resource loader that is used to gather the images.
      * @param time
      *            The total time this animation takes in milliseconds.
      * @param images
      *            The names of the {@link RenderableImages} that are used in the mapping of the resource loader.
      */
-    public Animation(Scene scene, long time, String... images)
+    public Animation(ResourceLoader resourceLoader, long time, String... images)
     {
         if (images.length == 0)
         {
             throw new IllegalArgumentException("Must pass at least one image name.");
         }
 
-        this.scene = scene;
+        this.resourceLoader = resourceLoader;
         this.imageNames = images;
         this.onFrame = new HashMap<>();
         this.time = time;
@@ -77,12 +77,12 @@ public class Animation implements Renderable, Tickable
     public void setup()
     {
         this.images = Arrays.stream(this.imageNames)
-                .map(this.scene.getResourceLoader()::getRenderable)
+                .map(this.resourceLoader::getRenderable)
                 .filter(RenderableImage.class::isInstance)
                 .map(RenderableImage.class::cast)
                 .toArray(RenderableImage[]::new);
 
-        if (this.images.length == 0)
+        if (this.images.length != this.imageNames.length)
         {
             throw new IllegalArgumentException(
                     "Unable to receive enough RenderableImages from the resource loader. Some image names are not mapped to instances of RenderableImage.");
@@ -115,7 +115,7 @@ public class Animation implements Renderable, Tickable
      */
     public long getTime()
     {
-        return this.interval * this.images.length;
+        return this.time;
     }
 
     /**
@@ -255,5 +255,15 @@ public class Animation implements Renderable, Tickable
     public void reset()
     {
         this.currentIndex = 0;
+    }
+
+    /**
+     * Gets the set image names.
+     * 
+     * @return the imageNames
+     */
+    public String[] getImageNames()
+    {
+        return this.imageNames;
     }
 }

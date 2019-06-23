@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import bt.game.resource.load.Loadable;
 import bt.game.resource.load.ResourceLoader;
+import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.impl.RenderableGif;
 import bt.game.resource.render.impl.RenderableImage;
 import bt.runtime.InstanceKiller;
@@ -28,8 +29,8 @@ import bt.utils.log.Logger;
  * <h3>The json (.res) file needs to be in the following format:</h3>
  * 
  * <p>
- * The arrays 'images', 'gifs', 'sounds', 'files' and 'fonts' are all optional. They can be empty, contain multiple
- * entries or not exist at all. <br>
+ * The arrays 'images', 'gifs', 'sounds', 'files', 'fonts' and 'animations' are all optional. They can be empty, contain
+ * multiple entries or not exist at all. <br>
  * The alias will be the resource name that the resource is mapped by.
  * </p>
  * 
@@ -77,7 +78,20 @@ import bt.utils.log.Logger;
                 "type":"truetype" //either 'truetype' or 'type1'
             },
             ...
-        ]
+        ],
+        "animations":
+        [
+            {
+                "interval":1000,
+                "alias":"test_font",
+                "images":
+                [
+                    "test_image",
+                    ...
+                ]
+            },
+            ...
+        ]                
     }
 }
  * </pre>
@@ -88,6 +102,7 @@ import bt.utils.log.Logger;
 public class JsonResourceLoader extends BaseResourceLoader
 {
     private File resourceDir;
+    private File lastResourceFile;
 
     /**
      * Creates a new instance and sets the directory that contains the json files for the {@link #load(String)}
@@ -139,8 +154,8 @@ public class JsonResourceLoader extends BaseResourceLoader
      * <h3>The json (.res) file needs to be in the following format:</h3>
      * 
      * <p>
-     * The arrays 'images', 'gifs', 'sounds', 'files' and 'fonts' are all optional. They can be empty, contain multiple
-     * entries or not exist at all. <br>
+     * The arrays 'images', 'gifs', 'sounds', 'files', 'fonts' and 'animations' are all optional. They can be empty,
+     * contain multiple entries or not exist at all. <br>
      * The alias will be the resource name that the resource is mapped by. This is case insensitive.
      * </p>
      * 
@@ -188,6 +203,19 @@ public class JsonResourceLoader extends BaseResourceLoader
                     "type":"truetype" //either 'truetype' or 'type1'
                 },
                 ...
+            ],
+            "animations":
+            [
+                {
+                    "interval":1000,
+                    "alias":"test_font",
+                    "images":
+                    [
+                        "test_image",
+                        ...
+                    ]
+                },
+                ...
             ]
         }
     }
@@ -200,7 +228,14 @@ public class JsonResourceLoader extends BaseResourceLoader
     {
         super.load(name);
 
-        JSONObject json = getJsonForName(name).getJSONObject("resource");
+        JSONObject json = getJsonForName(name);
+
+        if (json == null)
+        {
+            return;
+        }
+
+        json = json.getJSONObject("resource");
 
         JSONObject obj;
         String alias;
@@ -292,6 +327,41 @@ public class JsonResourceLoader extends BaseResourceLoader
                 }
             }
         }
+
+        if (json.has("animations"))
+        {
+            JSONArray animationArray = json.getJSONArray("animations");
+            JSONArray imageArray = null;
+            JSONObject jsonImage;
+            String type;
+            int interval = 0;
+            String[] images;
+
+            for (int i = 0; i < animationArray.length(); i ++ )
+            {
+                obj = animationArray.getJSONObject(i);
+                alias = obj.getString("alias");
+                interval = obj.getInt("interval");
+                imageArray = obj.getJSONArray("images");
+                images = new String[imageArray.length()];
+
+                for (int j = 0; j < imageArray.length(); j ++ )
+                {
+                    images[j] = imageArray.getString(j);
+                }
+
+                try
+                {
+                    add(alias, new Animation(this, interval, images));
+                    Logger.global().print("Loaded animation '" + alias + "' defined in '"
+                            + this.lastResourceFile.getAbsolutePath() + "'.");
+                }
+                catch (Exception e)
+                {
+                    Logger.global().print(e);
+                }
+            }
+        }
     }
 
     /**
@@ -310,17 +380,17 @@ public class JsonResourceLoader extends BaseResourceLoader
     private JSONObject getJsonForName(String name)
     {
         File[] files = FileUtils.getFiles(this.resourceDir.getAbsolutePath(), "res");
-        File jsonFile = null;
+        this.lastResourceFile = null;
 
         for (File file : files)
         {
             if (file.getName().equalsIgnoreCase(name + ".res"))
             {
-                jsonFile = file;
+                this.lastResourceFile = file;
                 break;
             }
         }
 
-        return JSON.parse(jsonFile);
+        return JSON.parse(this.lastResourceFile);
     }
 }
