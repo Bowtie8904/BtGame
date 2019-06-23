@@ -152,7 +152,7 @@ public abstract class BaseScene implements Scene
      * @see bt.runtime.Killable#kill()
      */
     @Override
-    public synchronized void kill()
+    public void kill()
     {
         this.isLoaded = false;
         Logger.global().print(this.name == null ? "Killing scene." : "Killing scene '" + this.name + "'.");
@@ -190,7 +190,7 @@ public abstract class BaseScene implements Scene
      * @see bt.game.core.scene.Scene#tick()
      */
     @Override
-    public synchronized void tick(double delta)
+    public void tick(double delta)
     {
         if (this.isLoaded)
         {
@@ -208,7 +208,7 @@ public abstract class BaseScene implements Scene
      * @see bt.game.core.scene.Scene#render(java.awt.Graphics)
      */
     @Override
-    public synchronized void render(Graphics2D g)
+    public void render(Graphics2D g)
     {
         if (this.isLoaded)
         {
