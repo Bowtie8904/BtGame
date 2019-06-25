@@ -25,12 +25,16 @@ public class RenderableImage implements Renderable, Killable
     protected Unit lastWidth;
     protected Unit lastHeight;
     protected double lastUnitRatio = Unit.getRatio();
+    protected Unit z;
+    protected boolean shouldRender;
 
     public RenderableImage(Image image)
     {
         this.image = image;
         this.transform = new AffineTransform();
         this.alpha = 1f;
+        this.z = Unit.zero();
+        this.shouldRender = true;
     }
 
     /**
@@ -149,6 +153,33 @@ public class RenderableImage implements Renderable, Killable
     @Override
     public Unit getZ()
     {
-        return Unit.zero();
+        return this.z;
+    }
+
+    /**
+     * @see bt.game.resource.render.Renderable#setZ(bt.game.util.unit.Unit)
+     */
+    @Override
+    public void setZ(Unit z)
+    {
+        this.z = z;
+    }
+
+    /**
+     * @see bt.game.resource.render.Renderable#shouldRender()
+     */
+    @Override
+    public boolean shouldRender()
+    {
+        return this.shouldRender;
+    }
+
+    /**
+     * @see bt.game.resource.render.Renderable#shouldRender(boolean)
+     */
+    @Override
+    public void shouldRender(boolean shouldRender)
+    {
+        this.shouldRender = shouldRender;
     }
 }
