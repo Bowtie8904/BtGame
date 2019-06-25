@@ -351,10 +351,9 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     {
         sortObjects();
 
-        for (Renderable renderable : this.renderables)
-        {
-            renderable.render(g);
-        }
+        this.renderables.stream()
+                .filter(Renderable::shouldRender)
+                .forEach(r -> r.render(g));
     }
 
     /**
