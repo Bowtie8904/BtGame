@@ -37,4 +37,13 @@ public interface Renderable
      * @return
      */
     public Unit getZ();
+
+    /**
+     * Sets the Z position of this object. This should be used to render the objects with the lowest Z value first.
+     */
+    public void setZ(Unit z);
+
+    public boolean shouldRender();
+
+    public void shouldRender(boolean shouldRender);
 }
