@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 
-import bt.game.resource.render.Renderable;
+import bt.game.resource.render.impl.AdvancedRenderable;
 import bt.game.util.unit.Unit;
 
 /**
@@ -26,20 +26,8 @@ import bt.game.util.unit.Unit;
  * 
  * @author &#8904
  */
-public abstract class RenderableText implements Renderable
+public abstract class RenderableText extends AdvancedRenderable
 {
-    /** The X position of this text. */
-    protected Unit x;
-
-    /** The Y position of this text. */
-    protected Unit y;
-
-    /** The width of this text. */
-    protected Unit width;
-
-    /** The height of this text. */
-    protected Unit height;
-
     /** The last used unit to pixel ration. Used to detect when the size of the text should be recalculated. */
     protected double lastUnitRatio = Unit.getRatio();
 
@@ -95,8 +83,8 @@ public abstract class RenderableText implements Renderable
     protected RenderableText(String text, Unit x, Unit y, Unit w, Unit h)
     {
         this.text = text;
-        this.width = w;
-        this.height = h;
+        this.w = w;
+        this.h = h;
         this.x = x;
         this.y = y;
         this.shouldRecalculate = true;
@@ -283,16 +271,16 @@ public abstract class RenderableText implements Renderable
 
         // only do this if the scaling really needs to be adjusted
         if (this.shouldRecalculate
-                || !w.equals(this.width)
-                || !h.equals(this.height)
+                || !w.equals(this.w)
+                || !h.equals(this.h)
                 || this.lastUnitRatio != Unit.getRatio())
         {
             doScaling(g, x, y, w, h);
         }
 
         g.rotate(Math.toRadians(this.rotationAngle),
-                this.x.pixels() + this.width.pixels() / 2,
-                this.y.pixels() + this.height.pixels() / 2);
+                this.x.pixels() + this.w.pixels() / 2,
+                this.y.pixels() + this.h.pixels() / 2);
 
         g.setFont(this.font.deriveFont(this.transform));
 
@@ -304,8 +292,8 @@ public abstract class RenderableText implements Renderable
         g.drawString(this.text, (int)this.x.pixels(), (int)this.y.pixels());
 
         g.rotate(Math.toRadians(-this.rotationAngle),
-                this.x.pixels() + this.width.pixels() / 2,
-                this.y.pixels() + this.height.pixels() / 2);
+                this.x.pixels() + this.w.pixels() / 2,
+                this.y.pixels() + this.h.pixels() / 2);
     }
 
     /**
@@ -329,8 +317,8 @@ public abstract class RenderableText implements Renderable
         render(g,
                 this.x,
                 this.y,
-                this.width,
-                this.height);
+                this.w,
+                this.h);
     }
 
     /**

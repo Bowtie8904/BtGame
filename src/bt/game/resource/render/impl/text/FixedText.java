@@ -132,7 +132,7 @@ public class FixedText extends RenderableText
         this.transform = AffineTransform.getTranslateInstance(xPos, yPos);
         this.transform.scale(trueScale, trueScale);
 
-        this.height = h;
-        this.width = w;
+        this.h = h;
+        this.w = w;
     }
 }

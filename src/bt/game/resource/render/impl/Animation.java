@@ -7,7 +7,6 @@ import java.util.Map;
 
 import bt.game.core.obj.intf.Tickable;
 import bt.game.resource.load.ResourceLoader;
-import bt.game.resource.render.Renderable;
 import bt.game.util.unit.Unit;
 
 /**
@@ -16,7 +15,7 @@ import bt.game.util.unit.Unit;
  * 
  * @author &#8904
  */
-public class Animation implements Renderable, Tickable
+public class Animation extends AdvancedRenderable implements Tickable
 {
     private ResourceLoader resourceLoader;
     private RenderableImage[] images;
@@ -239,15 +238,6 @@ public class Animation implements Renderable, Tickable
         {
             this.images[this.currentIndex].render(g, this.rotation);
         }
-    }
-
-    /**
-     * @see bt.game.resource.render.Renderable#getZ()
-     */
-    @Override
-    public Unit getZ()
-    {
-        return Unit.zero();
     }
 
     /**

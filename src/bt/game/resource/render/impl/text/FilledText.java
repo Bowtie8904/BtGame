@@ -102,7 +102,7 @@ public class FilledText extends RenderableText
         this.transform = AffineTransform.getTranslateInstance(xPos, yPos);
         this.transform.scale(xScale, yScale);
 
-        this.height = h;
-        this.width = w;
+        this.h = h;
+        this.w = w;
     }
 }
