@@ -316,7 +316,7 @@ public abstract class GameContainer extends Canvas
             this.currentScene.kill();
         }
 
-        Entry<Scene, Scene> entry = this.scenes.get(name.toUpperCase());
+        Entry<Scene, Scene> entry = this.scenes.get(name);
         Scene mainScene = entry.getKey();
         Scene loadingScene = entry.getValue();
 
@@ -328,7 +328,7 @@ public abstract class GameContainer extends Canvas
         }
 
         Threads.get().executeCached(() -> {
-            mainScene.load(name.toUpperCase());
+            mainScene.load(name);
             setScene(mainScene);
             mainScene.start();
         });
@@ -341,7 +341,7 @@ public abstract class GameContainer extends Canvas
      */
     private void setScene(Scene scene)
     {
-        if (this.currentScene != null && !currentScene.equals(scene))
+        if (this.currentScene != null && !this.currentScene.equals(scene))
         {
             this.currentScene.kill();
         }
@@ -381,7 +381,7 @@ public abstract class GameContainer extends Canvas
      */
     protected void addScene(String name, Scene mainScene, Scene loadingScene)
     {
-        this.scenes.put(name.toUpperCase(), new SimpleEntry<Scene, Scene>(mainScene, loadingScene));
+        this.scenes.put(name, new SimpleEntry<Scene, Scene>(mainScene, loadingScene));
     }
 
     public Scene getCurrentScene()
