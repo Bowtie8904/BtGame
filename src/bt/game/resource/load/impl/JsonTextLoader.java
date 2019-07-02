@@ -1,12 +1,14 @@
 package bt.game.resource.load.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import bt.game.resource.text.Text;
-import bt.utils.files.FileUtils;
 import bt.utils.json.JSON;
 import bt.utils.log.Logger;
 
@@ -16,29 +18,16 @@ import bt.utils.log.Logger;
  */
 public class JsonTextLoader extends BaseTextLoader
 {
-    private File resourceDir;
+    private String resourceDir;
 
     public JsonTextLoader(File resourceDir)
     {
-        super();
-        if (!resourceDir.exists())
-        {
-            try
-            {
-                resourceDir.mkdirs();
-            }
-            catch (Exception e)
-            {
-                Logger.global().print(e);
-            }
-        }
+        this(resourceDir.getAbsolutePath());
+    }
 
-        if (!resourceDir.isDirectory())
-        {
-            throw new IllegalArgumentException("The given file must be a directory.");
-        }
-
-        this.resourceDir = resourceDir;
+    public JsonTextLoader(String resourcePath)
+    {
+        this.resourceDir = resourcePath;
     }
 
     /**
@@ -56,19 +45,20 @@ public class JsonTextLoader extends BaseTextLoader
      */
     private JSONObject getJsonForName(String name)
     {
-        File[] files = FileUtils.getFiles(this.resourceDir.getAbsolutePath(), "lang");
-        File jsonFile = null;
+        String jsonString = null;
+        String path = this.resourceDir + "/" + name + ".lang";
 
-        for (File file : files)
+        try (var stream = getClass().getClassLoader().getResourceAsStream(path))
         {
-            if (file.getName().equalsIgnoreCase(name + ".lang"))
-            {
-                jsonFile = file;
-                break;
-            }
+            jsonString = new BufferedReader(new InputStreamReader(stream))
+                    .lines().collect(Collectors.joining("\n"));
+        }
+        catch (Exception e)
+        {
+            Logger.global().print(e);
         }
 
-        return JSON.parse(jsonFile);
+        return JSON.parse(jsonString);
     }
 
     /**
@@ -130,6 +120,7 @@ public class JsonTextLoader extends BaseTextLoader
         JSONArray jsonLanguageArray = null;
         JSONObject jsonLanguageObj = null;
         String text = null;
+        int count = 0;
 
         for (int i = 0; i < jsonTextArray.length(); i ++ )
         {
@@ -167,7 +158,10 @@ public class JsonTextLoader extends BaseTextLoader
                 }
 
                 add(id, new Text(id, text));
+                count ++ ;
             }
         }
+
+        Logger.global().print("Loaded " + count + " texts for '" + name + "'.");
     }
 }

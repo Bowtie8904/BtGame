@@ -1,8 +1,12 @@
 package bt.game.resource.load.impl;
 
 import java.awt.Font;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -17,7 +21,6 @@ import bt.game.resource.render.impl.RenderableImage;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.types.sound.SoundSupplier;
-import bt.utils.files.FileUtils;
 import bt.utils.img.ImageUtils;
 import bt.utils.json.JSON;
 import bt.utils.log.Logger;
@@ -101,7 +104,7 @@ import bt.utils.log.Logger;
  */
 public class JsonResourceLoader extends BaseResourceLoader
 {
-    private File resourceDir;
+    private String resourceDir;
     private File lastResourceFile;
 
     /**
@@ -122,24 +125,12 @@ public class JsonResourceLoader extends BaseResourceLoader
      */
     public JsonResourceLoader(File resourceDir)
     {
-        if (!resourceDir.exists())
-        {
-            try
-            {
-                resourceDir.mkdirs();
-            }
-            catch (Exception e)
-            {
-                Logger.global().print(e);
-            }
-        }
+        this(resourceDir.getAbsolutePath());
+    }
 
-        if (!resourceDir.isDirectory())
-        {
-            throw new IllegalArgumentException("The given file must be a directory.");
-        }
-
-        this.resourceDir = resourceDir;
+    public JsonResourceLoader(String resourcePath)
+    {
+        this.resourceDir = resourcePath;
     }
 
     /**
@@ -250,7 +241,8 @@ public class JsonResourceLoader extends BaseResourceLoader
                 obj = soundArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
-                add(alias, new SoundSupplier(new File(path)));
+                add(alias, new SoundSupplier(
+                        new BufferedInputStream(JsonResourceLoader.class.getResourceAsStream(path))));
                 Logger.global().print("Loaded sound '" + alias + "' from path '" + path + "'.");
             }
         }
@@ -266,7 +258,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 path = obj.getString("path");
                 try
                 {
-                    add(alias, new RenderableImage(ImageIO.read(new File(path))));
+                    add(alias, new RenderableImage(ImageIO.read(JsonResourceLoader.class.getResourceAsStream(path))));
                     Logger.global().print("Loaded image '" + alias + "' from path '" + path + "'.");
                 }
                 catch (IOException e)
@@ -285,7 +277,8 @@ public class JsonResourceLoader extends BaseResourceLoader
                 obj = imageArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
-                add(alias, new RenderableGif(ImageUtils.gertImageIcon(new File(path))));
+                add(alias,
+                        new RenderableGif(ImageUtils.getImageIcon(JsonResourceLoader.class.getResourceAsStream(path))));
                 Logger.global().print("Loaded gif '" + alias + "' from path '" + path + "'.");
             }
         }
@@ -318,7 +311,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 try
                 {
                     add(alias, Font.createFont(type.equalsIgnoreCase("truetype") ? Font.TRUETYPE_FONT : Font.TYPE1_FONT,
-                            new File(path)));
+                            JsonResourceLoader.class.getResourceAsStream(path)));
                     Logger.global().print("Loaded font '" + alias + "' from path '" + path + "'.");
                 }
                 catch (Exception e)
@@ -379,18 +372,21 @@ public class JsonResourceLoader extends BaseResourceLoader
      */
     private JSONObject getJsonForName(String name)
     {
-        File[] files = FileUtils.getFiles(this.resourceDir.getAbsolutePath(), "res");
-        this.lastResourceFile = null;
+        String jsonString = null;
+        String path = this.resourceDir + "/" + name + ".res";
 
-        for (File file : files)
+        try (var stream = getClass().getClassLoader().getResourceAsStream(path))
         {
-            if (file.getName().equalsIgnoreCase(name + ".res"))
-            {
-                this.lastResourceFile = file;
-                break;
-            }
+            jsonString = new BufferedReader(new InputStreamReader(stream))
+                    .lines().collect(Collectors.joining("\n"));
+        }
+        catch (Exception e)
+        {
+            Logger.global().print(e);
         }
 
-        return JSON.parse(this.lastResourceFile);
+        this.lastResourceFile = new File(path);
+
+        return JSON.parse(jsonString);
     }
 }
