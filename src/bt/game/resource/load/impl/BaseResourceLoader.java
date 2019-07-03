@@ -347,7 +347,8 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey, loadedRenderables.get(resourceKey));
                     Logger.global()
-                            .print("Loaded renderable '" + resourceKey + "' for " + loadable.getClass().getName()
+                            .print("[" + name + "] Loaded renderable '" + resourceKey + "' for "
+                                    + loadable.getClass().getName()
                                     + ".");
                 }
             }
@@ -361,7 +362,8 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey, loadedSounds.get(resourceKey));
                     Logger.global()
-                            .print("Loaded sound '" + resourceKey + "' for " + loadable.getClass().getName() + ".");
+                            .print("[" + name + "] Loaded sound '" + resourceKey + "' for "
+                                    + loadable.getClass().getName() + ".");
                 }
             }
 
@@ -374,7 +376,8 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey, loadedFiles.get(resourceKey));
                     Logger.global()
-                            .print("Loaded file '" + resourceKey + "' for " + loadable.getClass().getName() + ".");
+                            .print("[" + name + "] Loaded file '" + resourceKey + "' for "
+                                    + loadable.getClass().getName() + ".");
                 }
             }
 
@@ -387,7 +390,8 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey, loadedFonts.get(resourceKey));
                     Logger.global()
-                            .print("Loaded font '" + resourceKey + "' for " + loadable.getClass().getName() + ".");
+                            .print("[" + name + "] Loaded font '" + resourceKey + "' for "
+                                    + loadable.getClass().getName() + ".");
                 }
             }
 
@@ -400,7 +404,8 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey, loadedObjects.get(resourceKey));
                     Logger.global()
-                            .print("Loaded object '" + resourceKey + "' for " + loadable.getClass().getName() + ".");
+                            .print("[" + name + "] Loaded object '" + resourceKey + "' for "
+                                    + loadable.getClass().getName() + ".");
                 }
             }
 
@@ -413,7 +418,8 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey, loadedAnimations.get(resourceKey));
                     Logger.global()
-                            .print("Loaded animation '" + resourceKey + "' for " + loadable.getClass().getName() + ".");
+                            .print("[" + name + "] Loaded animation '" + resourceKey + "' for "
+                                    + loadable.getClass().getName() + ".");
                 }
             }
         }
