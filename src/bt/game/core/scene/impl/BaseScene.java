@@ -144,7 +144,11 @@ public abstract class BaseScene implements Scene
     @Override
     public void refresh()
     {
-        this.textLoader.load(this.name);
+        if (this.textLoader.getLoadMode() == TextLoader.LAZY_LOADING)
+        {
+            this.textLoader.load(this.name);
+        }
+
         this.gameObjectHandler.refresh();
     }
 
