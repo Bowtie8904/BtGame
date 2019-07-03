@@ -27,7 +27,7 @@ public class ResourceContainer
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
     private Map<String, Animation> animations;
-    private Map<Integer, Text> texts;
+    private Map<String, Map<Integer, Text>> texts;
 
     /**
      * Creates a new instance with empty maps.
@@ -131,7 +131,15 @@ public class ResourceContainer
      */
     public void add(int id, Text res)
     {
-        this.texts.put(id, res);
+        var textsForLanguage = this.texts.get(res.getLanguage());
+
+        if (textsForLanguage == null)
+        {
+            textsForLanguage = new HashMap<Integer, Text>();
+            this.texts.put(res.getLanguage(), textsForLanguage);
+        }
+
+        this.texts.get(res.getLanguage()).put(id, res);
     }
 
     /**
@@ -179,7 +187,7 @@ public class ResourceContainer
      * 
      * @return
      */
-    public Map<Integer, Text> getTexts()
+    public Map<String, Map<Integer, Text>> getTexts()
     {
         return this.texts;
     }
