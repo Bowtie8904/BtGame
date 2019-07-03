@@ -36,11 +36,12 @@ public class Text
     {
         this.id = id;
         this.text = text;
+        this.language = "EN";
     }
 
     public void setLanguage(String language)
     {
-        this.language = language;
+        this.language = language.toUpperCase();
     }
 
     public String getLanguage()
