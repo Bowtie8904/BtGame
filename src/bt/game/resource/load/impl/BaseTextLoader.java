@@ -17,14 +17,16 @@ import bt.utils.log.Logger;
  */
 public class BaseTextLoader implements TextLoader
 {
+    protected int loadMode;
     protected String language = "EN";
-    protected Map<Integer, Text> texts;
+    protected Map<String, Map<Integer, Text>> texts;
     protected List<Loadable> loadables;
 
     public BaseTextLoader()
     {
         this.texts = new HashMap<>();
         this.loadables = new ArrayList<>();
+        this.loadMode = TextLoader.LAZY_LOADING;
     }
 
     /**
@@ -42,7 +44,7 @@ public class BaseTextLoader implements TextLoader
     @Override
     public void setLanguage(String language)
     {
-        this.language = language;
+        this.language = language.toUpperCase();
     }
 
     /**
@@ -51,11 +53,19 @@ public class BaseTextLoader implements TextLoader
     @Override
     public Text get(int id)
     {
-        Text text = this.texts.get(id);
+        var textsForLanguage = this.texts.get(this.language);
+
+        Text text = null;
+
+        if (textsForLanguage != null)
+        {
+            text = textsForLanguage.get(id);
+        }
 
         if (text == null)
         {
             text = new Text(id, "* " + id + " *");
+            text.setLanguage(this.language);
             add(id, text);
         }
 
@@ -68,7 +78,15 @@ public class BaseTextLoader implements TextLoader
     @Override
     public void add(int id, Text text)
     {
-        this.texts.put(id, text);
+        var textsForLanguage = this.texts.get(text.getLanguage());
+
+        if (textsForLanguage == null)
+        {
+            textsForLanguage = new HashMap<Integer, Text>();
+            this.texts.put(text.getLanguage(), textsForLanguage);
+        }
+
+        this.texts.get(text.getLanguage()).put(id, text);
     }
 
     /**
@@ -108,19 +126,42 @@ public class BaseTextLoader implements TextLoader
             int count = 0;
             Text text = null;
 
-            for (Integer id : container.getTexts().keySet())
-            {
-                text = container.getTexts().get(id);
+            var mappedTexts = container.getTexts();
 
-                if (this.language.equalsIgnoreCase(text.getLanguage()))
+            if (this.loadMode == TextLoader.LAZY_LOADING)
+            {
+                var textsForLanguage = mappedTexts.get(this.language);
+
+                if (textsForLanguage != null)
                 {
-                    add(id, text);
-                    count ++ ;
+                    for (Integer id : textsForLanguage.keySet())
+                    {
+                        text = textsForLanguage.get(id);
+
+                        if (this.language.equalsIgnoreCase(text.getLanguage()))
+                        {
+                            add(id, text);
+                            count ++ ;
+                        }
+                    }
+                }
+            }
+            else if (this.loadMode == TextLoader.EAGER_LOADING)
+            {
+                for (String lang : mappedTexts.keySet())
+                {
+                    var textsForLanguage = mappedTexts.get(lang);
+
+                    for (Integer id : textsForLanguage.keySet())
+                    {
+                        add(id, textsForLanguage.get(id));
+                        count ++ ;
+                    }
                 }
             }
 
             Logger.global()
-                    .print("Loaded " + count + " texts for " + loadable.getClass().getName()
+                    .print("[" + name + "] Loaded " + count + " texts for " + loadable.getClass().getName()
                             + ".");
         }
     }
@@ -134,5 +175,23 @@ public class BaseTextLoader implements TextLoader
         Logger.global().print("Clearing texts.");
         this.loadables.clear();
         this.texts.clear();
+    }
+
+    /**
+     * @see bt.game.resource.load.TextLoader#setLoadMode(int)
+     */
+    @Override
+    public void setLoadMode(int mode)
+    {
+        this.loadMode = mode;
+    }
+
+    /**
+     * @see bt.game.resource.load.TextLoader#getLoadMode()
+     */
+    @Override
+    public int getLoadMode()
+    {
+        return this.loadMode;
     }
 }

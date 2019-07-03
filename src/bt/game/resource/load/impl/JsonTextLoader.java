@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import bt.game.resource.load.TextLoader;
 import bt.game.resource.text.Text;
 import bt.utils.json.JSON;
 import bt.utils.log.Logger;
@@ -120,6 +121,8 @@ public class JsonTextLoader extends BaseTextLoader
         JSONArray jsonLanguageArray = null;
         JSONObject jsonLanguageObj = null;
         String text = null;
+        String language = null;
+        Text textObj = null;
         int count = 0;
 
         for (int i = 0; i < jsonTextArray.length(); i ++ )
@@ -133,35 +136,73 @@ public class JsonTextLoader extends BaseTextLoader
             {
                 int id = jsonTextObj.getInt("id");
 
-                if (jsonTextObj.has("languages"))
+                if (this.loadMode == TextLoader.LAZY_LOADING)
                 {
-                    jsonLanguageArray = jsonTextObj.getJSONArray("languages");
-
-                    for (int k = 0; k < jsonLanguageArray.length(); k ++ )
+                    if (jsonTextObj.has("languages"))
                     {
-                        jsonLanguageObj = jsonLanguageArray.getJSONObject(k);
+                        jsonLanguageArray = jsonTextObj.getJSONArray("languages");
 
-                        if (this.language.equalsIgnoreCase(jsonLanguageObj.getString("language")))
+                        for (int k = 0; k < jsonLanguageArray.length(); k ++ )
                         {
-                            if (jsonLanguageObj.has("text"))
+                            jsonLanguageObj = jsonLanguageArray.getJSONObject(k);
+
+                            if (this.language.equalsIgnoreCase(jsonLanguageObj.getString("language")))
                             {
-                                text = jsonLanguageObj.getString("text");
-                                break;
+                                if (jsonLanguageObj.has("text"))
+                                {
+                                    text = jsonLanguageObj.getString("text");
+                                    language = jsonLanguageObj.getString("language");
+                                    break;
+                                }
                             }
                         }
                     }
-                }
 
-                if (text == null)
+                    if (text == null)
+                    {
+                        text = "* " + id + " *";
+                    }
+
+                    textObj = new Text(id, text);
+                    textObj.setLanguage(language == null ? "EN" : language);
+                    add(id, textObj);
+                    count ++ ;
+                }
+                else if (this.loadMode == TextLoader.EAGER_LOADING)
                 {
-                    text = "* " + id + " *";
-                }
+                    if (jsonTextObj.has("languages"))
+                    {
+                        jsonLanguageArray = jsonTextObj.getJSONArray("languages");
 
-                add(id, new Text(id, text));
-                count ++ ;
+                        for (int k = 0; k < jsonLanguageArray.length(); k ++ )
+                        {
+                            jsonLanguageObj = jsonLanguageArray.getJSONObject(k);
+
+                            if (jsonLanguageObj.has("text"))
+                            {
+                                text = jsonLanguageObj.getString("text");
+                                language = jsonLanguageObj.getString("language");
+                            }
+                            else
+                            {
+                                text = null;
+                            }
+
+                            if (text == null)
+                            {
+                                text = "* " + id + " *";
+                            }
+
+                            textObj = new Text(id, text);
+                            textObj.setLanguage(language == null ? "EN" : language);
+                            add(id, textObj);
+                            count ++ ;
+                        }
+                    }
+                }
             }
         }
 
-        Logger.global().print("Loaded " + count + " texts for '" + name + "'.");
+        Logger.global().print("[" + name + "] Loaded " + count + " texts from language file.");
     }
 }
