@@ -1,4 +1,4 @@
-package bt.game.resource.render.impl.text;
+package bt.game.resource.render.impl.text.single;
 
 import java.awt.Color;
 import java.awt.Font;

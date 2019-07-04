@@ -1,4 +1,4 @@
-package bt.game.resource.render.impl.text;
+package bt.game.resource.render.impl.text.single;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -70,7 +70,7 @@ public class FilledText extends RenderableText
     }
 
     /**
-     * @see bt.game.resource.render.impl.text.RenderableText#doScaling(java.awt.Graphics2D, bt.game.util.unit.Unit,
+     * @see bt.game.resource.render.impl.text.single.RenderableText#doScaling(java.awt.Graphics2D, bt.game.util.unit.Unit,
      *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
