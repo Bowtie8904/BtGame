@@ -161,8 +161,7 @@ public class BaseTextLoader implements TextLoader
             }
 
             Logger.global()
-                    .print("[" + name + "] Loaded " + count + " texts for " + loadable.getClass().getName()
-                            + ".");
+                    .printf("[%s] Loaded %d texts for %s.", name, count, loadable.getClass().getName());
         }
     }
 

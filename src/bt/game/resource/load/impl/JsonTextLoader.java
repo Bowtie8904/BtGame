@@ -203,6 +203,6 @@ public class JsonTextLoader extends BaseTextLoader
             }
         }
 
-        Logger.global().print("[" + name + "] Loaded " + count + " texts from language file.");
+        Logger.global().printf("[%s] Loaded %d texts from language file.", name, count);
     }
 }

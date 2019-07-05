@@ -243,7 +243,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 path = obj.getString("path");
                 add(alias, new SoundSupplier(
                         new BufferedInputStream(JsonResourceLoader.class.getResourceAsStream(path))));
-                Logger.global().print("[" + name + "] Loaded sound '" + alias + "' from path '" + path + "'.");
+                Logger.global().printf("[%s] Loaded sound '%s' from path '%s'.", name, alias, path);
             }
         }
 
@@ -259,7 +259,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 try
                 {
                     add(alias, new RenderableImage(ImageIO.read(JsonResourceLoader.class.getResourceAsStream(path))));
-                    Logger.global().print("[" + name + "] Loaded image '" + alias + "' from path '" + path + "'.");
+                    Logger.global().printf("[%s] Loaded image '%s' from path '%s'.", name, alias, path);
                 }
                 catch (IOException e)
                 {
@@ -279,7 +279,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 path = obj.getString("path");
                 add(alias,
                         new RenderableGif(ImageUtils.getImageIcon(JsonResourceLoader.class.getResourceAsStream(path))));
-                Logger.global().print("[" + name + "] Loaded gif '" + alias + "' from path '" + path + "'.");
+                Logger.global().printf("[%s] Loaded gif '%s' from path '%s'.", name, alias, path);
             }
         }
 
@@ -293,7 +293,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 alias = obj.getString("alias");
                 path = obj.getString("path");
                 add(alias, new File(path));
-                Logger.global().print("[" + name + "] Loaded file '" + alias + "' from path '" + path + "'.");
+                Logger.global().printf("[%s] Loaded file '%s' from path '%s'.", name, alias, path);
             }
         }
 
@@ -312,7 +312,8 @@ public class JsonResourceLoader extends BaseResourceLoader
                 {
                     add(alias, Font.createFont(type.equalsIgnoreCase("truetype") ? Font.TRUETYPE_FONT : Font.TYPE1_FONT,
                             JsonResourceLoader.class.getResourceAsStream(path)));
-                    Logger.global().print("[" + name + "] Loaded font '" + alias + "' from path '" + path + "'.");
+                    Logger.global().printf("[%s] Loaded font '%s' from path '%s'.",
+                            name, alias, path);
                 }
                 catch (Exception e)
                 {
@@ -346,8 +347,10 @@ public class JsonResourceLoader extends BaseResourceLoader
                 try
                 {
                     add(alias, new Animation(this, interval, images));
-                    Logger.global().print("[" + name + "] Loaded animation '" + alias + "' defined in '"
-                            + this.lastResourceFile.getAbsolutePath() + "'.");
+                    Logger.global().printf("[%s] Loaded animation '%s' defined in '%s'.",
+                            name,
+                            alias,
+                            this.lastResourceFile.getAbsolutePath());
                 }
                 catch (Exception e)
                 {
