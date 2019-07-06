@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
 import bt.utils.log.Logger;
 
@@ -130,32 +131,32 @@ public class ContainerSettings
         return this;
     }
 
-    protected float getUnitWidth()
+    public float getUnitWidth()
     {
         return this.unitWidth;
     }
 
-    protected float getUnitHeight()
+    public float getUnitHeight()
     {
         return this.unitHeight;
     }
 
-    protected int getFrameWidth()
+    public int getFrameWidth()
     {
         return this.frameWidth;
     }
 
-    protected int getFrameHeight()
+    public int getFrameHeight()
     {
         return this.frameHeight;
     }
 
-    protected boolean isUndecorated()
+    public boolean isUndecorated()
     {
         return this.undecorated;
     }
 
-    protected boolean isFullscreen()
+    public boolean isFullscreen()
     {
         return this.fullscreen;
     }

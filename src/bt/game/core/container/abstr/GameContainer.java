@@ -1,4 +1,4 @@
-package bt.game.core.container;
+package bt.game.core.container.abstr;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -17,9 +17,10 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
+import bt.game.core.container.ContainerSettings;
 import bt.game.core.ctrl.spec.key.KeyController;
 import bt.game.core.ctrl.spec.mouse.MouseController;
-import bt.game.core.scene.Scene;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 import bt.utils.log.Logger;
 import bt.utils.thread.Threads;

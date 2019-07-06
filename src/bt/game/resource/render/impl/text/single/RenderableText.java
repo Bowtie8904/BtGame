@@ -237,7 +237,7 @@ public abstract class RenderableText extends AdvancedRenderable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#getZ()
+     * @see bt.game.resource.render.intf.Renderable#getZ()
      */
     @Override
     public Unit getZ()
@@ -248,7 +248,7 @@ public abstract class RenderableText extends AdvancedRenderable
     /**
      * Renders this instance at the position x|y with a width of w and a height of h.
      * 
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit,
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit,
      *      bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
@@ -309,7 +309,7 @@ public abstract class RenderableText extends AdvancedRenderable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics)
      */
     @Override
     public void render(Graphics2D g)

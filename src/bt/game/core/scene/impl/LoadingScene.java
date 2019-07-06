@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 
 import org.dyn4j.dynamics.World;
 
-import bt.game.core.container.GameContainer;
+import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
 import bt.runtime.InstanceKiller;
 import bt.utils.log.Logger;
@@ -72,7 +72,7 @@ public class LoadingScene extends BaseScene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#tick()
+     * @see bt.game.core.scene.intf.Scene#tick()
      */
     @Override
     public void tick(double delta)
@@ -91,7 +91,7 @@ public class LoadingScene extends BaseScene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#render(java.awt.Graphics)
+     * @see bt.game.core.scene.intf.Scene#render(java.awt.Graphics)
      */
     @Override
     public void render(Graphics2D g)
@@ -117,7 +117,7 @@ public class LoadingScene extends BaseScene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#getWorld()
+     * @see bt.game.core.scene.intf.Scene#getWorld()
      */
     @Override
     public World getWorld()
@@ -126,7 +126,7 @@ public class LoadingScene extends BaseScene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#refresh()
+     * @see bt.game.core.scene.intf.Scene#refresh()
      */
     @Override
     public void refresh()

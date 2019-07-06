@@ -7,7 +7,7 @@ import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-import bt.game.resource.render.Renderable;
+import bt.game.resource.render.intf.Renderable;
 import bt.game.util.unit.Unit;
 import bt.runtime.Killable;
 import bt.utils.num.NumberUtils;
@@ -99,7 +99,7 @@ public class RenderableImage implements Renderable, Killable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics)
      */
     @Override
     public void render(Graphics2D g)
@@ -125,7 +125,7 @@ public class RenderableImage implements Renderable, Killable
     /**
      * Renders this instance at the position x|y with a width of w and a height of h.
      * 
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
@@ -188,7 +188,7 @@ public class RenderableImage implements Renderable, Killable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#getZ()
+     * @see bt.game.resource.render.intf.Renderable#getZ()
      */
     @Override
     public Unit getZ()
@@ -197,7 +197,7 @@ public class RenderableImage implements Renderable, Killable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#setZ(bt.game.util.unit.Unit)
+     * @see bt.game.resource.render.intf.Renderable#setZ(bt.game.util.unit.Unit)
      */
     @Override
     public void setZ(Unit z)
@@ -206,7 +206,7 @@ public class RenderableImage implements Renderable, Killable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#shouldRender()
+     * @see bt.game.resource.render.intf.Renderable#shouldRender()
      */
     @Override
     public boolean shouldRender()
@@ -215,7 +215,7 @@ public class RenderableImage implements Renderable, Killable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#shouldRender(boolean)
+     * @see bt.game.resource.render.intf.Renderable#shouldRender(boolean)
      */
     @Override
     public void shouldRender(boolean shouldRender)

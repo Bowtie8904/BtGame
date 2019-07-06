@@ -1,12 +1,13 @@
-package bt.game.resource.load;
+package bt.game.resource.load.container;
 
 import java.awt.Font;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import bt.game.resource.render.Renderable;
+import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.render.impl.Animation;
+import bt.game.resource.render.intf.Renderable;
 import bt.game.resource.text.Text;
 import bt.types.sound.SoundSupplier;
 

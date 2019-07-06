@@ -11,9 +11,10 @@ import java.util.function.Consumer;
 
 import org.dyn4j.geometry.Vector2;
 
-import bt.game.core.container.GameContainer;
-import bt.game.core.scene.Scene;
+import bt.game.core.container.abstr.GameContainer;
+import bt.game.core.ctrl.spec.mouse.intf.MouseTarget;
 import bt.game.core.scene.cam.Camera;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 import bt.utils.thread.Threads;
 

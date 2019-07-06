@@ -1,4 +1,4 @@
-package bt.game.core.obj.col;
+package bt.game.core.obj.col.intf;
 
 import org.dyn4j.collision.narrowphase.Penetration;
 import org.dyn4j.dynamics.Body;

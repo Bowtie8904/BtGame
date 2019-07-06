@@ -13,8 +13,8 @@ import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import bt.game.resource.load.Loadable;
-import bt.game.resource.load.ResourceLoader;
+import bt.game.resource.load.intf.Loadable;
+import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.impl.RenderableGif;
 import bt.game.resource.render.impl.RenderableImage;
@@ -212,7 +212,7 @@ public class JsonResourceLoader extends BaseResourceLoader
     }
      * </pre>
      * 
-     * @see bt.game.resource.load.ResourceLoader#load(java.lang.String)
+     * @see bt.game.resource.load.intf.ResourceLoader#load(java.lang.String)
      */
     @Override
     public void load(String name)

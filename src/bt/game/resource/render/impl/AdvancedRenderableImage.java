@@ -2,7 +2,7 @@ package bt.game.resource.render.impl;
 
 import java.awt.Graphics2D;
 
-import bt.game.core.scene.Scene;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
 /**
@@ -21,7 +21,7 @@ public class AdvancedRenderableImage extends AdvancedRenderable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics2D, bt.game.util.unit.Unit,
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics2D, bt.game.util.unit.Unit,
      *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override

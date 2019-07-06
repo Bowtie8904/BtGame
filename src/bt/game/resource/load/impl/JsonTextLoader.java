@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import bt.game.resource.load.TextLoader;
+import bt.game.resource.load.intf.TextLoader;
 import bt.game.resource.text.Text;
 import bt.utils.json.JSON;
 import bt.utils.log.Logger;

@@ -20,16 +20,16 @@ import org.dyn4j.dynamics.contact.PersistedContactPoint;
 import org.dyn4j.dynamics.contact.SolvedContactPoint;
 import org.dyn4j.dynamics.joint.Joint;
 
-import bt.game.core.obj.col.BroadPhaseCollider;
-import bt.game.core.obj.col.ConstraintCollider;
-import bt.game.core.obj.col.Contacter;
-import bt.game.core.obj.col.ManifoldCollider;
-import bt.game.core.obj.col.NarrowPhaseCollider;
-import bt.game.core.obj.hand.ObjectHandler;
+import bt.game.core.obj.col.intf.BroadPhaseCollider;
+import bt.game.core.obj.col.intf.ConstraintCollider;
+import bt.game.core.obj.col.intf.Contacter;
+import bt.game.core.obj.col.intf.ManifoldCollider;
+import bt.game.core.obj.col.intf.NarrowPhaseCollider;
+import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.obj.intf.Refreshable;
 import bt.game.core.obj.intf.Tickable;
-import bt.game.core.scene.Scene;
-import bt.game.resource.render.Renderable;
+import bt.game.core.scene.intf.Scene;
+import bt.game.resource.render.intf.Renderable;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.utils.log.Logger;
@@ -140,7 +140,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /**
      * Sorts the list of {@link Renderable}s by using the {@link #zComparator}.
      * 
-     * @see bt.game.core.obj.hand.ObjectHandler#sortObjects()
+     * @see bt.game.core.obj.hand.intf.ObjectHandler#sortObjects()
      */
     @Override
     public synchronized void sortObjects()
@@ -173,7 +173,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * Objects that don't implement any of those interfaces are ignored.
      * </p>
      * 
-     * @see bt.game.core.obj.hand.ObjectHandler#addObject(java.lang.Object)
+     * @see bt.game.core.obj.hand.intf.ObjectHandler#addObject(java.lang.Object)
      */
     @Override
     public synchronized void addObject(Object object)
@@ -257,7 +257,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /**
      * Removes the given object from all lists that it is a part of based on its interfaces.
      * 
-     * @see bt.game.core.obj.hand.ObjectHandler#removeObject(java.lang.Object)
+     * @see bt.game.core.obj.hand.intf.ObjectHandler#removeObject(java.lang.Object)
      */
     @Override
     public synchronized void removeObject(Object object)
@@ -331,7 +331,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * The tick methods are invoked in a parallel stream, so an order is not guaranteed.
      * </p>
      * 
-     * @see bt.game.core.obj.hand.ObjectHandler#tick()
+     * @see bt.game.core.obj.hand.intf.ObjectHandler#tick()
      */
     @Override
     public void tick(double delta)
@@ -344,7 +344,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /**
      * Sorts the held {@link Renderable renderables} via {@link #sortObjects()} and calls their render methods after.
      * 
-     * @see bt.game.core.obj.hand.ObjectHandler#render(java.awt.Graphics)
+     * @see bt.game.core.obj.hand.intf.ObjectHandler#render(java.awt.Graphics)
      */
     @Override
     public void render(Graphics2D g)
@@ -385,7 +385,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /**
      * Registers this instance to the {@link InstanceKiller}.
      * 
-     * @see bt.game.core.obj.hand.ObjectHandler#init()
+     * @see bt.game.core.obj.hand.intf.ObjectHandler#init()
      */
     @Override
     public void init()
@@ -577,7 +577,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     }
 
     /**
-     * @see bt.game.core.obj.hand.ObjectHandler#refresh()
+     * @see bt.game.core.obj.hand.intf.ObjectHandler#refresh()
      */
     @Override
     public void refresh()

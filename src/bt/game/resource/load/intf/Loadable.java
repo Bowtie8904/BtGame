@@ -1,4 +1,6 @@
-package bt.game.resource.load;
+package bt.game.resource.load.intf;
+
+import bt.game.resource.load.container.ResourceContainer;
 
 /**
  * Interface to define a class that can load its own resources which can then be accessed by a {@link ResourceLoader}.

@@ -2,7 +2,7 @@ package bt.game.core.loop.impl;
 
 import java.util.function.Consumer;
 
-import bt.game.core.loop.GameLoop;
+import bt.game.core.loop.abstr.GameLoop;
 
 /**
  * @author &#8904

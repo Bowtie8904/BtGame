@@ -9,10 +9,9 @@ import org.dyn4j.dynamics.contact.ContactPoint;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.MassType;
 
-import bt.game.core.obj.GameBody;
-import bt.game.core.obj.col.CollisionFilter;
-import bt.game.core.obj.col.Contacter;
-import bt.game.core.scene.Scene;
+import bt.game.core.obj.col.filter.CollisionFilter;
+import bt.game.core.obj.col.intf.Contacter;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
 /**
@@ -74,7 +73,7 @@ public abstract class LocationTrigger extends GameBody implements Contacter
     }
 
     /**
-     * @see bt.game.core.obj.col.Collider#getBody()
+     * @see bt.game.core.obj.col.intf.Collider#getBody()
      */
     @Override
     public Body getBody()
@@ -83,7 +82,7 @@ public abstract class LocationTrigger extends GameBody implements Contacter
     }
 
     /**
-     * @see bt.game.core.obj.col.Contacter#onContactBegin(org.dyn4j.dynamics.contact.ContactPoint)
+     * @see bt.game.core.obj.col.intf.Contacter#onContactBegin(org.dyn4j.dynamics.contact.ContactPoint)
      */
     @Override
     public synchronized boolean onContactBegin(ContactPoint point)
@@ -110,7 +109,7 @@ public abstract class LocationTrigger extends GameBody implements Contacter
     }
 
     /**
-     * @see bt.game.core.obj.col.Contacter#onContactEnd(org.dyn4j.dynamics.contact.ContactPoint)
+     * @see bt.game.core.obj.col.intf.Contacter#onContactEnd(org.dyn4j.dynamics.contact.ContactPoint)
      */
     @Override
     public synchronized void onContactEnd(ContactPoint point)

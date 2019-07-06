@@ -1,11 +1,11 @@
-package bt.game.core.ctrl.spec.mouse;
+package bt.game.core.ctrl.spec.mouse.intf;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import org.dyn4j.geometry.Shape;
 
-import bt.game.core.scene.Scene;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
 /**

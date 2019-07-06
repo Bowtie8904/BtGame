@@ -1,4 +1,4 @@
-package bt.game.core.loop;
+package bt.game.core.loop.abstr;
 
 import java.util.function.Consumer;
 

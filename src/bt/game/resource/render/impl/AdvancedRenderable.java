@@ -2,7 +2,7 @@ package bt.game.resource.render.impl;
 
 import java.awt.Graphics2D;
 
-import bt.game.resource.render.Renderable;
+import bt.game.resource.render.intf.Renderable;
 import bt.game.util.unit.Unit;
 
 /**
@@ -29,7 +29,7 @@ public abstract class AdvancedRenderable implements Renderable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics2D)
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics2D)
      */
     @Override
     public void render(Graphics2D g)
@@ -38,7 +38,7 @@ public abstract class AdvancedRenderable implements Renderable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#getZ()
+     * @see bt.game.resource.render.intf.Renderable#getZ()
      */
     @Override
     public Unit getZ()
@@ -47,7 +47,7 @@ public abstract class AdvancedRenderable implements Renderable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#setZ(bt.game.util.unit.Unit)
+     * @see bt.game.resource.render.intf.Renderable#setZ(bt.game.util.unit.Unit)
      */
     @Override
     public void setZ(Unit z)
@@ -76,7 +76,7 @@ public abstract class AdvancedRenderable implements Renderable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#shouldRender()
+     * @see bt.game.resource.render.intf.Renderable#shouldRender()
      */
     @Override
     public boolean shouldRender()
@@ -85,7 +85,7 @@ public abstract class AdvancedRenderable implements Renderable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#shouldRender(boolean)
+     * @see bt.game.resource.render.intf.Renderable#shouldRender(boolean)
      */
     @Override
     public void shouldRender(boolean shouldRender)

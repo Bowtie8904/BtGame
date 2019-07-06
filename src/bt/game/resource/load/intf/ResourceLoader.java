@@ -1,10 +1,10 @@
-package bt.game.resource.load;
+package bt.game.resource.load.intf;
 
 import java.awt.Font;
 import java.io.File;
 
-import bt.game.resource.render.Renderable;
 import bt.game.resource.render.impl.Animation;
+import bt.game.resource.render.intf.Renderable;
 import bt.runtime.Killable;
 import bt.types.sound.Sound;
 

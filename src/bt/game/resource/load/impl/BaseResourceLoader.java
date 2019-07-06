@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 import bt.game.core.obj.intf.Animated;
-import bt.game.resource.load.Loadable;
-import bt.game.resource.load.ResourceContainer;
-import bt.game.resource.load.ResourceLoader;
-import bt.game.resource.render.Renderable;
+import bt.game.resource.load.container.ResourceContainer;
+import bt.game.resource.load.intf.Loadable;
+import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.resource.render.impl.Animation;
+import bt.game.resource.render.intf.Renderable;
 import bt.runtime.InstanceKiller;
 import bt.runtime.Killable;
 import bt.types.sound.Sound;
@@ -209,7 +209,7 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.ResourceLoader#getRenderable(java.lang.String)
+     * @see bt.game.resource.load.intf.ResourceLoader#getRenderable(java.lang.String)
      */
     @Override
     public Renderable getRenderable(String resourceName)
@@ -223,7 +223,7 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.ResourceLoader#getSound(java.lang.String)
+     * @see bt.game.resource.load.intf.ResourceLoader#getSound(java.lang.String)
      */
     @Override
     public Sound getSound(String resourceName)
@@ -238,7 +238,7 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.ResourceLoader#getFile(java.lang.String)
+     * @see bt.game.resource.load.intf.ResourceLoader#getFile(java.lang.String)
      */
     @Override
     public File getFile(String resourceName)
@@ -252,7 +252,7 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.ResourceLoader#getFont(java.lang.String)
+     * @see bt.game.resource.load.intf.ResourceLoader#getFont(java.lang.String)
      */
     @Override
     public Font getFont(String resourceName)
@@ -268,7 +268,7 @@ public class BaseResourceLoader implements ResourceLoader
     /**
      * Creates a new animation with the interval and images of the mapped one.
      * 
-     * @see bt.game.resource.load.ResourceLoader#getAnimation(java.lang.String)
+     * @see bt.game.resource.load.intf.ResourceLoader#getAnimation(java.lang.String)
      */
     @Override
     public Animation getAnimation(String resourceName)
@@ -289,7 +289,7 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.ResourceLoader#get(java.lang.String)
+     * @see bt.game.resource.load.intf.ResourceLoader#get(java.lang.String)
      */
     @Override
     public Object get(String resourceName)
@@ -306,7 +306,7 @@ public class BaseResourceLoader implements ResourceLoader
      * Loads all {@link #register(Loadable) registered} {@link Loadable}s by calling their load methods and mapping
      * their returned values in this instance.
      * 
-     * @see bt.game.resource.load.ResourceLoader#load(java.lang.String)
+     * @see bt.game.resource.load.intf.ResourceLoader#load(java.lang.String)
      */
     @Override
     public void load(String name)
@@ -437,7 +437,7 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.load.ResourceLoader#finishLoad()
+     * @see bt.game.resource.load.intf.ResourceLoader#finishLoad()
      */
     @Override
     public void finishLoad()
@@ -451,7 +451,7 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.load.ResourceLoader#register(java.lang.Object)
+     * @see bt.game.resource.load.intf.ResourceLoader#register(java.lang.Object)
      */
     @Override
     public void register(Object object)
@@ -468,7 +468,7 @@ public class BaseResourceLoader implements ResourceLoader
     }
 
     /**
-     * @see bt.game.resource.load.ResourceLoader#registerClosingOperation(java.lang.Runnable)
+     * @see bt.game.resource.load.intf.ResourceLoader#registerClosingOperation(java.lang.Runnable)
      */
     @Override
     public void registerClosingOperation(Runnable closingOp)

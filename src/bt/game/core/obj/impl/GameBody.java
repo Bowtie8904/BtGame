@@ -1,9 +1,10 @@
-package bt.game.core.obj;
+package bt.game.core.obj.impl;
 
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Vector2;
 
-import bt.game.core.scene.Scene;
+import bt.game.core.obj.intf.GameObject;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
 /**
@@ -34,7 +35,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#getScene()
+     * @see bt.game.core.obj.intf.GameObject#getScene()
      */
     @Override
     public Scene getScene()
@@ -43,7 +44,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#setW(bt.game.util.unit.Unit)
+     * @see bt.game.core.obj.intf.GameObject#setW(bt.game.util.unit.Unit)
      */
     @Override
     public void setW(Unit w)
@@ -52,7 +53,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#setH(bt.game.util.unit.Unit)
+     * @see bt.game.core.obj.intf.GameObject#setH(bt.game.util.unit.Unit)
      */
     @Override
     public void setH(Unit h)
@@ -61,7 +62,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#getH()
+     * @see bt.game.core.obj.intf.GameObject#getH()
      */
     @Override
     public Unit getH()
@@ -70,7 +71,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#getW()
+     * @see bt.game.core.obj.intf.GameObject#getW()
      */
     @Override
     public Unit getW()
@@ -79,7 +80,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#setX(bt.game.util.unit.Unit)
+     * @see bt.game.core.obj.intf.GameObject#setX(bt.game.util.unit.Unit)
      */
     @Override
     public void setX(Unit x)
@@ -89,7 +90,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#setY(bt.game.util.unit.Unit)
+     * @see bt.game.core.obj.intf.GameObject#setY(bt.game.util.unit.Unit)
      */
     @Override
     public void setY(Unit y)
@@ -99,7 +100,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#getX()
+     * @see bt.game.core.obj.intf.GameObject#getX()
      */
     @Override
     public Unit getX()
@@ -108,7 +109,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#getY()
+     * @see bt.game.core.obj.intf.GameObject#getY()
      */
     @Override
     public Unit getY()
@@ -117,7 +118,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#getCenterX()
+     * @see bt.game.core.obj.intf.GameObject#getCenterX()
      */
     @Override
     public Unit getCenterX()
@@ -126,7 +127,7 @@ public class GameBody extends Body implements GameObject
     }
 
     /**
-     * @see bt.game.core.obj.GameObject#getCenterY()
+     * @see bt.game.core.obj.intf.GameObject#getCenterY()
      */
     @Override
     public Unit getCenterY()

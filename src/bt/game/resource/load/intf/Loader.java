@@ -1,4 +1,4 @@
-package bt.game.resource.load;
+package bt.game.resource.load.intf;
 
 /**
  * @author &#8904

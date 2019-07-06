@@ -1,4 +1,4 @@
-package bt.game.resource.render;
+package bt.game.resource.render.intf;
 
 import java.awt.Graphics2D;
 

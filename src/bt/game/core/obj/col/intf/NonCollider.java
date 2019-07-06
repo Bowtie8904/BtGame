@@ -1,4 +1,4 @@
-package bt.game.core.obj.col;
+package bt.game.core.obj.col.intf;
 
 /**
  * @author &#8904

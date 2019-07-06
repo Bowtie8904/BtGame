@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bt.game.core.obj.intf.Tickable;
-import bt.game.resource.load.ResourceLoader;
+import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.util.unit.Unit;
 
 /**
@@ -216,7 +216,7 @@ public class Animation extends AdvancedRenderable implements Tickable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit,
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit,
      *      bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
@@ -229,7 +229,7 @@ public class Animation extends AdvancedRenderable implements Tickable
     }
 
     /**
-     * @see bt.game.resource.render.Renderable#render(java.awt.Graphics)
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics)
      */
     @Override
     public void render(Graphics2D g)

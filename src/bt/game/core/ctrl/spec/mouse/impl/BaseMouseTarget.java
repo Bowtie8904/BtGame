@@ -6,8 +6,8 @@ import java.awt.event.MouseWheelEvent;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Shape;
 
-import bt.game.core.ctrl.spec.mouse.MouseTarget;
-import bt.game.core.scene.Scene;
+import bt.game.core.ctrl.spec.mouse.intf.MouseTarget;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
 /**
@@ -37,7 +37,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onRightClick()
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#onRightClick()
      */
     @Override
     public void onRightClick(MouseEvent e, Unit x, Unit y)
@@ -45,7 +45,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onLeftClick()
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#onLeftClick()
      */
     @Override
     public void onLeftClick(MouseEvent e, Unit x, Unit y)
@@ -53,7 +53,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onDrag(bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#onDrag(bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     public void onDrag(MouseEvent e, Unit xOffset, Unit yOffset)
@@ -61,7 +61,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onHover()
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#onHover()
      */
     @Override
     public void onHover()
@@ -69,7 +69,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#afterHover()
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#afterHover()
      */
     @Override
     public void afterHover()
@@ -77,7 +77,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#onMouseWheelMove(int)
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#onMouseWheelMove(int)
      */
     @Override
     public void onMouseWheelMove(MouseWheelEvent e, int clicks)
@@ -85,7 +85,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getZ()
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#getZ()
      */
     @Override
     public Unit getZ()
@@ -94,7 +94,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getShape()
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#getShape()
      */
     @Override
     public Shape getShape()
@@ -103,7 +103,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#getScene()
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#getScene()
      */
     @Override
     public Scene getScene()
@@ -112,7 +112,7 @@ public class BaseMouseTarget implements MouseTarget
     }
 
     /**
-     * @see bt.game.core.ctrl.spec.mouse.MouseTarget#affectedByCamera()
+     * @see bt.game.core.ctrl.spec.mouse.intf.MouseTarget#affectedByCamera()
      */
     @Override
     public boolean affectedByCamera()

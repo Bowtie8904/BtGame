@@ -1,6 +1,6 @@
-package bt.game.core.obj;
+package bt.game.core.obj.intf;
 
-import bt.game.core.scene.Scene;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
 /**

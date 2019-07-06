@@ -4,15 +4,15 @@ import java.awt.Graphics2D;
 
 import org.dyn4j.dynamics.World;
 
-import bt.game.core.container.GameContainer;
-import bt.game.core.obj.hand.ObjectHandler;
+import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.obj.hand.impl.BaseObjectHandler;
-import bt.game.core.scene.Scene;
+import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.scene.cam.Camera;
-import bt.game.resource.load.ResourceLoader;
-import bt.game.resource.load.TextLoader;
+import bt.game.core.scene.intf.Scene;
 import bt.game.resource.load.impl.BaseResourceLoader;
 import bt.game.resource.load.impl.BaseTextLoader;
+import bt.game.resource.load.intf.ResourceLoader;
+import bt.game.resource.load.intf.TextLoader;
 import bt.game.util.unit.Unit;
 import bt.runtime.InstanceKiller;
 import bt.utils.log.Logger;
@@ -67,7 +67,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#getObjectHandler()
+     * @see bt.game.core.scene.intf.Scene#getObjectHandler()
      */
     @Override
     public ObjectHandler getObjectHandler()
@@ -76,7 +76,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#getResourceLoader()
+     * @see bt.game.core.scene.intf.Scene#getResourceLoader()
      */
     @Override
     public ResourceLoader getResourceLoader()
@@ -85,7 +85,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#getTextLoader()
+     * @see bt.game.core.scene.intf.Scene#getTextLoader()
      */
     @Override
     public TextLoader getTextLoader()
@@ -94,7 +94,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#getGameContainer()
+     * @see bt.game.core.scene.intf.Scene#getGameContainer()
      */
     @Override
     public GameContainer getGameContainer()
@@ -103,7 +103,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#load(java.lang.String)
+     * @see bt.game.core.scene.intf.Scene#load(java.lang.String)
      */
     @Override
     public void load(String name)
@@ -130,7 +130,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#isLoaded()
+     * @see bt.game.core.scene.intf.Scene#isLoaded()
      */
     @Override
     public boolean isLoaded()
@@ -139,7 +139,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#refresh()
+     * @see bt.game.core.scene.intf.Scene#refresh()
      */
     @Override
     public void refresh()
@@ -191,7 +191,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#tick()
+     * @see bt.game.core.scene.intf.Scene#tick()
      */
     @Override
     public void tick(double delta)
@@ -209,7 +209,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#render(java.awt.Graphics)
+     * @see bt.game.core.scene.intf.Scene#render(java.awt.Graphics)
      */
     @Override
     public void render(Graphics2D g)
@@ -228,7 +228,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#getWidth()
+     * @see bt.game.core.scene.intf.Scene#getWidth()
      */
     @Override
     public Unit getWidth()
@@ -237,7 +237,7 @@ public abstract class BaseScene implements Scene
     }
 
     /**
-     * @see bt.game.core.scene.Scene#getHeight()
+     * @see bt.game.core.scene.intf.Scene#getHeight()
      */
     @Override
     public Unit getHeight()

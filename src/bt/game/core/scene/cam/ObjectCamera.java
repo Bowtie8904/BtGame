@@ -1,8 +1,8 @@
 package bt.game.core.scene.cam;
 
-import bt.game.core.container.GameContainer;
-import bt.game.core.obj.GameObject;
-import bt.game.core.scene.Scene;
+import bt.game.core.container.abstr.GameContainer;
+import bt.game.core.obj.intf.GameObject;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
 /**

@@ -1,4 +1,4 @@
-package bt.game.resource.load;
+package bt.game.resource.load.intf;
 
 import bt.game.resource.text.Text;
 import bt.runtime.Killable;

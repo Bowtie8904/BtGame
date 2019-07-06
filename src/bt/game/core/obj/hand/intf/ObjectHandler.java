@@ -1,4 +1,4 @@
-package bt.game.core.obj.hand;
+package bt.game.core.obj.hand.intf;
 
 import java.awt.Graphics2D;
 

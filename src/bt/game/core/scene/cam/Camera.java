@@ -2,10 +2,10 @@ package bt.game.core.scene.cam;
 
 import java.awt.Graphics2D;
 
-import bt.game.core.container.GameContainer;
+import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.obj.intf.Tickable;
-import bt.game.core.scene.Scene;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
 /**

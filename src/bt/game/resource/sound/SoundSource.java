@@ -1,9 +1,9 @@
 package bt.game.resource.sound;
 
-import bt.game.core.obj.GameObject;
-import bt.game.core.obj.hand.ObjectHandler;
+import bt.game.core.obj.hand.intf.ObjectHandler;
+import bt.game.core.obj.intf.GameObject;
 import bt.game.core.obj.intf.Tickable;
-import bt.game.core.scene.Scene;
+import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 import bt.types.sound.Sound;
 import bt.utils.num.NumberUtils;
