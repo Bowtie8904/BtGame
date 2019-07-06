@@ -5,6 +5,7 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 import bt.game.resource.render.Renderable;
 import bt.game.util.unit.Unit;
@@ -31,6 +32,7 @@ public class RenderableImage implements Renderable, Killable
     public RenderableImage(Image image)
     {
         this.image = image;
+        this.scaledImage = image;
         this.transform = new AffineTransform();
         this.alpha = 1f;
         this.z = Unit.zero();
@@ -56,6 +58,44 @@ public class RenderableImage implements Renderable, Killable
     public float getAlpha()
     {
         return this.alpha;
+    }
+
+    /**
+     * Returns a cropped version of the underlying image wrapped in a new {@link RenderableImage} instance.
+     * 
+     * <p>
+     * The returned RenderableImage copies the Z, alpha values and the {@link #shouldRender()} settting. It also shares
+     * the same image data as this instance, which means that changes to the underlying image can affect both
+     * RenderabelImages.
+     * </p>
+     * 
+     * @param x
+     *            The x pixel position of the cropped area on the original underlying image.
+     * @param y
+     *            The y pixel position of the cropped area on the original underlying image.
+     * @param w
+     *            The width in pixels of the cropped area on the original underlying image.
+     * @param h
+     *            The height in pixels of the cropped area on the original underlying image.
+     * @return The cropped RenderableImage if possible.
+     * 
+     * @throws UnsupportedOperationException
+     *             if the underlying image is not an instance of {@link BufferedImage}.
+     */
+    public RenderableImage crop(int x, int y, int w, int h)
+    {
+        if (this.image instanceof BufferedImage)
+        {
+            RenderableImage croppedImage = new RenderableImage(((BufferedImage)this.image).getSubimage(x, y, w, h));
+            croppedImage.setZ(this.z);
+            croppedImage.setAlpha(this.alpha);
+            croppedImage.shouldRender(this.shouldRender);
+            return croppedImage;
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Only instances of BufferedImage can be cropped.");
+        }
     }
 
     /**
