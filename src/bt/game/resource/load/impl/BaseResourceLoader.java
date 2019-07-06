@@ -133,7 +133,7 @@ public class BaseResourceLoader implements ResourceLoader
      * @param value
      *            The renderable to map.
      */
-    protected void add(String resourceName, Renderable value)
+    public void add(String resourceName, Renderable value)
     {
         this.renderables.put(resourceName.toUpperCase(), value);
     }
@@ -147,7 +147,7 @@ public class BaseResourceLoader implements ResourceLoader
      * @param value
      *            The sound to map.
      */
-    protected void add(String resourceName, SoundSupplier value)
+    public void add(String resourceName, SoundSupplier value)
     {
         this.sounds.put(resourceName.toUpperCase(), value);
     }
@@ -161,7 +161,7 @@ public class BaseResourceLoader implements ResourceLoader
      * @param value
      *            The file to map.
      */
-    protected void add(String resourceName, File value)
+    public void add(String resourceName, File value)
     {
         this.files.put(resourceName.toUpperCase(), value);
     }
@@ -175,7 +175,7 @@ public class BaseResourceLoader implements ResourceLoader
      * @param value
      *            The font to map.
      */
-    protected void add(String resourceName, Font value)
+    public void add(String resourceName, Font value)
     {
         this.fonts.put(resourceName.toUpperCase(), value);
     }
@@ -189,7 +189,7 @@ public class BaseResourceLoader implements ResourceLoader
      * @param value
      *            The animation to map.
      */
-    protected void add(String resourceName, Animation value)
+    public void add(String resourceName, Animation value)
     {
         this.animations.put(resourceName.toUpperCase(), value);
     }
@@ -203,7 +203,7 @@ public class BaseResourceLoader implements ResourceLoader
      * @param value
      *            The object to map.
      */
-    protected void add(String resourceName, Object value)
+    public void add(String resourceName, Object value)
     {
         this.objects.put(resourceName.toUpperCase(), value);
     }
