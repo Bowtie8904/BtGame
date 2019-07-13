@@ -23,6 +23,7 @@ public class BaseMouseTarget implements MouseTarget
     protected Unit h;
     protected Shape shape;
     protected Scene scene;
+    protected boolean affectedByCamera;
 
     public BaseMouseTarget(Scene scene, Unit x, Unit y, Unit z, Unit w, Unit h)
     {
@@ -32,6 +33,7 @@ public class BaseMouseTarget implements MouseTarget
         this.w = w;
         this.h = h;
         this.z = z;
+        this.affectedByCamera = true;
         this.shape = Geometry.createRectangle(w.pixels(),
                                               h.pixels());
         this.shape.translate(x.pixels() + (w.pixels() / 2),
@@ -119,6 +121,6 @@ public class BaseMouseTarget implements MouseTarget
     @Override
     public boolean affectedByCamera()
     {
-        return true;
+        return this.affectedByCamera;
     }
 }
