@@ -150,20 +150,27 @@ public abstract class GameContainer extends Canvas
         width = Unit.forUnits(this.settings.getUnitWidth());
         height = Unit.forUnits(this.settings.getUnitHeight());
 
-        setSize(new Dimension((int)width.pixels(), (int)height.pixels()));
-        setPreferredSize(new Dimension((int)width.pixels(), (int)height.pixels()));
-        setMaximumSize(new Dimension((int)width.pixels(), (int)height.pixels()));
+        setSize(new Dimension((int)width.pixels(),
+                              (int)height.pixels()));
+        setPreferredSize(new Dimension((int)width.pixels(),
+                                       (int)height.pixels()));
+        setMaximumSize(new Dimension((int)width.pixels(),
+                                     (int)height.pixels()));
 
         if (getWidth() < this.frame.getWidth())
         {
-            this.frame.getContentPane().setLayout(new BoxLayout(this.frame.getContentPane(), BoxLayout.X_AXIS));
+            this.frame.getContentPane()
+                      .setLayout(new BoxLayout(this.frame.getContentPane(),
+                                               BoxLayout.X_AXIS));
             this.frame.getContentPane().add(Box.createHorizontalGlue());
             this.frame.getContentPane().add(this);
             this.frame.getContentPane().add(Box.createHorizontalGlue());
         }
         else if (this.getHeight() < this.frame.getHeight())
         {
-            this.frame.getContentPane().setLayout(new BoxLayout(this.frame.getContentPane(), BoxLayout.Y_AXIS));
+            this.frame.getContentPane()
+                      .setLayout(new BoxLayout(this.frame.getContentPane(),
+                                               BoxLayout.Y_AXIS));
             this.frame.getContentPane().add(Box.createVerticalGlue());
             this.frame.getContentPane().add(this);
             this.frame.getContentPane().add(Box.createVerticalGlue());
@@ -226,7 +233,8 @@ public abstract class GameContainer extends Canvas
 
         if (!this.settings.isFullscreen())
         {
-            this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
+            this.frame.setSize(settings.getFrameWidth(),
+                               settings.getFrameHeight());
             this.frame.setLocationRelativeTo(null);
             this.isFullScreen = false;
         }
@@ -239,7 +247,8 @@ public abstract class GameContainer extends Canvas
         }
         else
         {
-            this.frame.setSize(settings.getFrameWidth(), settings.getFrameHeight());
+            this.frame.setSize(settings.getFrameWidth(),
+                               settings.getFrameHeight());
             this.frame.setLocationRelativeTo(null);
         }
 
@@ -280,7 +289,8 @@ public abstract class GameContainer extends Canvas
     public void setFrameSize(int frameWidth, int frameHeight)
     {
         this.canRender = false;
-        this.settings.frameSize(frameWidth, frameHeight);
+        this.settings.frameSize(frameWidth,
+                                frameHeight);
         createFrame();
         refresh();
     }
@@ -328,7 +338,8 @@ public abstract class GameContainer extends Canvas
             loadingScene.start();
         }
 
-        Threads.get().executeCached(() -> {
+        Threads.get().executeCached(() ->
+        {
             mainScene.load(name);
             setScene(mainScene);
             mainScene.start();
@@ -366,7 +377,9 @@ public abstract class GameContainer extends Canvas
      */
     protected void addScene(String name, Scene scene)
     {
-        addScene(name, scene, null);
+        addScene(name,
+                 scene,
+                 null);
     }
 
     /**
@@ -382,7 +395,9 @@ public abstract class GameContainer extends Canvas
      */
     protected void addScene(String name, Scene mainScene, Scene loadingScene)
     {
-        this.scenes.put(name, new SimpleEntry<Scene, Scene>(mainScene, loadingScene));
+        this.scenes.put(name,
+                        new SimpleEntry<Scene, Scene>(mainScene,
+                                                      loadingScene));
     }
 
     public Scene getCurrentScene()
@@ -421,8 +436,10 @@ public abstract class GameContainer extends Canvas
 
             Graphics2D g = (Graphics2D)bs.getDrawGraphics();
 
-            g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
+                               RenderingHints.VALUE_STROKE_PURE);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                               RenderingHints.VALUE_ANTIALIAS_ON);
 
             if (this.currentScene != null && this.currentScene.isLoaded())
             {

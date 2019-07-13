@@ -213,7 +213,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.broadColliders.put(collider.getBody(), collider);
+                this.broadColliders.put(collider.getBody(),
+                                        collider);
             }
         }
 
@@ -222,7 +223,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             NarrowPhaseCollider collider = NarrowPhaseCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.narrowColliders.put(collider.getBody(), collider);
+                this.narrowColliders.put(collider.getBody(),
+                                         collider);
             }
         }
 
@@ -231,7 +233,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             ManifoldCollider collider = ManifoldCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.manifoldColliders.put(collider.getBody(), collider);
+                this.manifoldColliders.put(collider.getBody(),
+                                           collider);
             }
         }
 
@@ -240,7 +243,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             ConstraintCollider collider = ConstraintCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.constraintColliders.put(collider.getBody(), collider);
+                this.constraintColliders.put(collider.getBody(),
+                                             collider);
             }
         }
 
@@ -249,7 +253,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             Contacter collider = Contacter.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.contacters.put(collider.getBody(), collider);
+                this.contacters.put(collider.getBody(),
+                                    collider);
             }
         }
     }
@@ -337,8 +342,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     public void tick(double delta)
     {
         this.tickables.stream()
-                .parallel()
-                .forEach(t -> t.tick(delta));
+                      .parallel()
+                      .forEach(t -> t.tick(delta));
     }
 
     /**
@@ -352,8 +357,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         sortObjects();
 
         this.renderables.stream()
-                .filter(Renderable::shouldRender)
-                .forEach(r -> r.render(g));
+                        .filter(Renderable::shouldRender)
+                        .forEach(r -> r.render(g));
     }
 
     /**
@@ -390,7 +395,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void init()
     {
-        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
+        InstanceKiller.killOnShutdown(this,
+                                      Integer.MIN_VALUE + 2);
 
         if (this.scene.getWorld() != null)
         {
@@ -412,12 +418,18 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (collider1 != null)
         {
-            proceed = proceed && collider1.onCollision(body1, fixture1, body2, fixture2);
+            proceed = proceed && collider1.onCollision(body1,
+                                                       fixture1,
+                                                       body2,
+                                                       fixture2);
         }
 
         if (collider2 != null)
         {
-            proceed = proceed && collider2.onCollision(body1, fixture1, body2, fixture2);
+            proceed = proceed && collider2.onCollision(body1,
+                                                       fixture1,
+                                                       body2,
+                                                       fixture2);
         }
 
         return proceed;
@@ -429,21 +441,29 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      */
     @Override
     public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2,
-            Penetration penetration)
+                             Penetration penetration)
     {
         NarrowPhaseCollider collider1 = this.narrowColliders.get(body1);
         NarrowPhaseCollider collider2 = this.narrowColliders.get(body2);
 
         boolean proceed = true;
-        
+
         if (collider1 != null)
         {
-            proceed = proceed && collider1.onCollision(body1, fixture1, body2, fixture2, penetration);
+            proceed = proceed && collider1.onCollision(body1,
+                                                       fixture1,
+                                                       body2,
+                                                       fixture2,
+                                                       penetration);
         }
 
         if (collider2 != null)
         {
-            proceed = proceed && collider2.onCollision(body1, fixture1, body2, fixture2, penetration);
+            proceed = proceed && collider2.onCollision(body1,
+                                                       fixture1,
+                                                       body2,
+                                                       fixture2,
+                                                       penetration);
         }
 
         return proceed;
@@ -463,12 +483,20 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (collider1 != null)
         {
-            proceed = proceed && collider1.onCollision(body1, fixture1, body2, fixture2, manifold);
+            proceed = proceed && collider1.onCollision(body1,
+                                                       fixture1,
+                                                       body2,
+                                                       fixture2,
+                                                       manifold);
         }
 
         if (collider2 != null)
         {
-            proceed = proceed && collider2.onCollision(body1, fixture1, body2, fixture2, manifold);
+            proceed = proceed && collider2.onCollision(body1,
+                                                       fixture1,
+                                                       body2,
+                                                       fixture2,
+                                                       manifold);
         }
 
         return proceed;

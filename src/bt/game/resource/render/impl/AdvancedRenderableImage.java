@@ -27,6 +27,12 @@ public class AdvancedRenderableImage extends AdvancedRenderable
     @Override
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
-        this.scene.getResourceLoader().getRenderable(this.imageName).render(g, x, y, w, h);
+        this.scene.getResourceLoader()
+                  .getRenderable(this.imageName)
+                  .render(g,
+                          x,
+                          y,
+                          w,
+                          h);
     }
 }

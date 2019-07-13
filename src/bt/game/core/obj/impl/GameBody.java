@@ -86,7 +86,8 @@ public class GameBody extends Body implements GameObject
     public void setX(Unit x)
     {
         x = x.subtractUnits(getX());
-        translate(x.units(), 0);
+        translate(x.units(),
+                  0);
     }
 
     /**
@@ -96,7 +97,8 @@ public class GameBody extends Body implements GameObject
     public void setY(Unit y)
     {
         y = y.subtractUnits(getY());
-        translate(0, y.units());
+        translate(0,
+                  y.units());
     }
 
     /**

@@ -124,12 +124,14 @@ public class Camera implements Tickable
      */
     public void render(Graphics2D g)
     {
-        g.translate((int)-this.x.pixels(), (int)-this.y.pixels());
+        g.translate((int)-this.x.pixels(),
+                    (int)-this.y.pixels());
     }
 
     public void resetTranslation(Graphics2D g)
     {
-        g.translate((int)this.x.pixels(), (int)this.y.pixels());
+        g.translate((int)this.x.pixels(),
+                    (int)this.y.pixels());
     }
 
     /**
@@ -138,6 +140,7 @@ public class Camera implements Tickable
     @Override
     public void tick(double delta)
     {
-        moveTo(this.x, this.y);
+        moveTo(this.x,
+               this.y);
     }
 }

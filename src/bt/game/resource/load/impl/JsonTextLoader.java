@@ -52,7 +52,8 @@ public class JsonTextLoader extends BaseTextLoader
         try (var stream = getClass().getClassLoader().getResourceAsStream(path))
         {
             jsonString = new BufferedReader(new InputStreamReader(stream))
-                    .lines().collect(Collectors.joining("\n"));
+                                                                          .lines()
+                                                                          .collect(Collectors.joining("\n"));
         }
         catch (Exception e)
         {
@@ -163,9 +164,11 @@ public class JsonTextLoader extends BaseTextLoader
                         text = "* " + id + " *";
                     }
 
-                    textObj = new Text(id, text);
+                    textObj = new Text(id,
+                                       text);
                     textObj.setLanguage(language == null ? "EN" : language);
-                    add(id, textObj);
+                    add(id,
+                        textObj);
                     count ++ ;
                 }
                 else if (this.loadMode == TextLoader.EAGER_LOADING)
@@ -193,9 +196,11 @@ public class JsonTextLoader extends BaseTextLoader
                                 text = "* " + id + " *";
                             }
 
-                            textObj = new Text(id, text);
+                            textObj = new Text(id,
+                                               text);
                             textObj.setLanguage(language == null ? "EN" : language);
-                            add(id, textObj);
+                            add(id,
+                                textObj);
                             count ++ ;
                         }
                     }
@@ -203,6 +208,9 @@ public class JsonTextLoader extends BaseTextLoader
             }
         }
 
-        Logger.global().printf("[%s] Loaded %d texts from language file.", name, count);
+        Logger.global()
+              .printf("[%s] Loaded %d texts from language file.",
+                      name,
+                      count);
     }
 }

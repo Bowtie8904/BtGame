@@ -22,10 +22,9 @@ public interface Renderable
      * @param h
      */
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h);
-	
-	/**
-     * Renders this instance. The given Graphics object is used
-     * to do the drawing.
+
+    /**
+     * Renders this instance. The given Graphics object is used to do the drawing.
      * 
      * @param g
      */

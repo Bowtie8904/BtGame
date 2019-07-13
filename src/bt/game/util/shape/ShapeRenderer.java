@@ -55,31 +55,45 @@ public final class ShapeRenderer
 
         if (shape instanceof Circle)
         {
-            ShapeRenderer.render(g, (Circle)shape, color);
+            ShapeRenderer.render(g,
+                                 (Circle)shape,
+                                 color);
         }
         else if (shape instanceof Polygon)
         {
-            ShapeRenderer.render(g, (Polygon)shape, color);
+            ShapeRenderer.render(g,
+                                 (Polygon)shape,
+                                 color);
         }
         else if (shape instanceof Segment)
         {
-            ShapeRenderer.render(g, (Segment)shape, color);
+            ShapeRenderer.render(g,
+                                 (Segment)shape,
+                                 color);
         }
         else if (shape instanceof Capsule)
         {
-            ShapeRenderer.render(g, (Capsule)shape, color);
+            ShapeRenderer.render(g,
+                                 (Capsule)shape,
+                                 color);
         }
         else if (shape instanceof Ellipse)
         {
-            ShapeRenderer.render(g, (Ellipse)shape, color);
+            ShapeRenderer.render(g,
+                                 (Ellipse)shape,
+                                 color);
         }
         else if (shape instanceof Slice)
         {
-            ShapeRenderer.render(g, (Slice)shape, color);
+            ShapeRenderer.render(g,
+                                 (Slice)shape,
+                                 color);
         }
         else if (shape instanceof HalfEllipse)
         {
-            ShapeRenderer.render(g, (HalfEllipse)shape, color);
+            ShapeRenderer.render(g,
+                                 (HalfEllipse)shape,
+                                 color);
         }
         else
         {
@@ -92,13 +106,15 @@ public final class ShapeRenderer
         AffineTransform ot = g.getTransform();
         AffineTransform lt = new AffineTransform();
         lt.translate(body.getTransform().getTranslationX() * Unit.getRatio(),
-                body.getTransform().getTranslationY() * Unit.getRatio());
+                     body.getTransform().getTranslationY() * Unit.getRatio());
         lt.rotate(body.getTransform().getRotation());
         g.transform(lt);
 
         for (Fixture f : body.getFixtures())
         {
-            ShapeRenderer.render(g, f.getShape(), color);
+            ShapeRenderer.render(g,
+                                 f.getShape(),
+                                 color);
         }
 
         g.setTransform(ot);
@@ -123,10 +139,10 @@ public final class ShapeRenderer
 
         double radius2 = 2.0 * radius;
         Ellipse2D.Double c = new Ellipse2D.Double(
-                (center.x - radius) * Unit.getRatio(),
-                (center.y - radius) * Unit.getRatio(),
-                radius2 * Unit.getRatio(),
-                radius2 * Unit.getRatio());
+                                                  (center.x - radius) * Unit.getRatio(),
+                                                  (center.y - radius) * Unit.getRatio(),
+                                                  radius2 * Unit.getRatio(),
+                                                  radius2 * Unit.getRatio());
 
         // fill the shape
         g.setColor(color);
@@ -137,10 +153,10 @@ public final class ShapeRenderer
 
         // draw a line so that rotation is visible
         Line2D.Double l = new Line2D.Double(
-                center.x * Unit.getRatio(),
-                center.y * Unit.getRatio(),
-                (center.x + radius) * Unit.getRatio(),
-                center.y * Unit.getRatio());
+                                            center.x * Unit.getRatio(),
+                                            center.y * Unit.getRatio(),
+                                            (center.x + radius) * Unit.getRatio(),
+                                            center.y * Unit.getRatio());
         g.draw(l);
     }
 
@@ -163,10 +179,12 @@ public final class ShapeRenderer
 
         // create the awt polygon
         Path2D.Double p = new Path2D.Double();
-        p.moveTo(vertices[0].x * Unit.getRatio(), vertices[0].y * Unit.getRatio());
+        p.moveTo(vertices[0].x * Unit.getRatio(),
+                 vertices[0].y * Unit.getRatio());
         for (int i = 1; i < l; i ++ )
         {
-            p.lineTo(vertices[i].x * Unit.getRatio(), vertices[i].y * Unit.getRatio());
+            p.lineTo(vertices[i].x * Unit.getRatio(),
+                     vertices[i].y * Unit.getRatio());
         }
         p.closePath();
 
@@ -195,10 +213,10 @@ public final class ShapeRenderer
         Vector2[] vertices = segment.getVertices();
 
         Line2D.Double l = new Line2D.Double(
-                vertices[0].x * Unit.getRatio(),
-                vertices[0].y * Unit.getRatio(),
-                vertices[1].x * Unit.getRatio(),
-                vertices[1].y * Unit.getRatio());
+                                            vertices[0].x * Unit.getRatio(),
+                                            vertices[0].y * Unit.getRatio(),
+                                            vertices[1].x * Unit.getRatio(),
+                                            vertices[1].y * Unit.getRatio());
 
         // draw the outline
         g.setColor(getOutlineColor(color));
@@ -226,7 +244,8 @@ public final class ShapeRenderer
         // save the old transform
         AffineTransform oTransform = g.getTransform();
         // translate and rotate
-        g.translate(center.x * Unit.getRatio(), center.y * Unit.getRatio());
+        g.translate(center.x * Unit.getRatio(),
+                    center.y * Unit.getRatio());
         g.rotate(rotation);
 
         double width = capsule.getLength();
@@ -234,28 +253,34 @@ public final class ShapeRenderer
         double radius2 = radius * 2.0;
 
         Arc2D.Double arcL = new Arc2D.Double(
-                -(width * 0.5) * Unit.getRatio(),
-                -radius * Unit.getRatio(),
-                radius2 * Unit.getRatio(),
-                radius2 * Unit.getRatio(),
-                90.0,
-                180.0,
-                Arc2D.OPEN);
+                                             -(width * 0.5) * Unit.getRatio(),
+                                             -radius * Unit.getRatio(),
+                                             radius2 * Unit.getRatio(),
+                                             radius2 * Unit.getRatio(),
+                                             90.0,
+                                             180.0,
+                                             Arc2D.OPEN);
         Arc2D.Double arcR = new Arc2D.Double(
-                (width * 0.5 - radius2) * Unit.getRatio(),
-                -radius * Unit.getRatio(),
-                radius2 * Unit.getRatio(),
-                radius2 * Unit.getRatio(),
-                -90.0,
-                180.0,
-                Arc2D.OPEN);
+                                             (width * 0.5 - radius2) * Unit.getRatio(),
+                                             -radius * Unit.getRatio(),
+                                             radius2 * Unit.getRatio(),
+                                             radius2 * Unit.getRatio(),
+                                             -90.0,
+                                             180.0,
+                                             Arc2D.OPEN);
 
         // connect the shapes
         Path2D.Double path = new Path2D.Double();
-        path.append(arcL, true);
-        path.append(new Line2D.Double(arcL.getEndPoint(), arcR.getStartPoint()), true);
-        path.append(arcR, true);
-        path.append(new Line2D.Double(arcR.getEndPoint(), arcL.getStartPoint()), true);
+        path.append(arcL,
+                    true);
+        path.append(new Line2D.Double(arcL.getEndPoint(),
+                                      arcR.getStartPoint()),
+                    true);
+        path.append(arcR,
+                    true);
+        path.append(new Line2D.Double(arcR.getEndPoint(),
+                                      arcL.getStartPoint()),
+                    true);
 
         // set the color
         g.setColor(color);
@@ -290,16 +315,17 @@ public final class ShapeRenderer
 
         // save the old transform
         AffineTransform oTransform = g.getTransform();
-        g.translate(center.x * Unit.getRatio(), center.y * Unit.getRatio());
+        g.translate(center.x * Unit.getRatio(),
+                    center.y * Unit.getRatio());
         g.rotate(rotation);
 
         double width = ellipse.getWidth();
         double height = ellipse.getHeight();
         Ellipse2D.Double c = new Ellipse2D.Double(
-                (-width * 0.5) * Unit.getRatio(),
-                (-height * 0.5) * Unit.getRatio(),
-                width * Unit.getRatio(),
-                height * Unit.getRatio());
+                                                  (-width * 0.5) * Unit.getRatio(),
+                                                  (-height * 0.5) * Unit.getRatio(),
+                                                  width * Unit.getRatio(),
+                                                  height * Unit.getRatio());
 
         // fill the shape
         g.setColor(color);
@@ -336,18 +362,19 @@ public final class ShapeRenderer
         // save the old transform
         AffineTransform oTransform = g.getTransform();
         // translate and rotate
-        g.translate(circleCenter.x * Unit.getRatio(), circleCenter.y * Unit.getRatio());
+        g.translate(circleCenter.x * Unit.getRatio(),
+                    circleCenter.y * Unit.getRatio());
         g.rotate(rotation);
 
         // to draw the arc, java2d wants the top left x,y
         // as if you were drawing a circle
         Arc2D a = new Arc2D.Double(-radius * Unit.getRatio(),
-                -radius * Unit.getRatio(),
-                2.0 * radius * Unit.getRatio(),
-                2.0 * radius * Unit.getRatio(),
-                -Math.toDegrees(theta2),
-                Math.toDegrees(2.0 * theta2),
-                Arc2D.PIE);
+                                   -radius * Unit.getRatio(),
+                                   2.0 * radius * Unit.getRatio(),
+                                   2.0 * radius * Unit.getRatio(),
+                                   -Math.toDegrees(theta2),
+                                   Math.toDegrees(2.0 * theta2),
+                                   Arc2D.PIE);
 
         // fill the shape
         g.setColor(color);
@@ -384,19 +411,20 @@ public final class ShapeRenderer
         // save the old transform
         AffineTransform oTransform = g.getTransform();
         // translate and rotate
-        g.translate(center.x * Unit.getRatio(), center.y * Unit.getRatio());
+        g.translate(center.x * Unit.getRatio(),
+                    center.y * Unit.getRatio());
         g.rotate(rotation);
 
         // to draw the arc, java2d wants the top left x,y
         // as if you were drawing a circle
         Arc2D a = new Arc2D.Double(
-                (-width * 0.5) * Unit.getRatio(),
-                -height * Unit.getRatio(),
-                width * Unit.getRatio(),
-                height * 2.0 * Unit.getRatio(),
-                0,
-                -180.0,
-                Arc2D.PIE);
+                                   (-width * 0.5) * Unit.getRatio(),
+                                   -height * Unit.getRatio(),
+                                   width * Unit.getRatio(),
+                                   height * 2.0 * Unit.getRatio(),
+                                   0,
+                                   -180.0,
+                                   Arc2D.PIE);
 
         // fill the shape
         g.setColor(color);
@@ -419,7 +447,10 @@ public final class ShapeRenderer
     private static final Color getOutlineColor(Color color)
     {
         Color oc = color.darker();
-        return new Color(oc.getRed(), oc.getGreen(), oc.getBlue(), color.getAlpha());
+        return new Color(oc.getRed(),
+                         oc.getGreen(),
+                         oc.getBlue(),
+                         color.getAlpha());
     }
 
     /**
@@ -430,8 +461,8 @@ public final class ShapeRenderer
     public static final Color getRandomColor()
     {
         return new Color(
-                (float)Math.random() * 0.5f + 0.5f,
-                (float)Math.random() * 0.5f + 0.5f,
-                (float)Math.random() * 0.5f + 0.5f);
+                         (float)Math.random() * 0.5f + 0.5f,
+                         (float)Math.random() * 0.5f + 0.5f,
+                         (float)Math.random() * 0.5f + 0.5f);
     }
 }

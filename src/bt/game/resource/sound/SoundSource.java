@@ -85,8 +85,8 @@ public class SoundSource implements Tickable
             Unit targetY = this.volumeTarget.getCenterY();
 
             double distance = Math
-                    .sqrt((targetX.units() - this.x.units()) * (targetX.units() - this.x.units())
-                            + (targetY.units() - this.y.units()) * (targetY.units() - this.y.units()));
+                                  .sqrt((targetX.units() - this.x.units()) * (targetX.units() - this.x.units())
+                                        + (targetY.units() - this.y.units()) * (targetY.units() - this.y.units()));
 
             if (distance > this.maxDistance.units())
             {
@@ -95,9 +95,9 @@ public class SoundSource implements Tickable
             else
             {
                 this.sound.setVolume(NumberUtils.clamp(
-                        this.maxVolume - (float)(distance / this.maxDistance.units()),
-                        this.minVolume,
-                        this.maxVolume));
+                                                       this.maxVolume - (float)(distance / this.maxDistance.units()),
+                                                       this.minVolume,
+                                                       this.maxVolume));
             }
         }
     }
@@ -113,7 +113,9 @@ public class SoundSource implements Tickable
      */
     public void setMinVolume(float minVolume)
     {
-        this.minVolume = NumberUtils.clamp(minVolume, 0f, 1f);
+        this.minVolume = NumberUtils.clamp(minVolume,
+                                           0f,
+                                           1f);
     }
 
     /**
@@ -127,7 +129,9 @@ public class SoundSource implements Tickable
      */
     public void setMaxVolume(float maxVolume)
     {
-        this.maxVolume = NumberUtils.clamp(maxVolume, 0f, 1f);
+        this.maxVolume = NumberUtils.clamp(maxVolume,
+                                           0f,
+                                           1f);
     }
 
     /**

@@ -56,7 +56,10 @@ public class ObjectCamera extends Camera
      */
     public ObjectCamera(Scene scene, GameObject object)
     {
-        this(scene, object, Unit.zero(), Unit.zero());
+        this(scene,
+             object,
+             Unit.zero(),
+             Unit.zero());
     }
 
     /**
@@ -74,13 +77,13 @@ public class ObjectCamera extends Camera
     {
         double objectX = this.object.getCenterX().units();
         double objectY = this.object.getCenterY().units();
-        
+
         double camX = getX().units() + GameContainer.width().units() / 2;
         double camY = getY().units() + GameContainer.height().units() / 2;
-        
+
         double xMove = 0;
         double yMove = 0;
-        
+
         if (objectX > camX + this.movementOffsetX.units())
         {
             xMove = objectX - camX - this.movementOffsetX.units();
@@ -99,6 +102,7 @@ public class ObjectCamera extends Camera
             yMove = objectY - camY + this.movementOffsetY.units();
         }
 
-        moveTo(getX().addUnits(xMove), getY().addUnits(yMove));
+        moveTo(getX().addUnits(xMove),
+               getY().addUnits(yMove));
     }
 }

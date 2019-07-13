@@ -16,7 +16,8 @@ public class FixedGameLoop extends GameLoop
      */
     public FixedGameLoop(Consumer<Double> tick, Runnable render)
     {
-        super(tick, render);
+        super(tick,
+              render);
     }
 
     /**

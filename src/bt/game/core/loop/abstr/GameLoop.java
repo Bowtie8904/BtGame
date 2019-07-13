@@ -65,7 +65,8 @@ public abstract class GameLoop implements Runnable, Killable
     {
         this.tick = tick;
         this.render = render;
-        InstanceKiller.killOnShutdown(this, 1);
+        InstanceKiller.killOnShutdown(this,
+                                      1);
     }
 
     /**
@@ -93,7 +94,9 @@ public abstract class GameLoop implements Runnable, Killable
         if (!this.running)
         {
             this.running = true;
-            Threads.get().execute(this, "GAME_LOOP");
+            Threads.get()
+                   .execute(this,
+                            "GAME_LOOP");
         }
     }
 

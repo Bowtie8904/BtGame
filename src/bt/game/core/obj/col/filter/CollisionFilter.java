@@ -51,7 +51,8 @@ public class CollisionFilter implements Filter
      */
     public CollisionFilter(Object collider)
     {
-        this(collider, new Class[] {});
+        this(collider,
+             new Class[] {});
     }
 
     /**
@@ -63,7 +64,8 @@ public class CollisionFilter implements Filter
      */
     public CollisionFilter(Class<?>... classes)
     {
-        this(null, classes);
+        this(null,
+             classes);
     }
 
     /**
@@ -76,7 +78,8 @@ public class CollisionFilter implements Filter
      */
     public CollisionFilter()
     {
-        this(null, new Class[] {});
+        this(null,
+             new Class[] {});
     }
 
     /**
@@ -119,8 +122,8 @@ public class CollisionFilter implements Filter
     public boolean allowsCollision(Object collider)
     {
         return this.classes.length == 0
-                || collider == null
-                || Arrays.stream(this.classes)
+               || collider == null
+               || Arrays.stream(this.classes)
                         .anyMatch(c -> c.isInstance(collider));
     }
 

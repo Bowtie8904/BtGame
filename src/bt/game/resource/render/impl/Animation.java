@@ -76,15 +76,15 @@ public class Animation extends AdvancedRenderable implements Tickable
     public void setup()
     {
         this.images = Arrays.stream(this.imageNames)
-                .map(this.resourceLoader::getRenderable)
-                .filter(RenderableImage.class::isInstance)
-                .map(RenderableImage.class::cast)
-                .toArray(RenderableImage[]::new);
+                            .map(this.resourceLoader::getRenderable)
+                            .filter(RenderableImage.class::isInstance)
+                            .map(RenderableImage.class::cast)
+                            .toArray(RenderableImage[]::new);
 
         if (this.images.length != this.imageNames.length)
         {
             throw new IllegalArgumentException(
-                    "Unable to receive enough RenderableImages from the resource loader. Some image names are not mapped to instances of RenderableImage.");
+                                               "Unable to receive enough RenderableImages from the resource loader. Some image names are not mapped to instances of RenderableImage.");
         }
 
         this.interval = this.time / this.images.length;
@@ -161,7 +161,8 @@ public class Animation extends AdvancedRenderable implements Tickable
      */
     public void onFrame(int frame, Runnable action)
     {
-        this.onFrame.put(frame, action);
+        this.onFrame.put(frame,
+                         action);
     }
 
     /**
@@ -187,7 +188,7 @@ public class Animation extends AdvancedRenderable implements Tickable
     public void tick(double delta)
     {
         if (this.currentIndex < this.images.length && System.currentTimeMillis() - this.lastTime >= this.interval
-                || this.lastTime == 0)
+            || this.lastTime == 0)
         {
             this.lastTime = System.currentTimeMillis();
 
@@ -216,15 +217,20 @@ public class Animation extends AdvancedRenderable implements Tickable
     }
 
     /**
-     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit,
-     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit,
+     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
         if (this.currentIndex >= 0 && this.currentIndex < this.images.length)
         {
-            this.images[this.currentIndex].render(g, x, y, w, h, this.rotation);
+            this.images[this.currentIndex].render(g,
+                                                  x,
+                                                  y,
+                                                  w,
+                                                  h,
+                                                  this.rotation);
         }
     }
 
@@ -236,7 +242,8 @@ public class Animation extends AdvancedRenderable implements Tickable
     {
         if (this.currentIndex >= 0 && this.currentIndex < this.images.length)
         {
-            this.images[this.currentIndex].render(g, this.rotation);
+            this.images[this.currentIndex].render(g,
+                                                  this.rotation);
         }
     }
 

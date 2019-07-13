@@ -81,11 +81,12 @@ public class BaseResourceLoader implements ResourceLoader
 
         this.killed = true;
 
-		this.renderables.values().stream()
-								.parallel()
-								.filter(Killable.class::isInstance)
-								.map(Killable.class::cast)
-                .forEach(killable -> killable.kill());
+        this.renderables.values()
+                        .stream()
+                        .parallel()
+                        .filter(Killable.class::isInstance)
+                        .map(Killable.class::cast)
+                        .forEach(killable -> killable.kill());
 
         for (Object obj : this.objects.values())
         {
@@ -102,7 +103,7 @@ public class BaseResourceLoader implements ResourceLoader
             }
 
             if (obj instanceof Killable
-                    && (!InstanceKiller.isActive() || !InstanceKiller.isRegistered((Killable)obj)))
+                && (!InstanceKiller.isActive() || !InstanceKiller.isRegistered((Killable)obj)))
             {
                 ((Killable)obj).kill();
             }
@@ -135,7 +136,8 @@ public class BaseResourceLoader implements ResourceLoader
      */
     public void add(String resourceName, Renderable value)
     {
-        this.renderables.put(resourceName.toUpperCase(), value);
+        this.renderables.put(resourceName.toUpperCase(),
+                             value);
     }
 
     /**
@@ -149,7 +151,8 @@ public class BaseResourceLoader implements ResourceLoader
      */
     public void add(String resourceName, SoundSupplier value)
     {
-        this.sounds.put(resourceName.toUpperCase(), value);
+        this.sounds.put(resourceName.toUpperCase(),
+                        value);
     }
 
     /**
@@ -163,7 +166,8 @@ public class BaseResourceLoader implements ResourceLoader
      */
     public void add(String resourceName, File value)
     {
-        this.files.put(resourceName.toUpperCase(), value);
+        this.files.put(resourceName.toUpperCase(),
+                       value);
     }
 
     /**
@@ -177,7 +181,8 @@ public class BaseResourceLoader implements ResourceLoader
      */
     public void add(String resourceName, Font value)
     {
-        this.fonts.put(resourceName.toUpperCase(), value);
+        this.fonts.put(resourceName.toUpperCase(),
+                       value);
     }
 
     /**
@@ -191,7 +196,8 @@ public class BaseResourceLoader implements ResourceLoader
      */
     public void add(String resourceName, Animation value)
     {
-        this.animations.put(resourceName.toUpperCase(), value);
+        this.animations.put(resourceName.toUpperCase(),
+                            value);
     }
 
     /**
@@ -205,7 +211,8 @@ public class BaseResourceLoader implements ResourceLoader
      */
     public void add(String resourceName, Object value)
     {
-        this.objects.put(resourceName.toUpperCase(), value);
+        this.objects.put(resourceName.toUpperCase(),
+                         value);
     }
 
     /**
@@ -282,7 +289,9 @@ public class BaseResourceLoader implements ResourceLoader
 
         if (mappedAnim != null)
         {
-            createdAnim = new Animation(this, mappedAnim.getTime(), mappedAnim.getImageNames());
+            createdAnim = new Animation(this,
+                                        mappedAnim.getTime(),
+                                        mappedAnim.getImageNames());
         }
 
         return createdAnim;
@@ -334,9 +343,10 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 loadedClasses.add(loadable.getClass().getName());
             }
-            
+
             container = new ResourceContainer();
-            loadable.load(name, container);
+            loadable.load(name,
+                          container);
 
             // images
             loadedRenderables = container.getRenderables();
@@ -345,12 +355,13 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 for (String resourceKey : loadedRenderables.keySet())
                 {
-                    add(resourceKey, loadedRenderables.get(resourceKey));
+                    add(resourceKey,
+                        loadedRenderables.get(resourceKey));
                     Logger.global()
-                            .printf("[%s] Loaded renderable '%s' for %s.",
-                                    name,
-                                    resourceKey,
-                                    loadable.getClass().getName());
+                          .printf("[%s] Loaded renderable '%s' for %s.",
+                                  name,
+                                  resourceKey,
+                                  loadable.getClass().getName());
                 }
             }
 
@@ -361,12 +372,13 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 for (String resourceKey : loadedSounds.keySet())
                 {
-                    add(resourceKey, loadedSounds.get(resourceKey));
+                    add(resourceKey,
+                        loadedSounds.get(resourceKey));
                     Logger.global()
-                            .printf("[%s] Loaded sound '%s' for %s.",
-                                    name,
-                                    resourceKey,
-                                    loadable.getClass().getName());
+                          .printf("[%s] Loaded sound '%s' for %s.",
+                                  name,
+                                  resourceKey,
+                                  loadable.getClass().getName());
                 }
             }
 
@@ -377,12 +389,13 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 for (String resourceKey : loadedFiles.keySet())
                 {
-                    add(resourceKey, loadedFiles.get(resourceKey));
+                    add(resourceKey,
+                        loadedFiles.get(resourceKey));
                     Logger.global()
-                            .printf("[%s] Loaded file '%s' for %s.",
-                                    name,
-                                    resourceKey,
-                                    loadable.getClass().getName());
+                          .printf("[%s] Loaded file '%s' for %s.",
+                                  name,
+                                  resourceKey,
+                                  loadable.getClass().getName());
                 }
             }
 
@@ -393,12 +406,13 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 for (String resourceKey : loadedFonts.keySet())
                 {
-                    add(resourceKey, loadedFonts.get(resourceKey));
+                    add(resourceKey,
+                        loadedFonts.get(resourceKey));
                     Logger.global()
-                            .printf("[%s] Loaded font '%s' for %s.",
-                                    name,
-                                    resourceKey,
-                                    loadable.getClass().getName());
+                          .printf("[%s] Loaded font '%s' for %s.",
+                                  name,
+                                  resourceKey,
+                                  loadable.getClass().getName());
                 }
             }
 
@@ -409,12 +423,13 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 for (String resourceKey : loadedObjects.keySet())
                 {
-                    add(resourceKey, loadedObjects.get(resourceKey));
+                    add(resourceKey,
+                        loadedObjects.get(resourceKey));
                     Logger.global()
-                            .printf("[%s] Loaded object '%s' for %s.",
-                                    name,
-                                    resourceKey,
-                                    loadable.getClass().getName());
+                          .printf("[%s] Loaded object '%s' for %s.",
+                                  name,
+                                  resourceKey,
+                                  loadable.getClass().getName());
                 }
             }
 
@@ -425,12 +440,13 @@ public class BaseResourceLoader implements ResourceLoader
             {
                 for (String resourceKey : loadedAnimations.keySet())
                 {
-                    add(resourceKey, loadedAnimations.get(resourceKey));
+                    add(resourceKey,
+                        loadedAnimations.get(resourceKey));
                     Logger.global()
-                            .printf("[%s] Loaded animation '%s' for %s.",
-                                    name,
-                                    resourceKey,
-                                    loadable.getClass().getName());
+                          .printf("[%s] Loaded animation '%s' for %s.",
+                                  name,
+                                  resourceKey,
+                                  loadable.getClass().getName());
                 }
             }
         }

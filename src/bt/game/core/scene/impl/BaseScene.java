@@ -57,7 +57,8 @@ public abstract class BaseScene implements Scene
 
     public BaseScene(GameContainer gameContainer)
     {
-        this(gameContainer, null);
+        this(gameContainer,
+             null);
     }
 
     @Override
@@ -110,7 +111,8 @@ public abstract class BaseScene implements Scene
     {
         this.isLoaded = false;
         this.gameObjectHandler.init();
-        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
+        InstanceKiller.killOnShutdown(this,
+                                      Integer.MIN_VALUE + 2);
         this.name = name;
         loadTextLoader(name);
         load();

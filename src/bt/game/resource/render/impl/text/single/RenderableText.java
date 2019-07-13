@@ -63,7 +63,11 @@ public abstract class RenderableText extends AdvancedRenderable
      */
     public RenderableText(String text)
     {
-        this(text, Unit.zero(), Unit.zero(), Unit.zero(), Unit.zero());
+        this(text,
+             Unit.zero(),
+             Unit.zero(),
+             Unit.zero(),
+             Unit.zero());
     }
 
     /**
@@ -102,7 +106,11 @@ public abstract class RenderableText extends AdvancedRenderable
      */
     protected RenderableText(String text, Unit w, Unit h)
     {
-        this(text, Unit.zero(), Unit.zero(), w, h);
+        this(text,
+             Unit.zero(),
+             Unit.zero(),
+             w,
+             h);
     }
 
     /**
@@ -248,8 +256,8 @@ public abstract class RenderableText extends AdvancedRenderable
     /**
      * Renders this instance at the position x|y with a width of w and a height of h.
      * 
-     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit,
-     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit,
+     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
@@ -265,22 +273,26 @@ public abstract class RenderableText extends AdvancedRenderable
         g.setFont(this.font);
 
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                           RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
-                RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+                           RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
         // only do this if the scaling really needs to be adjusted
         if (this.shouldRecalculate
-                || !w.equals(this.w)
-                || !h.equals(this.h)
-                || this.lastUnitRatio != Unit.getRatio())
+            || !w.equals(this.w)
+            || !h.equals(this.h)
+            || this.lastUnitRatio != Unit.getRatio())
         {
-            doScaling(g, x, y, w, h);
+            doScaling(g,
+                      x,
+                      y,
+                      w,
+                      h);
         }
 
         g.rotate(Math.toRadians(this.rotationAngle),
-                this.x.pixels() + this.w.pixels() / 2,
-                this.y.pixels() + this.h.pixels() / 2);
+                 this.x.pixels() + this.w.pixels() / 2,
+                 this.y.pixels() + this.h.pixels() / 2);
 
         g.setFont(this.font.deriveFont(this.transform));
 
@@ -289,11 +301,13 @@ public abstract class RenderableText extends AdvancedRenderable
             g.setColor(this.color);
         }
 
-        g.drawString(this.text, (int)this.x.pixels(), (int)this.y.pixels());
+        g.drawString(this.text,
+                     (int)this.x.pixels(),
+                     (int)this.y.pixels());
 
         g.rotate(Math.toRadians(-this.rotationAngle),
-                this.x.pixels() + this.w.pixels() / 2,
-                this.y.pixels() + this.h.pixels() / 2);
+                 this.x.pixels() + this.w.pixels() / 2,
+                 this.y.pixels() + this.h.pixels() / 2);
     }
 
     /**
@@ -302,10 +316,10 @@ public abstract class RenderableText extends AdvancedRenderable
     public void render(Graphics2D g, Unit w, Unit h)
     {
         render(g,
-                this.x,
-                this.y,
-                w,
-                h);
+               this.x,
+               this.y,
+               w,
+               h);
     }
 
     /**
@@ -315,10 +329,10 @@ public abstract class RenderableText extends AdvancedRenderable
     public void render(Graphics2D g)
     {
         render(g,
-                this.x,
-                this.y,
-                this.w,
-                this.h);
+               this.x,
+               this.y,
+               this.w,
+               this.h);
     }
 
     /**

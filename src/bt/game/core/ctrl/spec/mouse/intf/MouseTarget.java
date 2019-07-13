@@ -65,7 +65,7 @@ public interface MouseTarget
      * @return
      */
     public Unit getZ();
-    
+
     /**
      * Gets the shape of this instance. Used to determine whether a click was performed in this instances area and so
      * on.
@@ -80,7 +80,7 @@ public interface MouseTarget
      * @return
      */
     public Scene getScene();
-    
+
     /**
      * Indicates whether this target is affected by the camera translation, so that we offset is taken into account.
      * 

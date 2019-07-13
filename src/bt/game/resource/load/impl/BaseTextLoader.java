@@ -64,9 +64,11 @@ public class BaseTextLoader implements TextLoader
 
         if (text == null)
         {
-            text = new Text(id, "* " + id + " *");
+            text = new Text(id,
+                            "* " + id + " *");
             text.setLanguage(this.language);
-            add(id, text);
+            add(id,
+                text);
         }
 
         return text;
@@ -83,10 +85,13 @@ public class BaseTextLoader implements TextLoader
         if (textsForLanguage == null)
         {
             textsForLanguage = new HashMap<Integer, Text>();
-            this.texts.put(text.getLanguage(), textsForLanguage);
+            this.texts.put(text.getLanguage(),
+                           textsForLanguage);
         }
 
-        this.texts.get(text.getLanguage()).put(id, text);
+        this.texts.get(text.getLanguage())
+                  .put(id,
+                       text);
     }
 
     /**
@@ -119,9 +124,10 @@ public class BaseTextLoader implements TextLoader
             {
                 loadedClasses.add(loadable.getClass().getName());
             }
-            
+
             container = new ResourceContainer();
-            loadable.load(name, container);
+            loadable.load(name,
+                          container);
 
             int count = 0;
             Text text = null;
@@ -140,7 +146,8 @@ public class BaseTextLoader implements TextLoader
 
                         if (this.language.equalsIgnoreCase(text.getLanguage()))
                         {
-                            add(id, text);
+                            add(id,
+                                text);
                             count ++ ;
                         }
                     }
@@ -154,14 +161,18 @@ public class BaseTextLoader implements TextLoader
 
                     for (Integer id : textsForLanguage.keySet())
                     {
-                        add(id, textsForLanguage.get(id));
+                        add(id,
+                            textsForLanguage.get(id));
                         count ++ ;
                     }
                 }
             }
 
             Logger.global()
-                    .printf("[%s] Loaded %d texts for %s.", name, count, loadable.getClass().getName());
+                  .printf("[%s] Loaded %d texts for %s.",
+                          name,
+                          count,
+                          loadable.getClass().getName());
         }
     }
 

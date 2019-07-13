@@ -51,11 +51,13 @@ public abstract class LocationTrigger extends GameBody implements Contacter
         this.repeat = true;
 
         BodyFixture bf = new BodyFixture(shape);
-        bf.setFilter(new CollisionFilter(this, acceptedCollisions));
+        bf.setFilter(new CollisionFilter(this,
+                                         acceptedCollisions));
         bf.setSensor(true);
         addFixture(bf);
         setMass(MassType.NORMAL);
-        translate(x.units(), y.units());
+        translate(x.units(),
+                  y.units());
 
         scene.getObjectHandler().addObject(this);
     }

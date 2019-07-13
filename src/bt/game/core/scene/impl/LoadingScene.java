@@ -43,7 +43,8 @@ public class LoadingScene extends BaseScene
      */
     public LoadingScene(GameContainer gameContainer)
     {
-        this(gameContainer, 5);
+        this(gameContainer,
+             5);
     }
 
     @Override
@@ -97,21 +98,29 @@ public class LoadingScene extends BaseScene
     public void render(Graphics2D g)
     {
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, (int)GameContainer.width().pixels(), (int)GameContainer.height().pixels());
+        g.fillRect(0,
+                   0,
+                   (int)GameContainer.width().pixels(),
+                   (int)GameContainer.height().pixels());
 
         Unit length = Unit.forUnits(GameContainer.width().units() / 27);
         Unit height = Unit.forUnits(length.units() / 1.8f);
         Unit y = Unit.forUnits(GameContainer.height().units() / 2);
         g.setColor(Color.DARK_GRAY);
-        g.fillRect((int)(9 * length.pixels()), (int)y.pixels(), (int)(length.pixels() * 9), (int)height.pixels());
+        g.fillRect((int)(9 * length.pixels()),
+                   (int)y.pixels(),
+                   (int)(length.pixels() * 9),
+                   (int)height.pixels());
 
         for (int i = 0; i < 9; i ++ )
         {
             if (this.highlight == i)
             {
                 g.setColor(Color.WHITE);
-                g.fillRect((int)((9 + i) * length.pixels()), (int)y.pixels(), (int)length.pixels(),
-                        (int)height.pixels());
+                g.fillRect((int)((9 + i) * length.pixels()),
+                           (int)y.pixels(),
+                           (int)length.pixels(),
+                           (int)height.pixels());
             }
         }
     }

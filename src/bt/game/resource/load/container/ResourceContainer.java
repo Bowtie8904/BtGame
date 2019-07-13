@@ -54,7 +54,8 @@ public class ResourceContainer
      */
     public void add(String name, Renderable res)
     {
-        this.renderables.put(name, res);
+        this.renderables.put(name,
+                             res);
     }
 
     /**
@@ -67,7 +68,8 @@ public class ResourceContainer
      */
     public void add(String name, SoundSupplier res)
     {
-        this.sounds.put(name, res);
+        this.sounds.put(name,
+                        res);
     }
 
     /**
@@ -80,7 +82,8 @@ public class ResourceContainer
      */
     public void add(String name, File res)
     {
-        this.files.put(name, res);
+        this.files.put(name,
+                       res);
     }
 
     /**
@@ -93,7 +96,8 @@ public class ResourceContainer
      */
     public void add(String name, Font res)
     {
-        this.fonts.put(name, res);
+        this.fonts.put(name,
+                       res);
     }
 
     /**
@@ -106,7 +110,8 @@ public class ResourceContainer
      */
     public void add(String name, Object res)
     {
-        this.objects.put(name, res);
+        this.objects.put(name,
+                         res);
     }
 
     /**
@@ -119,7 +124,8 @@ public class ResourceContainer
      */
     public void add(String name, Animation res)
     {
-        this.animations.put(name, res);
+        this.animations.put(name,
+                            res);
     }
 
     /**
@@ -137,10 +143,13 @@ public class ResourceContainer
         if (textsForLanguage == null)
         {
             textsForLanguage = new HashMap<Integer, Text>();
-            this.texts.put(res.getLanguage(), textsForLanguage);
+            this.texts.put(res.getLanguage(),
+                           textsForLanguage);
         }
 
-        this.texts.get(res.getLanguage()).put(id, res);
+        this.texts.get(res.getLanguage())
+                  .put(id,
+                       res);
     }
 
     /**

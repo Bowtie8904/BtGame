@@ -48,7 +48,11 @@ public class FlexibleText extends RenderableText
      */
     public FlexibleText(String text, Unit x, Unit y, Unit w, Unit h)
     {
-        super(text, x, y, w, h);
+        super(text,
+              x,
+              y,
+              w,
+              h);
     }
 
     /**
@@ -67,23 +71,28 @@ public class FlexibleText extends RenderableText
      */
     public FlexibleText(String text, Unit w, Unit h)
     {
-        super(text, w, h);
+        super(text,
+              w,
+              h);
     }
 
     /**
-     * @see bt.game.resource.render.impl.text.single.RenderableText#doScaling(java.awt.Graphics2D, bt.game.util.unit.Unit,
-     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * @see bt.game.resource.render.impl.text.single.RenderableText#doScaling(java.awt.Graphics2D,
+     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     protected void doScaling(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
         Font font = g.getFont();
         FontRenderContext renderContext = g.getFontRenderContext();
-        LineMetrics metrics = font.getLineMetrics(this.text, renderContext);
+        LineMetrics metrics = font.getLineMetrics(this.text,
+                                                  renderContext);
 
         this.lastUnitRatio = Unit.getRatio();
         float height = metrics.getAscent() + metrics.getDescent();
-        double width = font.getStringBounds(this.text, renderContext).getWidth();
+        double width = font.getStringBounds(this.text,
+                                            renderContext)
+                           .getWidth();
         double xScale = w.pixels() / width;
         double yScale = (double)(h.pixels() / height);
 
@@ -104,8 +113,10 @@ public class FlexibleText extends RenderableText
             yPos = (h.pixels() + trueScale * height) / 2 - trueScale * metrics.getDescent();
         }
 
-        this.transform = AffineTransform.getTranslateInstance(xPos, yPos);
-        this.transform.scale(trueScale, trueScale);
+        this.transform = AffineTransform.getTranslateInstance(xPos,
+                                                              yPos);
+        this.transform.scale(trueScale,
+                             trueScale);
 
         this.h = h;
         this.w = w;

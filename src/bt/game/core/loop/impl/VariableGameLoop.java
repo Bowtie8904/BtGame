@@ -18,7 +18,8 @@ public class VariableGameLoop extends GameLoop
      */
     public VariableGameLoop(Consumer<Double> tick, Runnable render)
     {
-        super(tick, render);
+        super(tick,
+              render);
     }
 
     public double getLastDelta()

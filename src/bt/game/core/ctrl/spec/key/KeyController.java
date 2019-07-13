@@ -92,7 +92,8 @@ public class KeyController implements KeyListener
         {
             if (!isKeyDown(e.getKeyCode()))
             {
-                this.keyChanges.put(e.getKeyCode(), KEY_JUST_DOWN);
+                this.keyChanges.put(e.getKeyCode(),
+                                    KEY_JUST_DOWN);
             }
         }
     }
@@ -105,14 +106,16 @@ public class KeyController implements KeyListener
     {
         synchronized (this.keyChanges)
         {
-            this.keyChanges.put(e.getKeyCode(), KEY_RELEASED);
+            this.keyChanges.put(e.getKeyCode(),
+                                KEY_RELEASED);
         }
     }
 
     public void checkKeyChanges()
     {
         // changing 'recently released' to 'not down' and 'just down' to 'down'
-        this.keyValues.replaceAll((k, v) -> {
+        this.keyValues.replaceAll((k, v) ->
+        {
             if (v == KEY_RELEASED)
             {
                 return KEY_NOT_DOWN;
@@ -130,7 +133,8 @@ public class KeyController implements KeyListener
         {
             for (var key : this.keyChanges.keySet())
             {
-                this.keyValues.put(key, this.keyChanges.get(key));
+                this.keyValues.put(key,
+                                   this.keyChanges.get(key));
             }
 
             this.keyChanges.clear();

@@ -34,7 +34,11 @@ public abstract class AdvancedRenderable implements Renderable
     @Override
     public void render(Graphics2D g)
     {
-        render(g, this.x, this.y, this.w, this.h);
+        render(g,
+               this.x,
+               this.y,
+               this.w,
+               this.h);
     }
 
     /**

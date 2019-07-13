@@ -119,9 +119,9 @@ public class MouseController extends MouseAdapter
     public void clearMouseTargets(Scene scene)
     {
         this.mouseTargets
-                .stream()
-                .filter(m -> m.getScene().equals(scene))
-                .forEach(this.mouseTargets::remove);
+                         .stream()
+                         .filter(m -> m.getScene().equals(scene))
+                         .forEach(this.mouseTargets::remove);
     }
 
     public void checkHover()
@@ -156,7 +156,7 @@ public class MouseController extends MouseAdapter
                 boolean foundOne = false;
 
                 sortTargets();
-                
+
                 for (MouseTarget target : this.mouseTargets)
                 {
                     if (target.affectedByCamera())
@@ -170,7 +170,9 @@ public class MouseController extends MouseAdapter
                         y = my;
                     }
 
-                    if (target.getShape().contains(new Vector2(x, y)))
+                    if (target.getShape()
+                              .contains(new Vector2(x,
+                                                    y)))
                     {
                         if (!target.equals(this.lastHoveredTarget))
                         {
@@ -203,20 +205,22 @@ public class MouseController extends MouseAdapter
         }
     }
 
+    // TODO replace Points with primitives
     @Override
     public void mousePressed(MouseEvent e)
     {
         this.mouseX = e.getX();
         this.mouseY = e.getY();
 
-        Point pBase = new Point(this.mouseX, this.mouseY);
+        Point pBase = new Point(this.mouseX,
+                                this.mouseY);
         Point p;
         Point pCam = null;
 
         if (Camera.currentCamera != null)
         {
             pCam = new Point((int)(this.mouseX + Camera.currentCamera.getX().pixels()),
-                    (int)(this.mouseY + Camera.currentCamera.getY().pixels()));
+                             (int)(this.mouseY + Camera.currentCamera.getY().pixels()));
         }
         else
         {
@@ -247,7 +251,9 @@ public class MouseController extends MouseAdapter
                     p = pBase;
                 }
 
-                if (target.getShape().contains(new Vector2(p.x, p.y)))
+                if (target.getShape()
+                          .contains(new Vector2(p.x,
+                                                p.y)))
                 {
                     final Point finalPoint = p;
 
@@ -256,15 +262,21 @@ public class MouseController extends MouseAdapter
                         this.lastClickedTarget = target; // used for dragging. only used with left mouse button
                         onLeftClick(target);
 
-                        Threads.get().executeCached(() -> {
-                            target.onLeftClick(e, Unit.forPixels(finalPoint.x), Unit.forPixels(finalPoint.y));
+                        Threads.get().executeCached(() ->
+                        {
+                            target.onLeftClick(e,
+                                               Unit.forPixels(finalPoint.x),
+                                               Unit.forPixels(finalPoint.y));
                         });
                     }
                     else if (e.getButton() == MouseEvent.BUTTON3)
                     {
                         onRightClick(target);
-                        Threads.get().executeCached(() -> {
-                            target.onRightClick(e, Unit.forPixels(finalPoint.x), Unit.forPixels(finalPoint.y));
+                        Threads.get().executeCached(() ->
+                        {
+                            target.onRightClick(e,
+                                                Unit.forPixels(finalPoint.x),
+                                                Unit.forPixels(finalPoint.y));
                         });
                     }
                     return;
@@ -289,28 +301,33 @@ public class MouseController extends MouseAdapter
         {
             // dont switch to another target if we havnt released our last click yet, i.e. are still dragging the
             // target around
-            this.lastClickedTarget.onMouseWheelMove(e, e.getWheelRotation());
+            this.lastClickedTarget.onMouseWheelMove(e,
+                                                    e.getWheelRotation());
         }
         else
         {
             this.mouseX = e.getX();
             this.mouseY = e.getY();
 
-            Point p = new Point(this.mouseX, this.mouseY);
+            Point p = new Point(this.mouseX,
+                                this.mouseY);
 
             if (Camera.currentCamera != null)
             {
                 p = new Point((int)(this.mouseX + Camera.currentCamera.getX().pixels()),
-                        (int)(this.mouseY + Camera.currentCamera.getY().pixels()));
+                              (int)(this.mouseY + Camera.currentCamera.getY().pixels()));
             }
 
             sortTargets();
 
             for (MouseTarget target : this.mouseTargets)
             {
-                if (target.getShape().contains(new Vector2(p.x, p.y)))
+                if (target.getShape()
+                          .contains(new Vector2(p.x,
+                                                p.y)))
                 {
-                    target.onMouseWheelMove(e, e.getWheelRotation());
+                    target.onMouseWheelMove(e,
+                                            e.getWheelRotation());
                     return;
                 }
             }
@@ -323,8 +340,8 @@ public class MouseController extends MouseAdapter
         if (this.lastClickedTarget != null)
         {
             this.lastClickedTarget.onDrag(e,
-                    Unit.forPixels(e.getX() - this.mouseX),
-                    Unit.forPixels(e.getY() - this.mouseY));
+                                          Unit.forPixels(e.getX() - this.mouseX),
+                                          Unit.forPixels(e.getY() - this.mouseY));
 
             this.mouseX = e.getX();
             this.mouseY = e.getY();

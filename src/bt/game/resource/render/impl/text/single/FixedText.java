@@ -64,7 +64,11 @@ public class FixedText extends RenderableText
      */
     public FixedText(String text, int fixedType, Unit x, Unit y, Unit fixedValue)
     {
-        super(text, x, y, fixedValue, fixedValue);
+        super(text,
+              x,
+              y,
+              fixedValue,
+              fixedValue);
         this.fixedType = fixedType;
     }
 
@@ -84,24 +88,29 @@ public class FixedText extends RenderableText
      */
     public FixedText(String text, int fixedType, Unit fixedValue)
     {
-        super(text, fixedValue, fixedValue);
+        super(text,
+              fixedValue,
+              fixedValue);
         this.fixedType = fixedType;
     }
 
     /**
-     * @see bt.game.resource.render.impl.text.single.RenderableText#doScaling(java.awt.Graphics2D, bt.game.util.unit.Unit,
-     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * @see bt.game.resource.render.impl.text.single.RenderableText#doScaling(java.awt.Graphics2D,
+     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     protected void doScaling(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
         Font font = g.getFont();
         FontRenderContext renderContext = g.getFontRenderContext();
-        LineMetrics metrics = font.getLineMetrics(this.text, renderContext);
+        LineMetrics metrics = font.getLineMetrics(this.text,
+                                                  renderContext);
 
         this.lastUnitRatio = Unit.getRatio();
         float height = metrics.getAscent() + metrics.getDescent();
-        double width = font.getStringBounds(this.text, renderContext).getWidth();
+        double width = font.getStringBounds(this.text,
+                                            renderContext)
+                           .getWidth();
         double xScale = w.pixels() / width;
         double yScale = (double)(h.pixels() / height);
 
@@ -129,8 +138,10 @@ public class FixedText extends RenderableText
             yPos = (h.pixels() + trueScale * height) / 2 - trueScale * metrics.getDescent();
         }
 
-        this.transform = AffineTransform.getTranslateInstance(xPos, yPos);
-        this.transform.scale(trueScale, trueScale);
+        this.transform = AffineTransform.getTranslateInstance(xPos,
+                                                              yPos);
+        this.transform.scale(trueScale,
+                             trueScale);
 
         this.h = h;
         this.w = w;

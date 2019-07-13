@@ -47,7 +47,9 @@ public class RenderableImage implements Renderable, Killable
      */
     public void setAlpha(float alpha)
     {
-        this.alpha = NumberUtils.clamp(alpha, 0, 1);
+        this.alpha = NumberUtils.clamp(alpha,
+                                       0,
+                                       1);
     }
 
     /**
@@ -86,7 +88,10 @@ public class RenderableImage implements Renderable, Killable
     {
         if (this.image instanceof BufferedImage)
         {
-            RenderableImage croppedImage = new RenderableImage(((BufferedImage)this.image).getSubimage(x, y, w, h));
+            RenderableImage croppedImage = new RenderableImage(((BufferedImage)this.image).getSubimage(x,
+                                                                                                       y,
+                                                                                                       w,
+                                                                                                       h));
             croppedImage.setZ(this.z);
             croppedImage.setAlpha(this.alpha);
             croppedImage.shouldRender(this.shouldRender);
@@ -105,32 +110,38 @@ public class RenderableImage implements Renderable, Killable
     public void render(Graphics2D g)
     {
         render(g,
-                Unit.zero(),
-                Unit.zero(),
-                Unit.forUnits(this.image.getWidth(null)),
-                Unit.forUnits(this.image.getHeight(null)),
-                0);
+               Unit.zero(),
+               Unit.zero(),
+               Unit.forUnits(this.image.getWidth(null)),
+               Unit.forUnits(this.image.getHeight(null)),
+               0);
     }
 
     public void render(Graphics2D g, double rotation)
     {
         render(g,
-                Unit.zero(),
-                Unit.zero(),
-                Unit.forUnits(this.image.getWidth(null)),
-                Unit.forUnits(this.image.getHeight(null)),
-                rotation);
+               Unit.zero(),
+               Unit.zero(),
+               Unit.forUnits(this.image.getWidth(null)),
+               Unit.forUnits(this.image.getHeight(null)),
+               rotation);
     }
 
     /**
      * Renders this instance at the position x|y with a width of w and a height of h.
      * 
-     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit,
+     *      bt.game.util.unit.Unit)
      */
     @Override
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
     {
-        render(g, x, y, w, h, 0);
+        render(g,
+               x,
+               y,
+               w,
+               h,
+               0);
     }
 
     /**
@@ -152,21 +163,27 @@ public class RenderableImage implements Renderable, Killable
         Composite origComposite = g.getComposite();
 
         this.transform.setToRotation(Math.toRadians(rotation),
-                x.pixels() + w.pixels() / 2,
-                y.pixels() + h.pixels() / 2);
+                                     x.pixels() + w.pixels() / 2,
+                                     y.pixels() + h.pixels() / 2);
 
         g.transform(this.transform);
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                                                  this.alpha));
 
         if (!w.equals(this.lastWidth) || !h.equals(this.lastHeight) || this.lastUnitRatio != Unit.getRatio())
         {
             this.lastUnitRatio = Unit.getRatio();
-            this.scaledImage = this.image.getScaledInstance((int)w.pixels(), (int)h.pixels(), Image.SCALE_SMOOTH);
+            this.scaledImage = this.image.getScaledInstance((int)w.pixels(),
+                                                            (int)h.pixels(),
+                                                            Image.SCALE_SMOOTH);
             this.lastHeight = h;
             this.lastWidth = w;
         }
 
-        g.drawImage(this.scaledImage, (int)x.pixels(), (int)y.pixels(), null);
+        g.drawImage(this.scaledImage,
+                    (int)x.pixels(),
+                    (int)y.pixels(),
+                    null);
 
         this.transform.setToRotation(0);
         g.setComposite(origComposite);
