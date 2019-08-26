@@ -115,19 +115,19 @@ public class KeyController implements KeyListener
     {
         // changing 'recently released' to 'not down' and 'just down' to 'down'
         this.keyValues.replaceAll((k, v) ->
-        {
-            if (v == KEY_RELEASED)
             {
-                return KEY_NOT_DOWN;
-            }
+                if (v == KEY_RELEASED)
+                {
+                    return KEY_NOT_DOWN;
+                }
 
-            if (v == KEY_JUST_DOWN)
-            {
-                return KEY_DOWN;
-            }
+                if (v == KEY_JUST_DOWN)
+                {
+                    return KEY_DOWN;
+                }
 
-            return v;
-        });
+                return v;
+            });
 
         synchronized (this.keyChanges)
         {

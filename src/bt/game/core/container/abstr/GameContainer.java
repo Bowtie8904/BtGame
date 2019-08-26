@@ -339,11 +339,11 @@ public abstract class GameContainer extends Canvas
         }
 
         Threads.get().executeCached(() ->
-        {
-            mainScene.load(name);
-            setScene(mainScene);
-            mainScene.start();
-        });
+            {
+                mainScene.load(name);
+                setScene(mainScene);
+                mainScene.start();
+            });
     }
 
     /**

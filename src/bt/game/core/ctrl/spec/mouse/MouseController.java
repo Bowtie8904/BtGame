@@ -263,21 +263,21 @@ public class MouseController extends MouseAdapter
                         onLeftClick(target);
 
                         Threads.get().executeCached(() ->
-                        {
-                            target.onLeftClick(e,
-                                               Unit.forPixels(finalPoint.x),
-                                               Unit.forPixels(finalPoint.y));
-                        });
+                            {
+                                target.onLeftClick(e,
+                                                   Unit.forPixels(finalPoint.x),
+                                                   Unit.forPixels(finalPoint.y));
+                            });
                     }
                     else if (e.getButton() == MouseEvent.BUTTON3)
                     {
                         onRightClick(target);
                         Threads.get().executeCached(() ->
-                        {
-                            target.onRightClick(e,
-                                                Unit.forPixels(finalPoint.x),
-                                                Unit.forPixels(finalPoint.y));
-                        });
+                            {
+                                target.onRightClick(e,
+                                                    Unit.forPixels(finalPoint.x),
+                                                    Unit.forPixels(finalPoint.y));
+                            });
                     }
                     return;
                 }
