@@ -9,7 +9,7 @@ import bt.game.resource.load.container.ResourceContainer;
 import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.load.intf.TextLoader;
 import bt.game.resource.text.Text;
-import bt.utils.log.Logger;
+import bt.log.Logger;
 
 /**
  * @author &#8904
@@ -84,7 +84,7 @@ public class BaseTextLoader implements TextLoader
 
         if (textsForLanguage == null)
         {
-            textsForLanguage = new HashMap<Integer, Text>();
+            textsForLanguage = new HashMap<>();
             this.texts.put(text.getLanguage(),
                            textsForLanguage);
         }

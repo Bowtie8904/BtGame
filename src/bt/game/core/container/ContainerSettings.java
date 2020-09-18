@@ -8,11 +8,11 @@ import javax.imageio.ImageIO;
 
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
-import bt.utils.log.Logger;
+import bt.log.Logger;
 
 /**
  * A configuration class for {@link GameContainer}s.
- * 
+ *
  * @author &#8904
  */
 public class ContainerSettings
@@ -29,7 +29,7 @@ public class ContainerSettings
     /**
      * Sets the measurements of the the game canvas in {@link Unit units}. This has no effect on the actual window size,
      * it just measn that the window width <i>n</i> will consist of <i>unitWidth</i> units.
-     * 
+     *
      * @param unitWidth
      *            The units of the X axis.
      * @param unitHeight
@@ -45,7 +45,7 @@ public class ContainerSettings
 
     /**
      * Sets the size of the frame. This setting has no effect if {@link #fullscreen(boolean)} is set to true.
-     * 
+     *
      * @param width
      *            The width of the window.
      * @param height
@@ -61,7 +61,7 @@ public class ContainerSettings
 
     /**
      * Sets whether the window will be decorated.
-     * 
+     *
      * @param undecorated
      *            true to remove window decorations.
      * @return This instance for chaining.
@@ -74,7 +74,7 @@ public class ContainerSettings
 
     /**
      * Indicates whether the game should be in fullscreen mode.
-     * 
+     *
      * @param fullscreen
      *            true if the game shuld be in fullscreen.
      * @return This instance for chaining.
@@ -87,7 +87,7 @@ public class ContainerSettings
 
     /**
      * Sets the title of the game shown in the taskbar.
-     * 
+     *
      * @param title
      *            The title.
      * @return This instance for chaining.
@@ -100,7 +100,7 @@ public class ContainerSettings
 
     /**
      * Sets the icon of the game shown in the taskbar.
-     * 
+     *
      * @param icon
      *            The icon.
      * @return This instance for chaining.
@@ -113,7 +113,7 @@ public class ContainerSettings
 
     /**
      * Sets the icon of the game shown in the taskbar.
-     * 
+     *
      * @param icon
      *            The image file.
      * @return This instance for chaining.

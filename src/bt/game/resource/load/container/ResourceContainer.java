@@ -9,15 +9,15 @@ import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.intf.Renderable;
 import bt.game.resource.text.Text;
-import bt.types.sound.SoundSupplier;
+import bt.io.sound.SoundSupplier;
 
 /**
  * A class which can hold maps of resources.
- * 
+ *
  * <p>
  * Used to let {@link Loadable loadables} give their required resources back to the requesting resource loader.
  * </p>
- * 
+ *
  * @author &#8904
  */
 public class ResourceContainer
@@ -46,7 +46,7 @@ public class ResourceContainer
 
     /**
      * Maps the given resource with the given name.
-     * 
+     *
      * @param name
      *            The name of the resource.
      * @param res
@@ -60,7 +60,7 @@ public class ResourceContainer
 
     /**
      * Maps the given resource with the given name.
-     * 
+     *
      * @param name
      *            The name of the resource.
      * @param res
@@ -74,7 +74,7 @@ public class ResourceContainer
 
     /**
      * Maps the given resource with the given name.
-     * 
+     *
      * @param name
      *            The name of the resource.
      * @param res
@@ -88,7 +88,7 @@ public class ResourceContainer
 
     /**
      * Maps the given resource with the given name.
-     * 
+     *
      * @param name
      *            The name of the resource.
      * @param res
@@ -102,7 +102,7 @@ public class ResourceContainer
 
     /**
      * Maps the given resource with the given name.
-     * 
+     *
      * @param name
      *            The name of the resource.
      * @param res
@@ -116,7 +116,7 @@ public class ResourceContainer
 
     /**
      * Maps the given resource with the given name.
-     * 
+     *
      * @param name
      *            The name of the resource.
      * @param res
@@ -130,7 +130,7 @@ public class ResourceContainer
 
     /**
      * Maps the given resource with the given name.
-     * 
+     *
      * @param id
      *            The id of the text.
      * @param res
@@ -142,7 +142,7 @@ public class ResourceContainer
 
         if (textsForLanguage == null)
         {
-            textsForLanguage = new HashMap<Integer, Text>();
+            textsForLanguage = new HashMap<>();
             this.texts.put(res.getLanguage(),
                            textsForLanguage);
         }
@@ -154,7 +154,7 @@ public class ResourceContainer
 
     /**
      * Gets all mapped renderable resources.
-     * 
+     *
      * @return
      */
     public Map<String, Renderable> getRenderables()
@@ -164,7 +164,7 @@ public class ResourceContainer
 
     /**
      * Gets all mapped sound resources.
-     * 
+     *
      * @return
      */
     public Map<String, SoundSupplier> getSounds()
@@ -174,7 +174,7 @@ public class ResourceContainer
 
     /**
      * Gets all mapped file resources.
-     * 
+     *
      * @return
      */
     public Map<String, File> getFiles()
@@ -184,7 +184,7 @@ public class ResourceContainer
 
     /**
      * Gets all mapped font resources.
-     * 
+     *
      * @return
      */
     public Map<String, Font> getFonts()
@@ -194,7 +194,7 @@ public class ResourceContainer
 
     /**
      * Gets all mapped text resources.
-     * 
+     *
      * @return
      */
     public Map<String, Map<Integer, Text>> getTexts()
@@ -204,11 +204,11 @@ public class ResourceContainer
 
     /**
      * Gets all mapped object resources.
-     * 
+     *
      * <p>
      * This does only include resources that where specifically added via {@link #add(String, Object)}.
      * </p>
-     * 
+     *
      * @return
      */
     public Map<String, Object> getObjects()
@@ -218,7 +218,7 @@ public class ResourceContainer
 
     /**
      * Gets all mapped animation resources.
-     * 
+     *
      * @return
      */
     public Map<String, Animation> getAnimations()

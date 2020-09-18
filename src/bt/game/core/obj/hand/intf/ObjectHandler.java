@@ -2,12 +2,12 @@ package bt.game.core.obj.hand.intf;
 
 import java.awt.Graphics2D;
 
-import bt.runtime.Killable;
+import bt.types.Killable;
 
 /**
  * An interface describing the functionalities of an object handler. Implementations are supposed to hold collections of
  * objects and forward tick and render calls to them.
- * 
+ *
  * @author &#8904
  */
 public interface ObjectHandler extends Killable
@@ -24,14 +24,14 @@ public interface ObjectHandler extends Killable
 
     /**
      * Adds the given object to the collection.
-     * 
+     *
      * @param object
      */
     public void addObject(Object object);
 
     /**
      * Removed the given object from the collection.
-     * 
+     *
      * @param object
      */
     public void removeObject(Object object);

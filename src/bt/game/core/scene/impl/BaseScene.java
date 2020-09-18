@@ -14,8 +14,8 @@ import bt.game.resource.load.impl.BaseTextLoader;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.resource.load.intf.TextLoader;
 import bt.game.util.unit.Unit;
+import bt.log.Logger;
 import bt.runtime.InstanceKiller;
-import bt.utils.log.Logger;
 
 /**
  * @author &#8904
@@ -261,18 +261,18 @@ public abstract class BaseScene implements Scene
 
     /**
      * Supposed to render the background.
-     * 
+     *
      * <p>
      * Called from inside the {@link #render(Graphics2D)} after the camera is translated.
      * </p>
-     * 
+     *
      * @param g
      */
     public abstract void renderBackground(Graphics2D g);
 
     /**
      * Supposed to setup/register additional resources.
-     * 
+     *
      * <p>
      * This method is called from inside the {@link #load(String)} method after {@link #loadTextLoader(String)} and
      * before {@link #loadResourceLoader(String)}.

@@ -11,7 +11,7 @@ import bt.game.resource.load.intf.Loader;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.resource.load.intf.TextLoader;
 import bt.game.util.unit.Unit;
-import bt.runtime.Killable;
+import bt.types.Killable;
 
 /**
  * @author &#8904

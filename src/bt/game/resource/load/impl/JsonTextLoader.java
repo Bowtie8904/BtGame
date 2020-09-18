@@ -10,8 +10,8 @@ import org.json.JSONObject;
 
 import bt.game.resource.load.intf.TextLoader;
 import bt.game.resource.text.Text;
-import bt.utils.json.JSON;
-import bt.utils.log.Logger;
+import bt.io.json.JSON;
+import bt.log.Logger;
 
 /**
  * @author &#8904
@@ -35,11 +35,11 @@ public class JsonTextLoader extends BaseTextLoader
      * Attempts to find a file with the given name inside the defined directory (see the constructor). The first file
      * with the correct (case insensitive) name will be used. This method will try to parse the file content as json and
      * return the created {@link JSONObject}.
-     * 
+     *
      * <p>
      * The resource filer needs to have the file extension .lang.
      * </p>
-     * 
+     *
      * @param name
      *            The context name = the name of the file (without file ending) to load from.
      * @return The parsed json from the file or null if parsing failed for any reason.
@@ -64,9 +64,9 @@ public class JsonTextLoader extends BaseTextLoader
     }
 
     /**
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * <pre>
      {
         "texts":

@@ -9,12 +9,12 @@ import java.awt.image.BufferedImage;
 
 import bt.game.resource.render.intf.Renderable;
 import bt.game.util.unit.Unit;
-import bt.runtime.Killable;
+import bt.types.Killable;
 import bt.utils.num.NumberUtils;
 
 /**
- * 
- * 
+ *
+ *
  * @author &#8904
  */
 public class RenderableImage implements Renderable, Killable
@@ -41,7 +41,7 @@ public class RenderableImage implements Renderable, Killable
 
     /**
      * Sets the alhpa value for this image.
-     * 
+     *
      * @param alpha
      *            A value between 0 and 1.
      */
@@ -54,7 +54,7 @@ public class RenderableImage implements Renderable, Killable
 
     /**
      * Gets the alpha value for this image.
-     * 
+     *
      * @return
      */
     public float getAlpha()
@@ -64,13 +64,13 @@ public class RenderableImage implements Renderable, Killable
 
     /**
      * Returns a cropped version of the underlying image wrapped in a new {@link RenderableImage} instance.
-     * 
+     *
      * <p>
      * The returned RenderableImage copies the Z, alpha values and the {@link #shouldRender()} settting. It also shares
      * the same image data as this instance, which means that changes to the underlying image can affect both
      * RenderabelImages.
      * </p>
-     * 
+     *
      * @param x
      *            The x pixel position of the cropped area on the original underlying image.
      * @param y
@@ -80,7 +80,7 @@ public class RenderableImage implements Renderable, Killable
      * @param h
      *            The height in pixels of the cropped area on the original underlying image.
      * @return The cropped RenderableImage if possible.
-     * 
+     *
      * @throws UnsupportedOperationException
      *             if the underlying image is not an instance of {@link BufferedImage}.
      */
@@ -129,7 +129,7 @@ public class RenderableImage implements Renderable, Killable
 
     /**
      * Renders this instance at the position x|y with a width of w and a height of h.
-     * 
+     *
      * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit,
      *      bt.game.util.unit.Unit)
      */
@@ -148,7 +148,7 @@ public class RenderableImage implements Renderable, Killable
      * Renders this instance at the position x|y with a width of w and a height of h. The image is rotated clockwise
      * around its middle point by the given rotation. The given Graphics object is used to create a {@link Graphics2D}
      * copy, so that rotation actions can be performed.
-     * 
+     *
      * @param g
      * @param x
      * @param y

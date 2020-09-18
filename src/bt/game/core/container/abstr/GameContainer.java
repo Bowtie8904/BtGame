@@ -22,12 +22,12 @@ import bt.game.core.ctrl.spec.key.KeyController;
 import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
-import bt.utils.log.Logger;
-import bt.utils.thread.Threads;
+import bt.log.Logger;
+import bt.scheduler.Threads;
 
 /**
  * A frame including a canvas to display a game. This class handles the starting and ending of {@link Scene scenes}.
- * 
+ *
  * @author &#8904
  */
 public abstract class GameContainer extends Canvas
@@ -76,7 +76,7 @@ public abstract class GameContainer extends Canvas
 
     /**
      * The {@link Unit} that describes the X axis of the game.
-     * 
+     *
      * @return The unit instance.
      */
     public static Unit width()
@@ -86,7 +86,7 @@ public abstract class GameContainer extends Canvas
 
     /**
      * The {@link Unit} that describes the Y axis of the game.
-     * 
+     *
      * @return The unit instance.
      */
     public static Unit height()
@@ -97,7 +97,7 @@ public abstract class GameContainer extends Canvas
     /**
      * Creates a new instance and uses the given settings. This will setup the frame, calculate and set the ratio for
      * {@link Unit units} and call {@link #createScenes()}.
-     * 
+     *
      * @param settings
      *            The settings to use for this game container.
      */
@@ -119,7 +119,7 @@ public abstract class GameContainer extends Canvas
      * Calculates the pixel per unit ratio by using the width and height of the given component and the units set in the
      * {@link ContainerSettings settings} given to the constructor. This method will call {@link Unit#setRatio(float)}
      * with the result.
-     * 
+     *
      * @param comp
      *            The component whichs width and height are used to calculate the ration.
      */
@@ -188,7 +188,7 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Gets the frame that contains this games canvas.
-     * 
+     *
      * @return
      */
     public JFrame getFrame()
@@ -198,7 +198,7 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Gets whether this container is currently in full screen mode.
-     * 
+     *
      * @return true if the container is in full screen.
      */
     public boolean isFullScreen()
@@ -218,7 +218,7 @@ public abstract class GameContainer extends Canvas
 
         this.frame = new JFrame();
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setUndecorated(settings.isUndecorated());
+        this.frame.setUndecorated(this.settings.isUndecorated());
         this.frame.setResizable(false);
 
         if (this.settings.getTitle() != null)
@@ -233,8 +233,8 @@ public abstract class GameContainer extends Canvas
 
         if (!this.settings.isFullscreen())
         {
-            this.frame.setSize(settings.getFrameWidth(),
-                               settings.getFrameHeight());
+            this.frame.setSize(this.settings.getFrameWidth(),
+                               this.settings.getFrameHeight());
             this.frame.setLocationRelativeTo(null);
             this.isFullScreen = false;
         }
@@ -247,8 +247,8 @@ public abstract class GameContainer extends Canvas
         }
         else
         {
-            this.frame.setSize(settings.getFrameWidth(),
-                               settings.getFrameHeight());
+            this.frame.setSize(this.settings.getFrameWidth(),
+                               this.settings.getFrameHeight());
             this.frame.setLocationRelativeTo(null);
         }
 
@@ -261,11 +261,11 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Sets this container to full screen.
-     * 
+     *
      * <p>
      * A new frame will be created.
      * </p>
-     * 
+     *
      * @param fullscreen
      */
     public void setFullScreen(boolean fullscreen)
@@ -278,11 +278,11 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Sets the size of this container in pixels.
-     * 
+     *
      * <p>
      * A new frame will be created.
      * </p>
-     * 
+     *
      * @param frameWidth
      * @param frameHeight
      */
@@ -297,13 +297,13 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Requests a new scene to be loaded after the current render iteration.
-     * 
+     *
      * <p>
      * This will cause the container to properly {@link Scene#kill() kill} the current scene. The new main scene will be
      * loaded in a different thread. During the loading of the main scene the set loading scene is played (if it
      * exists).
      * </p>
-     * 
+     *
      * @param name
      */
     public void requestScene(String name)
@@ -316,7 +316,7 @@ public abstract class GameContainer extends Canvas
      * Sets the {@link Scene} to be displayed. This will properly {@link Scene#kill() kill} the current scene. The new
      * main scene will be loaded in a different thread. During the loading of the main scene the set loading scene is
      * played (if it exists).
-     * 
+     *
      * @param name
      *            The name of the scene that should be played.
      */
@@ -348,7 +348,7 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Sets the given scene. This kills the current scene if it does not equal the given one.
-     * 
+     *
      * @param scene
      */
     private void setScene(Scene scene)
@@ -363,15 +363,15 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Adds the given scene and maps it to the given name.
-     * 
+     *
      * <p>
      * This is a convinience method for
-     * 
+     *
      * <pre>
      * {@link #addScene(String, Scene, Scene) addScene(name, scene, null);}
      * </pre>
      * </p>
-     * 
+     *
      * @param name
      * @param scene
      */
@@ -384,11 +384,11 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Adds the given main scene and loading scene and maps them to the given name.
-     * 
+     *
      * <p>
      * The loading scene may be null. If it is not null it will be displayed while the main scene is loading.
      * </p>
-     * 
+     *
      * @param name
      * @param mainScene
      * @param loadingScene
@@ -396,7 +396,7 @@ public abstract class GameContainer extends Canvas
     protected void addScene(String name, Scene mainScene, Scene loadingScene)
     {
         this.scenes.put(name,
-                        new SimpleEntry<Scene, Scene>(mainScene,
+                        new SimpleEntry<>(mainScene,
                                                       loadingScene));
     }
 
@@ -469,15 +469,15 @@ public abstract class GameContainer extends Canvas
 
     /**
      * A method called from inside the {@link #render()} method.
-     * 
+     *
      * <p>
      * This method is called AFTER the current scene was rendered.
      * </p>
-     * 
+     *
      * <p>
      * This can be used to render stuff that will be globally used across scenes, i.e. frame decoration.
      * </p>
-     * 
+     *
      * @param g
      */
     protected void render(Graphics2D g)
@@ -487,7 +487,7 @@ public abstract class GameContainer extends Canvas
 
     /**
      * Called after a change in frame size.
-     * 
+     *
      * <p>
      * Refreshes the current scene.
      * </p>

@@ -30,13 +30,13 @@ import bt.game.core.obj.intf.Refreshable;
 import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.intf.Scene;
 import bt.game.resource.render.intf.Renderable;
+import bt.log.Logger;
 import bt.runtime.InstanceKiller;
-import bt.runtime.Killable;
-import bt.utils.log.Logger;
+import bt.types.Killable;
 
 /**
  * A base implementation of the {@link ObjectHandler} interface.
- * 
+ *
  * <p>
  * This handler holds lists of different interface implementations that have been added via the
  * {@link #addObject(Object)} method to handle their specififc needs. A single object may implement multiple of these
@@ -63,7 +63,7 @@ import bt.utils.log.Logger;
  * The list of {@link Renderable renderables} is sorted after the objects Z value (low to high) everytime the render
  * method is called. This behavior can be adapted by overriding {@link #sortObjects()}.
  * </p>
- * 
+ *
  * @author &#8904
  */
 public class BaseObjectHandler implements ObjectHandler, CollisionListener, ContactListener
@@ -116,7 +116,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.manifoldColliders = new Hashtable<>();
         this.constraintColliders = new Hashtable<>();
         this.contacters = new Hashtable<>();
-        this.zComparator = new Comparator<Renderable>() {
+        this.zComparator = new Comparator<>() {
             @Override
             public int compare(Renderable o1, Renderable o2)
             {
@@ -139,7 +139,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
     /**
      * Sorts the list of {@link Renderable}s by using the {@link #zComparator}.
-     * 
+     *
      * @see bt.game.core.obj.hand.intf.ObjectHandler#sortObjects()
      */
     @Override
@@ -151,7 +151,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /**
      * Adds the given object to the held lists based on its implemented interfaces.<br>
      * <br>
-     * 
+     *
      * <b>Supported interfaces</b><br>
      * <ul>
      * <li>{@link Renderable}: Will be rendered during the {@link #render(Graphics)} method.</li>
@@ -168,11 +168,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * <li>{@link Body}: Added to the world object of the scene.</li>
      * <li>{@link Joint}: Added to the world object of the scene.</li>
      * </ul>
-     * 
+     *
      * <p>
      * Objects that don't implement any of those interfaces are ignored.
      * </p>
-     * 
+     *
      * @see bt.game.core.obj.hand.intf.ObjectHandler#addObject(java.lang.Object)
      */
     @Override
@@ -261,7 +261,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
     /**
      * Removes the given object from all lists that it is a part of based on its interfaces.
-     * 
+     *
      * @see bt.game.core.obj.hand.intf.ObjectHandler#removeObject(java.lang.Object)
      */
     @Override
@@ -331,11 +331,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /**
      * Calls the tick method of every added {@link Tickable} and checks for collisions between {@link ActiveCollider
      * active} and {@link PassiveCollider passive} colliders.
-     * 
+     *
      * <p>
      * The tick methods are invoked in a parallel stream, so an order is not guaranteed.
      * </p>
-     * 
+     *
      * @see bt.game.core.obj.hand.intf.ObjectHandler#tick()
      */
     @Override
@@ -348,7 +348,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
     /**
      * Sorts the held {@link Renderable renderables} via {@link #sortObjects()} and calls their render methods after.
-     * 
+     *
      * @see bt.game.core.obj.hand.intf.ObjectHandler#render(java.awt.Graphics)
      */
     @Override
@@ -363,7 +363,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
     /**
      * Calls {@link Killable#kill() kill} on every added killable and clears all held lists.
-     * 
+     *
      * @see bt.runtime.Killable#kill()
      */
     @Override
@@ -389,7 +389,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
     /**
      * Registers this instance to the {@link InstanceKiller}.
-     * 
+     *
      * @see bt.game.core.obj.hand.intf.ObjectHandler#init()
      */
     @Override

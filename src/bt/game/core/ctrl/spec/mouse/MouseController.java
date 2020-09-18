@@ -16,7 +16,7 @@ import bt.game.core.ctrl.spec.mouse.intf.MouseTarget;
 import bt.game.core.scene.cam.Camera;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
-import bt.utils.thread.Threads;
+import bt.scheduler.Threads;
 
 /**
  * @author &#8904
@@ -73,7 +73,7 @@ public class MouseController extends MouseAdapter
 
     /**
      * Gets the X position of the cursor during the last click event.
-     * 
+     *
      * @return
      */
     public int getLastMouseX()
@@ -83,7 +83,7 @@ public class MouseController extends MouseAdapter
 
     /**
      * Gets the Y position of the cursor during the last click event.
-     * 
+     *
      * @return
      */
     public int getLastMouseY()
@@ -371,12 +371,12 @@ public class MouseController extends MouseAdapter
 
     /**
      * Sets the comparator that is used to sort mousetargets before checking hoverring.
-     * 
+     *
      * <p>
      * If the cursor is hovering over multiple targets, the one with the lowest index in the list after applying the
      * comparator will be used.
      * </p>
-     * 
+     *
      * @param comp
      */
     public void setTargetComparator(Comparator<MouseTarget> comp)

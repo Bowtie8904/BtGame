@@ -5,17 +5,17 @@ import bt.game.core.obj.intf.GameObject;
 import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
-import bt.types.sound.Sound;
+import bt.io.sound.Sound;
 import bt.utils.num.NumberUtils;
 
 /**
  * A class that represents a location based sound source whichs volume can be updated depending on the distance to a
  * given game object.
- * 
+ *
  * <p>
  * This class implements the {@link Tickable} interface to allow recalculating of the volume on a fixed rate.
  * </p>
- * 
+ *
  * @author &#8904
  */
 public class SoundSource implements Tickable
@@ -31,12 +31,12 @@ public class SoundSource implements Tickable
 
     /**
      * Creates a new instance with the given parameters.
-     * 
+     *
      * <p>
      * This will add this instance to the {@link ObjectHandler} of the given scene via
      * {@link ObjectHandler#addObject(Object)}.
      * </p>
-     * 
+     *
      * @param scene
      *            The scene that this instance is used for.
      * @param volumeTarget
@@ -66,11 +66,11 @@ public class SoundSource implements Tickable
 
     /**
      * Updates the volume of the used sound based on the distance to the volumeTarget.
-     * 
+     *
      * <p>
      * This method does nothing if the volumeTarget or sound are null.
      * </p>
-     * 
+     *
      * <p>
      * This method will never set the volume to something lower than what is specified via {@link #setMinVolume(float)
      * setMinVolume}, and never to something higher than what is specified via {@link #setMaxVolume(float)
@@ -104,11 +104,11 @@ public class SoundSource implements Tickable
 
     /**
      * Sets the lowest possible volume this instance will use.
-     * 
+     *
      * <p>
      * The value will be clamped between 0 and 1.
      * </p>
-     * 
+     *
      * @param minVolume
      */
     public void setMinVolume(float minVolume)
@@ -120,11 +120,11 @@ public class SoundSource implements Tickable
 
     /**
      * Sets the highest possible volume this instance will use.
-     * 
+     *
      * <p>
      * The value will be clamped between 0 and 1.
      * </p>
-     * 
+     *
      * @param maxVolume
      */
     public void setMaxVolume(float maxVolume)
@@ -136,11 +136,11 @@ public class SoundSource implements Tickable
 
     /**
      * Starts playing the sound if it is not null.
-     * 
+     *
      * <p>
      * This method will make a call to {@link #updateVolume()} before the sound is played.
      * </p>
-     * 
+     *
      * @see Sound#start()
      */
     public void start()
@@ -154,11 +154,11 @@ public class SoundSource implements Tickable
 
     /**
      * Starts looping the sound if it is not null.
-     * 
+     *
      * <p>
      * This method will make a call to {@link #updateVolume()} before the sound is played.
      * </p>
-     * 
+     *
      * @see Sound#loop()
      */
     public void loop()
@@ -172,11 +172,11 @@ public class SoundSource implements Tickable
 
     /**
      * Starts playing the sound <i>count + 1</i> times if it is not null.
-     * 
+     *
      * <p>
      * This method will make a call to {@link #updateVolume()} before the sound is played.
      * </p>
-     * 
+     *
      * @see Sound#loop(int)
      */
     public void loop(int count)
@@ -190,7 +190,7 @@ public class SoundSource implements Tickable
 
     /**
      * Stops the sound if it is not null.
-     * 
+     *
      * @see Sound#stop()
      */
     public void stop()
@@ -203,7 +203,7 @@ public class SoundSource implements Tickable
 
     /**
      * Gets the scene this instance is used in.
-     * 
+     *
      * @return
      */
     public Scene getScene()
@@ -213,7 +213,7 @@ public class SoundSource implements Tickable
 
     /**
      * The x position of this instance used to calculate the distance to the volumeTarget.
-     * 
+     *
      * @return
      */
     public Unit getX()
@@ -223,7 +223,7 @@ public class SoundSource implements Tickable
 
     /**
      * Sets the x position of this instance.
-     * 
+     *
      * @param x
      */
     public void setX(Unit x)
@@ -233,7 +233,7 @@ public class SoundSource implements Tickable
 
     /**
      * The y position of this instance used to calculate the distance to the volumeTarget.
-     * 
+     *
      * @return
      */
     public Unit getY()
@@ -243,7 +243,7 @@ public class SoundSource implements Tickable
 
     /**
      * Sets the y position of this instance.
-     * 
+     *
      * @param y
      */
     public void setY(Unit y)
@@ -254,7 +254,7 @@ public class SoundSource implements Tickable
     /**
      * Gets the game object which is used to update the volume of the played sound based on its distance to this
      * instance.
-     * 
+     *
      * @return
      */
     public GameObject getVolumeTarget()
@@ -264,7 +264,7 @@ public class SoundSource implements Tickable
 
     /**
      * Calls {@link #updateVolume()}.
-     * 
+     *
      * @see bt.game.core.obj.intf.Tickable#tick(double)
      */
     @Override

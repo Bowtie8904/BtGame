@@ -18,25 +18,25 @@ import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.impl.RenderableGif;
 import bt.game.resource.render.impl.RenderableImage;
+import bt.io.json.JSON;
+import bt.io.sound.SoundSupplier;
+import bt.log.Logger;
 import bt.runtime.InstanceKiller;
-import bt.runtime.Killable;
-import bt.types.sound.SoundSupplier;
+import bt.types.Killable;
 import bt.utils.img.ImageUtils;
-import bt.utils.json.JSON;
-import bt.utils.log.Logger;
 
 /**
  * An implementation of {@link ResourceLoader} which offers the same functionalities as {@link BaseResourceLoader} but
  * can additionally load resources that were defined in a json (.res) file.
- * 
+ *
  * <h3>The json (.res) file needs to be in the following format:</h3>
- * 
+ *
  * <p>
  * The arrays 'images', 'gifs', 'sounds', 'files', 'fonts' and 'animations' are all optional. They can be empty, contain
  * multiple entries or not exist at all. <br>
  * The alias will be the resource name that the resource is mapped by.
  * </p>
- * 
+ *
  * <pre>
  * {
     "resource":
@@ -94,12 +94,12 @@ import bt.utils.log.Logger;
                 ]
             },
             ...
-        ]                
+        ]
     }
 }
  * </pre>
- * 
- * 
+ *
+ *
  * @author &#8904
  */
 public class JsonResourceLoader extends BaseResourceLoader
@@ -110,7 +110,7 @@ public class JsonResourceLoader extends BaseResourceLoader
     /**
      * Creates a new instance and sets the directory that contains the json files for the {@link #load(String)}
      * implementation.
-     * 
+     *
      * <p>
      * This constructor will add the instance to the {@link InstanceKiller} via
      * {@link InstanceKiller#killOnShutdown(Killable) killOnShutdown} to close resources on application shutdown. The
@@ -118,7 +118,7 @@ public class JsonResourceLoader extends BaseResourceLoader
      * {@link InstanceKiller#unregister(Killable) unregister} the instance as soon as the resources are not needed
      * anymore.
      * </p>
-     * 
+     *
      * @param resourceDir
      *            The directory which contains the json (.res) files that define additional resources to load. If the
      *            directory does not exist it will be created.
@@ -136,20 +136,20 @@ public class JsonResourceLoader extends BaseResourceLoader
     /**
      * Loads all {@link #register(Loadable) registered} {@link Loadable}s by calling their load methods and mapping
      * their returned values in this instance.
-     * 
+     *
      * <p>
      * Additionally resources defined in a json file with the same name as the given context name and the file ending
      * .res will be loaded.
      * </p>
-     * 
+     *
      * <h3>The json (.res) file needs to be in the following format:</h3>
-     * 
+     *
      * <p>
      * The arrays 'images', 'gifs', 'sounds', 'files', 'fonts' and 'animations' are all optional. They can be empty,
      * contain multiple entries or not exist at all. <br>
      * The alias will be the resource name that the resource is mapped by. This is case insensitive.
      * </p>
-     * 
+     *
      * <pre>
      * {
         "resource":
@@ -211,7 +211,7 @@ public class JsonResourceLoader extends BaseResourceLoader
         }
     }
      * </pre>
-     * 
+     *
      * @see bt.game.resource.load.intf.ResourceLoader#load(java.lang.String)
      */
     @Override
@@ -287,13 +287,20 @@ public class JsonResourceLoader extends BaseResourceLoader
                 obj = imageArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
-                add(alias,
-                    new RenderableGif(ImageUtils.getImageIcon(JsonResourceLoader.class.getResourceAsStream(path))));
-                Logger.global()
-                      .printf("[%s] Loaded gif '%s' from path '%s'.",
-                              name,
-                              alias,
-                              path);
+                try
+                {
+                    add(alias,
+                        new RenderableGif(ImageUtils.getImageIcon(JsonResourceLoader.class.getResourceAsStream(path))));
+                    Logger.global()
+                          .printf("[%s] Loaded gif '%s' from path '%s'.",
+                                  name,
+                                  alias,
+                                  path);
+                }
+                catch (IOException e)
+                {
+                    Logger.global().print(e);
+                }
             }
         }
 
@@ -391,11 +398,11 @@ public class JsonResourceLoader extends BaseResourceLoader
      * Attempts to find a file with the given name inside the defined directory (see the constructor). The first file
      * with the correct (case insensitive) name will be used. This method will try to parse the file content as json and
      * return the created {@link JSONObject}.
-     * 
+     *
      * <p>
      * The resource filer needs to have the file extension .res.
      * </p>
-     * 
+     *
      * @param name
      *            The context name = the name of the file (without file ending) to load from.
      * @return The parsed json from the file or null if parsing failed for any reason.

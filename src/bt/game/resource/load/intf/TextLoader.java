@@ -1,7 +1,7 @@
 package bt.game.resource.load.intf;
 
 import bt.game.resource.text.Text;
-import bt.runtime.Killable;
+import bt.types.Killable;
 
 /**
  * @author &#8904

@@ -15,16 +15,16 @@ import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.intf.Renderable;
+import bt.io.sound.Sound;
+import bt.io.sound.SoundSupplier;
+import bt.log.Logger;
 import bt.runtime.InstanceKiller;
-import bt.runtime.Killable;
-import bt.types.sound.Sound;
-import bt.types.sound.SoundSupplier;
-import bt.utils.log.Logger;
+import bt.types.Killable;
 
 /**
  * A basic implementation of the {@link ResourceLoader} interface. This implementation is fully functional and is
  * focused on loading resources from {@link Loadable}s that were {@link #register(Loadable) registered}.
- * 
+ *
  * @author &#8904
  */
 public class BaseResourceLoader implements ResourceLoader
@@ -42,7 +42,7 @@ public class BaseResourceLoader implements ResourceLoader
 
     /**
      * Creates a new instance and initializes its maps and lists.
-     * 
+     *
      * <p>
      * This constructor will add the instance to the {@link InstanceKiller} via
      * {@link InstanceKiller#killOnShutdown(Killable) killOnShutdown} to close resources on application shutdown. The
@@ -66,12 +66,12 @@ public class BaseResourceLoader implements ResourceLoader
 
     /**
      * Closes all resources loaded by or for this instance.
-     * 
+     *
      * <p>
      * If an object resource implements {@link Closeable} its {@link Closeable#close() close} method is called. If an
      * object resource implements {@link Killable} its {@link Killable#kill() kill} method is called.
      * </p>
-     * 
+     *
      * @see bt.runtime.Killable#kill()
      */
     @Override
@@ -128,7 +128,7 @@ public class BaseResourceLoader implements ResourceLoader
     /**
      * Maps the given renderable by the given (case insensitive) resource name. Once the renderable has been added it
      * becomes accessible by {@link #getRenderable(String)}.
-     * 
+     *
      * @param resourceName
      *            The unique resource name for the given renderable.
      * @param value
@@ -143,7 +143,7 @@ public class BaseResourceLoader implements ResourceLoader
     /**
      * Maps the given sound supplier by the given (case insensitive) resource name. Once the sound supplier has been
      * added its services become accessible by {@link #getSound(String)}.
-     * 
+     *
      * @param resourceName
      *            The unique resource name for the given sound supplier.
      * @param value
@@ -158,7 +158,7 @@ public class BaseResourceLoader implements ResourceLoader
     /**
      * Maps the given file by the given (case insensitive) resource name. Once the file has been added it becomes
      * accessible by {@link #getFile(String)}.
-     * 
+     *
      * @param resourceName
      *            The unique resource name for the given file.
      * @param value
@@ -173,7 +173,7 @@ public class BaseResourceLoader implements ResourceLoader
     /**
      * Maps the given font by the given (case insensitive) resource name. Once the font has been added it becomes
      * accessible by {@link #getFont(String)}.
-     * 
+     *
      * @param resourceName
      *            The unique resource name for the given font.
      * @param value
@@ -188,7 +188,7 @@ public class BaseResourceLoader implements ResourceLoader
     /**
      * Maps the given animation by the given (case insensitive) resource name. Once the animation has been added it
      * becomes accessible by {@link #getAnimation(String)}.
-     * 
+     *
      * @param resourceName
      *            The unique resource name for the given animation.
      * @param value
@@ -203,7 +203,7 @@ public class BaseResourceLoader implements ResourceLoader
     /**
      * Maps the given object by the given (case insensitive) resource name. Once the object has been added it becomes
      * accessible by {@link #get(String)}.
-     * 
+     *
      * @param resourceName
      *            The unique resource name for the given object.
      * @param value
@@ -274,7 +274,7 @@ public class BaseResourceLoader implements ResourceLoader
 
     /**
      * Creates a new animation with the interval and images of the mapped one.
-     * 
+     *
      * @see bt.game.resource.load.intf.ResourceLoader#getAnimation(java.lang.String)
      */
     @Override
@@ -314,7 +314,7 @@ public class BaseResourceLoader implements ResourceLoader
     /**
      * Loads all {@link #register(Loadable) registered} {@link Loadable}s by calling their load methods and mapping
      * their returned values in this instance.
-     * 
+     *
      * @see bt.game.resource.load.intf.ResourceLoader#load(java.lang.String)
      */
     @Override

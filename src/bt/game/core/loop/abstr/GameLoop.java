@@ -2,14 +2,14 @@ package bt.game.core.loop.abstr;
 
 import java.util.function.Consumer;
 
+import bt.log.Logger;
 import bt.runtime.InstanceKiller;
-import bt.runtime.Killable;
-import bt.utils.log.Logger;
-import bt.utils.thread.Threads;
+import bt.scheduler.Threads;
+import bt.types.Killable;
 
 /**
  * A class to handle tick and render method calls.
- * 
+ *
  * @author &#8904
  */
 public abstract class GameLoop implements Runnable, Killable
@@ -53,11 +53,11 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Creates a new instance and sets the runnables for tick and render methods.
-     * 
+     *
      * <p>
      * This constructor registers the loop to the {@link InstanceKiller} with a priority of 1.
      * </p>
-     * 
+     *
      * @param tick
      * @param render
      */
@@ -71,12 +71,12 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Kills the loop. This method just adds logging to the {@link #stop()} call.
-     * 
+     *
      * <p>
      * This will not cancel the current iteration. The tick and render methods might still be called once before the
      * loop truly terminates.
      * </p>
-     * 
+     *
      * @see bt.runtime.Killable#kill()
      */
     @Override
@@ -102,7 +102,7 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Stops the loop if it is currently running.
-     * 
+     *
      * <p>
      * This will not cancel the current iteration. The tick and render methods might still be called once before the
      * loop truly terminates.
@@ -115,7 +115,7 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Sets the target frame rate that this loop will try to hold.
-     * 
+     *
      * @param desiredFramesPerSecond
      *            The target frame rate. Setting this to -1 causes the loop to try and achieve the highest frame rate
      *            possible.
@@ -127,7 +127,7 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Defines an action that is executed when the frames per second are updated.
-     * 
+     *
      * @param onUpdate
      */
     public void onFpsUpdate(Runnable onUpdate)
@@ -137,7 +137,7 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Sets how many times the frames per second value (accessible via {@link #getFramesPerSecond()}) will be updated.
-     * 
+     *
      * @param updatesPerSecond
      */
     public void setFpsUpdateRate(int updatesPerSecond)
@@ -147,7 +147,7 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Gets the current frame rate. This value is updated {@link #setFpsUpdateRate(int) n} times per second.
-     * 
+     *
      * @return
      */
     public int getFramesPerSecond()
@@ -157,7 +157,7 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Gets how many times the tick method is called per second.
-     * 
+     *
      * @return
      */
     public double getTicksPerSecond()
@@ -167,7 +167,7 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Sets how many times per second the given tick method should be called.
-     * 
+     *
      * @param ticks
      */
     public void setTicksPerSecond(double ticks)
@@ -199,11 +199,11 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Sets the paused state of this loop.
-     * 
+     *
      * <p>
      * Loops that are paused will no longer call tick methods.
      * </p>
-     * 
+     *
      * @param paused
      */
     public void setPaused(boolean paused)
@@ -213,11 +213,11 @@ public abstract class GameLoop implements Runnable, Killable
 
     /**
      * Indictaes whether this loop is currently paused.
-     * 
+     *
      * <p>
      * Loops that are paused will no longer call tick methods.
      * </p>
-     * 
+     *
      * @param paused
      */
     public boolean isPaused()

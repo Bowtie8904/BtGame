@@ -7,16 +7,16 @@ import org.dyn4j.dynamics.World;
 
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
+import bt.log.Logger;
 import bt.runtime.InstanceKiller;
-import bt.utils.log.Logger;
 
 /**
  * A very simple scene displaying a black background with blinking dark grey / white loading bars in the middle.
- * 
+ *
  * <p>
  * This can be used as a simple transition before a scene that requires a longer loading time for resources.
  * </p>
- * 
+ *
  * @author &#8904
  */
 public class LoadingScene extends BaseScene
@@ -27,7 +27,7 @@ public class LoadingScene extends BaseScene
 
     /**
      * Creates a new scene.
-     * 
+     *
      * @param ticksPerMove
      *            Specifies the interval at which the highlighted bar will move. Default is 5, which means that the bar
      *            will be moved every 5 ticks.

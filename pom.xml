@@ -50,6 +50,11 @@
             <version>master-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.github.Bowtie8904</groupId>
+            <artifactId>BtIO</artifactId>
+            <version>master-SNAPSHOT</version>
+        </dependency>
+        <dependency>
 		    <groupId>org.dyn4j</groupId>
 		    <artifactId>dyn4j</artifactId>
 		    <version>3.3.0</version>
