@@ -1,18 +1,18 @@
 package bt.game.resource.render.impl;
 
-import java.awt.Graphics2D;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import bt.game.core.obj.intf.Tickable;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.util.unit.Unit;
 
+import java.awt.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A class to render an animation consisting of multiple {@link RenderableImages}. This class offers options to execute
  * actions at specific frames and at the end of the animation.
- * 
+ *
  * @author &#8904
  */
 public class Animation extends AdvancedRenderable implements Tickable
@@ -31,30 +31,27 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Creates a new animation.
-     * 
+     *
      * <p>
      * This instance will use the resource loader of the given scene to load the images with the given names.
      * </p>
-     * 
+     *
      * <p>
      * The animation will be played within the given time frame. <br>
      * <br>
-     * 
+     *
      * <b>Example:</b><br>
      * An animation consisting of two images and with a set time of 1000 ms will switch images every 500 ms. So the
      * interval between images will be <i>time / n</i> where <i>n</i> is the number of images.
      * </p>
-     * 
+     *
      * <p>
      * Before this animation can be used {@link #setup()} must be called.
      * </p>
-     * 
-     * @param resourceLoader
-     *            The resource loader that is used to gather the images.
-     * @param time
-     *            The total time this animation takes in milliseconds.
-     * @param images
-     *            The names of the {@link RenderableImages} that are used in the mapping of the resource loader.
+     *
+     * @param resourceLoader The resource loader that is used to gather the images.
+     * @param time           The total time this animation takes in milliseconds.
+     * @param images         The names of the {@link RenderableImages} that are used in the mapping of the resource loader.
      */
     public Animation(ResourceLoader resourceLoader, long time, String... images)
     {
@@ -84,7 +81,7 @@ public class Animation extends AdvancedRenderable implements Tickable
         if (this.images.length != this.imageNames.length)
         {
             throw new IllegalArgumentException(
-                                               "Unable to receive enough RenderableImages from the resource loader. Some image names are not mapped to instances of RenderableImage.");
+                    "Unable to receive enough RenderableImages from the resource loader. Some image names are not mapped to instances of RenderableImage.");
         }
 
         this.interval = this.time / this.images.length;
@@ -94,11 +91,11 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Sets the total time this animation takes in milliseconds.
-     * 
+     *
      * <p>
      * This will recalculate the interval between images. This method should not be called before {@link #setup()}.
      * </p>
-     * 
+     *
      * @param time
      */
     public void setTime(long time)
@@ -109,7 +106,7 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Gets the total time this animation takes in milliseconds.
-     * 
+     *
      * @return
      */
     public long getTime()
@@ -119,7 +116,7 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Sets the rotation angle at which this animation will be drawn.
-     * 
+     *
      * @param rotation
      */
     public void setRotation(double rotation)
@@ -129,7 +126,7 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Gets the rotation angle at which this animation will be drawn.
-     * 
+     *
      * @return
      */
     public double getRotation()
@@ -139,7 +136,7 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Sets whether this animation will play in a loop or just once.
-     * 
+     *
      * @param loop
      */
     public void setLoop(boolean loop)
@@ -149,15 +146,13 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Sets an action that will be executed at the specified frame.
-     * 
+     *
      * <p>
      * Newly set actions will overwrite the old one for the specified frame if it exists.
      * </p>
-     * 
-     * @param frame
-     *            The zero index based frame.
-     * @param action
-     *            The action to execute.
+     *
+     * @param frame  The zero index based frame.
+     * @param action The action to execute.
      */
     public void onFrame(int frame, Runnable action)
     {
@@ -167,7 +162,7 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Defines an action that is executed when a non looping animation ends (after the last frame).
-     * 
+     *
      * @param action
      */
     public void onEnd(Runnable action)
@@ -177,22 +172,22 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Switches images at the caluclated interval and executes actions based on the frame index.
-     * 
+     *
      * <p>
      * If a non looping animation has played all images it will trigger the {@link #onEnd} action if any is specified.
      * </p>
-     * 
+     *
      * @see bt.game.core.obj.intf.Tickable#tick()
      */
     @Override
     public void tick(double delta)
     {
         if (this.currentIndex < this.images.length && System.currentTimeMillis() - this.lastTime >= this.interval
-            || this.lastTime == 0)
+                || this.lastTime == 0)
         {
             this.lastTime = System.currentTimeMillis();
 
-            this.currentIndex ++ ;
+            this.currentIndex++;
 
             if (this.currentIndex >= this.images.length)
             {
@@ -218,10 +213,10 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit,
-     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
     {
         if (this.currentIndex >= 0 && this.currentIndex < this.images.length)
         {
@@ -230,7 +225,8 @@ public class Animation extends AdvancedRenderable implements Tickable
                                                   y,
                                                   w,
                                                   h,
-                                                  this.rotation);
+                                                  this.rotation,
+                                                  debugRendering);
         }
     }
 
@@ -238,12 +234,11 @@ public class Animation extends AdvancedRenderable implements Tickable
      * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics2D g)
+    public void render(Graphics2D g, boolean debugRendering)
     {
         if (this.currentIndex >= 0 && this.currentIndex < this.images.length)
         {
-            this.images[this.currentIndex].render(g,
-                                                  this.rotation);
+            this.images[this.currentIndex].render(g, this.rotation, debugRendering);
         }
     }
 
@@ -257,7 +252,7 @@ public class Animation extends AdvancedRenderable implements Tickable
 
     /**
      * Gets the set image names.
-     * 
+     *
      * @return the imageNames
      */
     public String[] getImageNames()

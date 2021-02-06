@@ -1,13 +1,12 @@
 package bt.game.resource.render.impl;
 
-import java.awt.Graphics2D;
-
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
+import java.awt.*;
+
 /**
  * @author &#8904
- *
  */
 public class AdvancedRenderableImage extends AdvancedRenderable
 {
@@ -22,10 +21,10 @@ public class AdvancedRenderableImage extends AdvancedRenderable
 
     /**
      * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics2D, bt.game.util.unit.Unit,
-     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
     {
         this.scene.getResourceLoader()
                   .getRenderable(this.imageName)
@@ -33,6 +32,7 @@ public class AdvancedRenderableImage extends AdvancedRenderable
                           x,
                           y,
                           w,
-                          h);
+                          h,
+                          debugRendering);
     }
 }

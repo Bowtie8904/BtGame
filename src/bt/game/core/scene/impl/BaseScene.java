@@ -208,18 +208,18 @@ public abstract class BaseScene implements Scene
      * @see bt.game.core.scene.intf.Scene#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics2D g)
+    public void render(Graphics2D g, boolean debugRendering)
     {
         if (this.isLoaded)
         {
             if (this.camera != null)
             {
-                this.camera.render(g);
+                this.camera.render(g, debugRendering);
             }
 
-            renderBackground(g);
+            renderBackground(g, debugRendering);
 
-            this.gameObjectHandler.render(g);
+            this.gameObjectHandler.render(g, debugRendering);
         }
     }
 
@@ -262,7 +262,7 @@ public abstract class BaseScene implements Scene
      *
      * @param g
      */
-    public abstract void renderBackground(Graphics2D g);
+    public abstract void renderBackground(Graphics2D g, boolean debugRendering);
 
     /**
      * Supposed to register additional resources.

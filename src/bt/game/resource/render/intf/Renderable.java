@@ -1,12 +1,12 @@
 package bt.game.resource.render.intf;
 
-import java.awt.Graphics2D;
-
 import bt.game.util.unit.Unit;
+
+import java.awt.*;
 
 /**
  * Defines a class which can be rendered.
- * 
+ *
  * @author &#8904
  */
 public interface Renderable
@@ -14,25 +14,25 @@ public interface Renderable
     /**
      * Renders this instance at the position x|y with a width of w and a height of h. The given Graphics object is used
      * to do the drawing.
-     * 
+     *
      * @param g
      * @param x
      * @param y
      * @param w
      * @param h
      */
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h);
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering);
 
     /**
      * Renders this instance. The given Graphics object is used to do the drawing.
-     * 
+     *
      * @param g
      */
-    public void render(Graphics2D g);
+    public void render(Graphics2D g, boolean debugRendering);
 
     /**
      * Gets the Z position of this object. This should be used to render the objects with the lowest Z value first.
-     * 
+     *
      * @return
      */
     public Unit getZ();

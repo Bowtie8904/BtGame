@@ -66,40 +66,64 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class BaseObjectHandler implements ObjectHandler, CollisionListener, ContactListener, TimeOfImpactListener
 {
-    /** The list of tickable objects. */
+    /**
+     * The list of tickable objects.
+     */
     protected List<Tickable> tickables;
 
-    /** The list of refreshable objects. */
+    /**
+     * The list of refreshable objects.
+     */
     protected List<Refreshable> refreshables;
 
-    /** The list of renderable objects. */
+    /**
+     * The list of renderable objects.
+     */
     protected List<Renderable> renderables;
 
-    /** The list of killable objects. */
+    /**
+     * The list of killable objects.
+     */
     protected List<Killable> killables;
 
-    /** The map of BroadPhaseCollider objects. */
+    /**
+     * The map of BroadPhaseCollider objects.
+     */
     protected Map<CollisionBody, BroadPhaseCollider> broadColliders;
 
-    /** The map of NarrowPhaseCollider objects. */
+    /**
+     * The map of NarrowPhaseCollider objects.
+     */
     protected Map<CollisionBody, NarrowPhaseCollider> narrowColliders;
 
-    /** The map of ManifoldCollider objects. */
+    /**
+     * The map of ManifoldCollider objects.
+     */
     protected Map<CollisionBody, ManifoldCollider> manifoldColliders;
 
-    /** The map of ConstraintCollider objects. */
+    /**
+     * The map of ConstraintCollider objects.
+     */
     protected Map<CollisionBody, ConstraintCollider> constraintColliders;
 
-    /** The map of Contacter objects. */
+    /**
+     * The map of Contacter objects.
+     */
     protected Map<CollisionBody, Contacter> contacters;
 
-    /** The map of TimeOfImpactCollider objects. */
+    /**
+     * The map of TimeOfImpactCollider objects.
+     */
     protected Map<CollisionBody, TimeOfImpactCollider> timeOfImpactColliders;
 
-    /** The comparator to sort renderables after their Z value. */
+    /**
+     * The comparator to sort renderables after their Z value.
+     */
     protected Comparator<Renderable> zComparator;
 
-    /** The scene that uses this handler. */
+    /**
+     * The scene that uses this handler.
+     */
     protected Scene scene;
 
     /**
@@ -119,7 +143,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.contacters = new Hashtable<>();
         this.timeOfImpactColliders = new Hashtable<>();
 
-        this.zComparator = new Comparator<>() {
+        this.zComparator = new Comparator<>()
+        {
             @Override
             public int compare(Renderable o1, Renderable o2)
             {
@@ -366,13 +391,13 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * @see bt.game.core.obj.hand.intf.ObjectHandler#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics2D g)
+    public void render(Graphics2D g, boolean debugRendering)
     {
         sortObjects();
 
         this.renderables.stream()
                         .filter(Renderable::shouldRender)
-                        .forEach(r -> r.render(g));
+                        .forEach(r -> r.render(g, debugRendering));
     }
 
     /**

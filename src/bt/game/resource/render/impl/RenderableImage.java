@@ -1,20 +1,18 @@
 package bt.game.resource.render.impl;
 
-import java.awt.AlphaComposite;
-import java.awt.Composite;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-
 import bt.game.resource.render.intf.Renderable;
+import bt.game.util.shape.ShapeRenderer;
 import bt.game.util.unit.Unit;
 import bt.types.Killable;
 import bt.utils.NumberUtils;
+import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.Shape;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 /**
- *
- *
  * @author &#8904
  */
 public class RenderableImage implements Renderable, Killable
@@ -42,8 +40,7 @@ public class RenderableImage implements Renderable, Killable
     /**
      * Sets the alhpa value for this image.
      *
-     * @param alpha
-     *            A value between 0 and 1.
+     * @param alpha A value between 0 and 1.
      */
     public void setAlpha(float alpha)
     {
@@ -71,18 +68,12 @@ public class RenderableImage implements Renderable, Killable
      * RenderabelImages.
      * </p>
      *
-     * @param x
-     *            The x pixel position of the cropped area on the original underlying image.
-     * @param y
-     *            The y pixel position of the cropped area on the original underlying image.
-     * @param w
-     *            The width in pixels of the cropped area on the original underlying image.
-     * @param h
-     *            The height in pixels of the cropped area on the original underlying image.
+     * @param x The x pixel position of the cropped area on the original underlying image.
+     * @param y The y pixel position of the cropped area on the original underlying image.
+     * @param w The width in pixels of the cropped area on the original underlying image.
+     * @param h The height in pixels of the cropped area on the original underlying image.
      * @return The cropped RenderableImage if possible.
-     *
-     * @throws UnsupportedOperationException
-     *             if the underlying image is not an instance of {@link BufferedImage}.
+     * @throws UnsupportedOperationException if the underlying image is not an instance of {@link BufferedImage}.
      */
     public RenderableImage crop(int x, int y, int w, int h)
     {
@@ -107,41 +98,59 @@ public class RenderableImage implements Renderable, Killable
      * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics2D g)
+    public void render(Graphics2D g, boolean debugRendering)
     {
         render(g,
                Unit.zero(),
                Unit.zero(),
                Unit.forUnits(this.image.getWidth(null)),
                Unit.forUnits(this.image.getHeight(null)),
-               0);
+               0,
+               debugRendering);
+    }
+
+    public void render(Graphics2D g)
+    {
+        render(g, false);
     }
 
     public void render(Graphics2D g, double rotation)
     {
+        render(g, rotation, false);
+    }
+
+    public void render(Graphics2D g, double rotation, boolean debugRendering)
+    {
         render(g,
                Unit.zero(),
                Unit.zero(),
                Unit.forUnits(this.image.getWidth(null)),
                Unit.forUnits(this.image.getHeight(null)),
-               rotation);
+               rotation,
+               debugRendering);
     }
 
     /**
      * Renders this instance at the position x|y with a width of w and a height of h.
      *
      * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics, bt.game.util.unit.Unit,
-     *      bt.game.util.unit.Unit)
+     * bt.game.util.unit.Unit)
      */
     @Override
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
     {
         render(g,
                x,
                y,
                w,
                h,
-               0);
+               0,
+               debugRendering);
+    }
+
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation)
+    {
+        render(g, x, y, w, h, rotation, false);
     }
 
     /**
@@ -154,10 +163,9 @@ public class RenderableImage implements Renderable, Killable
      * @param y
      * @param w
      * @param h
-     * @param rotation
-     *            The rotation of the image in degrees.
+     * @param rotation The rotation of the image in degrees.
      */
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, boolean debugRendering)
     {
         AffineTransform origTransform = g.getTransform();
         Composite origComposite = g.getComposite();
@@ -184,6 +192,23 @@ public class RenderableImage implements Renderable, Killable
                     (int)x.pixels(),
                     (int)y.pixels(),
                     null);
+
+        if (debugRendering)
+        {
+            Shape sh = Geometry.createRectangle(w.units(),
+                                                h.units());
+            AffineTransform ot = g.getTransform();
+            AffineTransform lt = new AffineTransform();
+
+            lt.translate(x.pixels() + w.pixels() / 2,
+                         y.pixels() + h.pixels() / 2);
+
+            g.transform(lt);
+
+            ShapeRenderer.render(g, sh, Color.yellow);
+
+            g.setTransform(ot);
+        }
 
         this.transform.setToRotation(0);
         g.setComposite(origComposite);

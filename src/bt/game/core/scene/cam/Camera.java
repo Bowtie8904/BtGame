@@ -1,26 +1,32 @@
 package bt.game.core.scene.cam;
 
-import java.awt.Graphics2D;
-
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
+import java.awt.*;
+
 /**
  * A basic camera which translates the graphics context to its own position.
- * 
+ *
  * @author &#8904
  */
 public class Camera
 {
-    /** The scene that this instance is used for. */
+    /**
+     * The scene that this instance is used for.
+     */
     protected Scene scene;
 
-    /** The X position of this instance. */
+    /**
+     * The X position of this instance.
+     */
     protected Unit x;
 
-    /** The Y position of this instance. */
+    /**
+     * The Y position of this instance.
+     */
     protected Unit y;
 
     /**
@@ -36,7 +42,7 @@ public class Camera
 
     /**
      * Creates a new instance at the position 0|0.
-     * 
+     *
      * @param scene
      */
     public Camera(Scene scene)
@@ -49,9 +55,8 @@ public class Camera
     /**
      * Sets whether this camera should never move out of the bounds of the set scene. Indicated by the scenes
      * {@link Scene#getWidth() getWidth} and {@link Scene#getHeight() getHeight} methods.
-     * 
-     * @param clip
-     *            true to clip the camera to the bounds, false to let it move out of the scenes bounds.
+     *
+     * @param clip true to clip the camera to the bounds, false to let it move out of the scenes bounds.
      */
     public void clipToBorders(boolean clip)
     {
@@ -60,12 +65,12 @@ public class Camera
 
     /**
      * Moves the camera to the given position.
-     * 
+     *
      * <p>
      * If {@link #clipToBorders(boolean) clipToBorders} is set to true this method will correct its position immediately
      * if needed.
      * </p>
-     * 
+     *
      * @param x
      * @param y
      */
@@ -98,7 +103,7 @@ public class Camera
 
     /**
      * Gets the X position of this instance.
-     * 
+     *
      * @return
      */
     public Unit getX()
@@ -108,7 +113,7 @@ public class Camera
 
     /**
      * Gets the Y position of this instance.
-     * 
+     *
      * @return
      */
     public Unit getY()
@@ -118,10 +123,10 @@ public class Camera
 
     /**
      * Translates the given graphics context to this instances x and y positions.
-     * 
+     *
      * @param g
      */
-    public void render(Graphics2D g)
+    public void render(Graphics2D g, boolean debugRendering)
     {
         updatePosition();
         g.translate((int)-this.x.pixels(),

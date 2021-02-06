@@ -1,13 +1,12 @@
 package bt.game.resource.render.impl;
 
-import java.awt.Graphics2D;
-
 import bt.game.resource.render.intf.Renderable;
 import bt.game.util.unit.Unit;
 
+import java.awt.*;
+
 /**
  * @author &#8904
- *
  */
 public abstract class AdvancedRenderable implements Renderable
 {
@@ -32,13 +31,14 @@ public abstract class AdvancedRenderable implements Renderable
      * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics2D)
      */
     @Override
-    public void render(Graphics2D g)
+    public void render(Graphics2D g, boolean debugRendering)
     {
         render(g,
                this.x,
                this.y,
                this.w,
-               this.h);
+               this.h,
+               debugRendering);
     }
 
     /**

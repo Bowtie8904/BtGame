@@ -23,15 +23,14 @@ public class ContainerSettings
     private boolean fullscreen;
     private Image imageIcon;
     private String title;
+    private boolean debugRendering;
 
     /**
      * Sets the measurements of the the game canvas in {@link Unit units}. This has no effect on the actual window size,
      * it just measn that the window width <i>n</i> will consist of <i>unitWidth</i> units.
      *
-     * @param unitWidth
-     *            The units of the X axis.
-     * @param unitHeight
-     *            The units of the Y axis.
+     * @param unitWidth  The units of the X axis.
+     * @param unitHeight The units of the Y axis.
      * @return This instance for chaining.
      */
     public ContainerSettings gameUnits(float unitWidth, float unitHeight)
@@ -44,10 +43,8 @@ public class ContainerSettings
     /**
      * Sets the size of the frame. This setting has no effect if {@link #fullscreen(boolean)} is set to true.
      *
-     * @param width
-     *            The width of the window.
-     * @param height
-     *            The height of the window.
+     * @param width  The width of the window.
+     * @param height The height of the window.
      * @return This instance for chaining.
      */
     public ContainerSettings frameSize(int width, int height)
@@ -60,8 +57,7 @@ public class ContainerSettings
     /**
      * Sets whether the window will be decorated.
      *
-     * @param undecorated
-     *            true to remove window decorations.
+     * @param undecorated true to remove window decorations.
      * @return This instance for chaining.
      */
     public ContainerSettings undecorated(boolean undecorated)
@@ -73,8 +69,7 @@ public class ContainerSettings
     /**
      * Indicates whether the game should be in fullscreen mode.
      *
-     * @param fullscreen
-     *            true if the game shuld be in fullscreen.
+     * @param fullscreen true if the game shuld be in fullscreen.
      * @return This instance for chaining.
      */
     public ContainerSettings fullscreen(boolean fullscreen)
@@ -86,8 +81,7 @@ public class ContainerSettings
     /**
      * Sets the title of the game shown in the taskbar.
      *
-     * @param title
-     *            The title.
+     * @param title The title.
      * @return This instance for chaining.
      */
     public ContainerSettings title(String title)
@@ -99,8 +93,7 @@ public class ContainerSettings
     /**
      * Sets the icon of the game shown in the taskbar.
      *
-     * @param icon
-     *            The icon.
+     * @param icon The icon.
      * @return This instance for chaining.
      */
     public ContainerSettings icon(Image icon)
@@ -112,8 +105,7 @@ public class ContainerSettings
     /**
      * Sets the icon of the game shown in the taskbar.
      *
-     * @param icon
-     *            The image file.
+     * @param icon The image file.
      * @return This instance for chaining.
      */
     public ContainerSettings icon(File icon)
@@ -167,5 +159,16 @@ public class ContainerSettings
     public Image getIcon()
     {
         return this.imageIcon;
+    }
+
+    public boolean isDebugRendering()
+    {
+        return this.debugRendering;
+    }
+
+    public ContainerSettings setDebugRendering(boolean debugRendering)
+    {
+        this.debugRendering = debugRendering;
+        return this;
     }
 }

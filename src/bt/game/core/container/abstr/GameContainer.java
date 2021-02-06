@@ -22,16 +22,24 @@ import java.util.Map.Entry;
  */
 public abstract class GameContainer extends Canvas
 {
-    /** The currently active scene. */
+    /**
+     * The currently active scene.
+     */
     protected Scene currentScene;
 
-    /** The name of the currently active scene. */
+    /**
+     * The name of the currently active scene.
+     */
     protected String currentSceneName;
 
-    /** Indicates whether a new scene was requested and should be loaded. */
+    /**
+     * Indicates whether a new scene was requested and should be loaded.
+     */
     protected boolean sceneRequested;
 
-    /** The frame that contains the game canvas. */
+    /**
+     * The frame that contains the game canvas.
+     */
     protected JFrame frame;
 
     /**
@@ -40,28 +48,44 @@ public abstract class GameContainer extends Canvas
      */
     private Map<String, Entry<Scene, Scene>> scenes;
 
-    /** The pixel to {@link Unit} ratio that is calcualted when the frame is set up. */
+    /**
+     * The pixel to {@link Unit} ratio that is calcualted when the frame is set up.
+     */
     protected double ratio;
 
-    /** The width in units. */
+    /**
+     * The width in units.
+     */
     protected double unitWidth;
 
-    /** The height in units. */
+    /**
+     * The height in units.
+     */
     protected double unitHeight;
 
-    /** Indicates whether this container was set to fullscreen. */
+    /**
+     * Indicates whether this container was set to fullscreen.
+     */
     protected boolean isFullScreen;
 
-    /** The settings used to intitialize this container. */
+    /**
+     * The settings used to intitialize this container.
+     */
     protected ContainerSettings settings;
 
-    /** Indicates whether this container is in a valid state to perfom rendering. */
+    /**
+     * Indicates whether this container is in a valid state to perfom rendering.
+     */
     protected boolean canRender;
 
-    /** The width in units. */
+    /**
+     * The width in units.
+     */
     private static Unit width;
 
-    /** The height in units. */
+    /**
+     * The height in units.
+     */
     private static Unit height;
 
     /**
@@ -71,7 +95,7 @@ public abstract class GameContainer extends Canvas
      */
     public static Unit width()
     {
-        return width;
+        return GameContainer.width;
     }
 
     /**
@@ -81,15 +105,14 @@ public abstract class GameContainer extends Canvas
      */
     public static Unit height()
     {
-        return height;
+        return GameContainer.height;
     }
 
     /**
      * Creates a new instance and uses the given settings. This will setup the frame, calculate and set the ratio for
      * {@link Unit units} and call {@link #createScenes()}.
      *
-     * @param settings
-     *            The settings to use for this game container.
+     * @param settings The settings to use for this game container.
      */
     public GameContainer(ContainerSettings settings)
     {
@@ -110,8 +133,7 @@ public abstract class GameContainer extends Canvas
      * {@link ContainerSettings settings} given to the constructor. This method will call {@link Unit#setRatio(float)}
      * with the result.
      *
-     * @param comp
-     *            The component whichs width and height are used to calculate the ration.
+     * @param comp The component whichs width and height are used to calculate the ration.
      */
     private void calculateRatio(Component comp)
     {
@@ -137,15 +159,15 @@ public abstract class GameContainer extends Canvas
     {
         this.frame.getContentPane().setBackground(Color.BLACK);
 
-        width = Unit.forUnits(this.settings.getUnitWidth());
-        height = Unit.forUnits(this.settings.getUnitHeight());
+        GameContainer.width = Unit.forUnits(this.settings.getUnitWidth());
+        GameContainer.height = Unit.forUnits(this.settings.getUnitHeight());
 
-        setSize(new Dimension((int)width.pixels(),
-                              (int)height.pixels()));
-        setPreferredSize(new Dimension((int)width.pixels(),
-                                       (int)height.pixels()));
-        setMaximumSize(new Dimension((int)width.pixels(),
-                                     (int)height.pixels()));
+        setSize(new Dimension((int)GameContainer.width.pixels(),
+                              (int)GameContainer.height.pixels()));
+        setPreferredSize(new Dimension((int)GameContainer.width.pixels(),
+                                       (int)GameContainer.height.pixels()));
+        setMaximumSize(new Dimension((int)GameContainer.width.pixels(),
+                                     (int)GameContainer.height.pixels()));
 
         if (getWidth() < this.frame.getWidth())
         {
@@ -307,8 +329,7 @@ public abstract class GameContainer extends Canvas
      * main scene will be loaded in a different thread. During the loading of the main scene the set loading scene is
      * played (if it exists).
      *
-     * @param name
-     *            The name of the scene that should be played.
+     * @param name The name of the scene that should be played.
      */
     private void setScene(String name)
     {
@@ -329,11 +350,11 @@ public abstract class GameContainer extends Canvas
         }
 
         Threads.get().executeCached(() ->
-            {
-                mainScene.load(name);
-                setScene(mainScene);
-                mainScene.start();
-            });
+                                    {
+                                        mainScene.load(name);
+                                        setScene(mainScene);
+                                        mainScene.start();
+                                    });
     }
 
     /**
@@ -387,7 +408,7 @@ public abstract class GameContainer extends Canvas
     {
         this.scenes.put(name,
                         new SimpleEntry<>(mainScene,
-                                                      loadingScene));
+                                          loadingScene));
     }
 
     public Scene getCurrentScene()
@@ -433,10 +454,10 @@ public abstract class GameContainer extends Canvas
 
             if (this.currentScene != null && this.currentScene.isLoaded())
             {
-                this.currentScene.render(g);
+                this.currentScene.render(g, this.settings.isDebugRendering());
             }
 
-            render(g);
+            render(g, this.settings.isDebugRendering());
 
             g.dispose();
             bs.show();
@@ -470,7 +491,7 @@ public abstract class GameContainer extends Canvas
      *
      * @param g
      */
-    protected void render(Graphics2D g)
+    protected void render(Graphics2D g, boolean debugRendering)
     {
 
     }

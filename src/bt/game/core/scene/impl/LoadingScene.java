@@ -25,9 +25,8 @@ public class LoadingScene extends BaseScene
     /**
      * Creates a new scene.
      *
-     * @param ticksPerMove
-     *            Specifies the interval at which the highlighted bar will move. Default is 5, which means that the bar
-     *            will be moved every 5 ticks.
+     * @param ticksPerMove Specifies the interval at which the highlighted bar will move. Default is 5, which means that the bar
+     *                     will be moved every 5 ticks.
      */
     public LoadingScene(GameContainer gameContainer, int ticksPerMove)
     {
@@ -79,7 +78,7 @@ public class LoadingScene extends BaseScene
 
         if (this.count > this.ticks)
         {
-            this.highlight ++ ;
+            this.highlight++;
             if (this.highlight == 10)
             {
                 this.highlight = 0;
@@ -92,7 +91,7 @@ public class LoadingScene extends BaseScene
      * @see bt.game.core.scene.intf.Scene#render(java.awt.Graphics)
      */
     @Override
-    public void render(Graphics2D g)
+    public void render(Graphics2D g, boolean debugRendering)
     {
         g.setColor(Color.BLACK);
         g.fillRect(0,
@@ -109,7 +108,7 @@ public class LoadingScene extends BaseScene
                    (int)(length.pixels() * 9),
                    (int)height.pixels());
 
-        for (int i = 0; i < 9; i ++ )
+        for (int i = 0; i < 9; i++)
         {
             if (this.highlight == i)
             {
@@ -144,7 +143,7 @@ public class LoadingScene extends BaseScene
      * @see bt.game.core.scene.impl.BaseScene#renderBackground(java.awt.Graphics2D)
      */
     @Override
-    public void renderBackground(Graphics2D g)
+    public void renderBackground(Graphics2D g, boolean debugRendering)
     {
     }
 

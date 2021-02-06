@@ -1,8 +1,8 @@
 package bt.game.core.obj.hand.intf;
 
-import java.awt.Graphics2D;
-
 import bt.types.Killable;
+
+import java.awt.*;
 
 /**
  * An interface describing the functionalities of an object handler. Implementations are supposed to hold collections of
@@ -44,7 +44,7 @@ public interface ObjectHandler extends Killable
     /**
      * Forwards the render call to all held objects.
      */
-    public void render(Graphics2D g);
+    public void render(Graphics2D g, boolean debugRendering);
 
     /**
      * Indicates that all objects should refresh their data.
