@@ -1,11 +1,10 @@
 package bt.game.core.loop.abstr;
 
-import java.util.function.Consumer;
-
-import bt.log.Logger;
 import bt.runtime.InstanceKiller;
 import bt.scheduler.Threads;
 import bt.types.Killable;
+
+import java.util.function.Consumer;
 
 /**
  * A class to handle tick and render method calls.
@@ -83,7 +82,7 @@ public abstract class GameLoop implements Killable
     @Override
     public void kill()
     {
-        Logger.global().print("Killing game loop.");
+        System.out.println("Killing game loop.");
         stop();
     }
 

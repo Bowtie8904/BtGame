@@ -123,6 +123,11 @@ public abstract class LocationTrigger extends GameBody implements Contacter
         }
     }
 
+    public void persist(ContactCollisionData contactCollisionData, Contact contact, Contact contact1)
+    {
+
+    }
+
     /**
      * Defines an action that is executed when the given body enters the area of this trigger.
      * 

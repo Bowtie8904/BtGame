@@ -1,13 +1,11 @@
 package bt.game.core.scene.impl;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
-import bt.log.Logger;
 import bt.runtime.InstanceKiller;
 import org.dyn4j.world.World;
+
+import java.awt.*;
 
 /**
  * A very simple scene displaying a black background with blinking dark grey / white loading bars in the middle.
@@ -50,7 +48,7 @@ public class LoadingScene extends BaseScene
     public synchronized void kill()
     {
         this.isLoaded = false;
-        Logger.global().print("Killing loading scene.");
+        System.out.println("Killing loading scene.");
 
         // kill resource loader if instance killer is not already doing it or if the loader is not registered for
         // termination at all

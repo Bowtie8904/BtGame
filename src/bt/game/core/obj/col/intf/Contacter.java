@@ -10,12 +10,28 @@ import org.dyn4j.world.ContactCollisionData;
 public interface Contacter extends Collider
 {
     /**
-     * @see org.dyn4j.dynamics.contact.ContactListener#begin(org.dyn4j.dynamics.contact.ContactPoint)
+     * Called at the first detection of a contact.
+     *
+     * @param contactCollisionData
+     * @param contact
+     * @return
      */
     public boolean onContactBegin(ContactCollisionData contactCollisionData, Contact contact);
 
     /**
-     * @see org.dyn4j.dynamics.contact.ContactListener#end(org.dyn4j.dynamics.contact.ContactPoint)
+     * Called when a contact ended.
+     *
+     * @param contactCollisionData
+     * @param contact
      */
     public void onContactEnd(ContactCollisionData contactCollisionData, Contact contact);
+
+    /**
+     * Called if a contact persists for longer than one world step.
+     *
+     * @param contactCollisionData
+     * @param contact
+     * @param contact1
+     */
+    public void persist(ContactCollisionData contactCollisionData, Contact contact, Contact contact1);
 }

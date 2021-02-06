@@ -1,14 +1,5 @@
 package bt.game.resource.load.impl;
 
-import java.awt.Font;
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import bt.game.core.obj.intf.Animated;
 import bt.game.resource.load.container.ResourceContainer;
 import bt.game.resource.load.intf.Loadable;
@@ -17,9 +8,17 @@ import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.intf.Renderable;
 import bt.io.sound.Sound;
 import bt.io.sound.SoundSupplier;
-import bt.log.Logger;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
+
+import java.awt.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A basic implementation of the {@link ResourceLoader} interface. This implementation is fully functional and is
@@ -77,7 +76,7 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public void kill()
     {
-        Logger.global().print("Closing resources.");
+        System.out.println("Closing resources.");
 
         this.killed = true;
 
@@ -98,12 +97,11 @@ public class BaseResourceLoader implements ResourceLoader
                 }
                 catch (IOException e)
                 {
-                    Logger.global().print(e);
+                    e.printStackTrace();
                 }
             }
 
-            if (obj instanceof Killable
-                && (!InstanceKiller.isActive() || !InstanceKiller.isRegistered((Killable)obj)))
+            if (obj instanceof Killable && (!InstanceKiller.isActive() || !InstanceKiller.isRegistered((Killable)obj)))
             {
                 ((Killable)obj).kill();
             }
@@ -129,90 +127,72 @@ public class BaseResourceLoader implements ResourceLoader
      * Maps the given renderable by the given (case insensitive) resource name. Once the renderable has been added it
      * becomes accessible by {@link #getRenderable(String)}.
      *
-     * @param resourceName
-     *            The unique resource name for the given renderable.
-     * @param value
-     *            The renderable to map.
+     * @param resourceName The unique resource name for the given renderable.
+     * @param value        The renderable to map.
      */
     public void add(String resourceName, Renderable value)
     {
-        this.renderables.put(resourceName.toUpperCase(),
-                             value);
+        this.renderables.put(resourceName.toUpperCase(), value);
     }
 
     /**
      * Maps the given sound supplier by the given (case insensitive) resource name. Once the sound supplier has been
      * added its services become accessible by {@link #getSound(String)}.
      *
-     * @param resourceName
-     *            The unique resource name for the given sound supplier.
-     * @param value
-     *            The sound to map.
+     * @param resourceName The unique resource name for the given sound supplier.
+     * @param value        The sound to map.
      */
     public void add(String resourceName, SoundSupplier value)
     {
-        this.sounds.put(resourceName.toUpperCase(),
-                        value);
+        this.sounds.put(resourceName.toUpperCase(), value);
     }
 
     /**
      * Maps the given file by the given (case insensitive) resource name. Once the file has been added it becomes
      * accessible by {@link #getFile(String)}.
      *
-     * @param resourceName
-     *            The unique resource name for the given file.
-     * @param value
-     *            The file to map.
+     * @param resourceName The unique resource name for the given file.
+     * @param value        The file to map.
      */
     public void add(String resourceName, File value)
     {
-        this.files.put(resourceName.toUpperCase(),
-                       value);
+        this.files.put(resourceName.toUpperCase(), value);
     }
 
     /**
      * Maps the given font by the given (case insensitive) resource name. Once the font has been added it becomes
      * accessible by {@link #getFont(String)}.
      *
-     * @param resourceName
-     *            The unique resource name for the given font.
-     * @param value
-     *            The font to map.
+     * @param resourceName The unique resource name for the given font.
+     * @param value        The font to map.
      */
     public void add(String resourceName, Font value)
     {
-        this.fonts.put(resourceName.toUpperCase(),
-                       value);
+        this.fonts.put(resourceName.toUpperCase(), value);
     }
 
     /**
      * Maps the given animation by the given (case insensitive) resource name. Once the animation has been added it
      * becomes accessible by {@link #getAnimation(String)}.
      *
-     * @param resourceName
-     *            The unique resource name for the given animation.
-     * @param value
-     *            The animation to map.
+     * @param resourceName The unique resource name for the given animation.
+     * @param value        The animation to map.
      */
     public void add(String resourceName, Animation value)
     {
-        this.animations.put(resourceName.toUpperCase(),
-                            value);
+        this.animations.put(resourceName.toUpperCase(), value);
     }
 
     /**
      * Maps the given object by the given (case insensitive) resource name. Once the object has been added it becomes
      * accessible by {@link #get(String)}.
      *
-     * @param resourceName
-     *            The unique resource name for the given object.
-     * @param value
-     *            The object to map.
+     * @param resourceName The unique resource name for the given object.
+     * @param value        The object to map.
      */
     public void add(String resourceName, Object value)
     {
-        this.objects.put(resourceName.toUpperCase(),
-                         value);
+        this.objects.put(resourceName.toUpperCase(), value);
     }
 
     /**
@@ -357,11 +337,11 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey,
                         loadedRenderables.get(resourceKey));
-                    Logger.global()
-                          .printf("[%s] Loaded renderable '%s' for %s.",
-                                  name,
-                                  resourceKey,
-                                  loadable.getClass().getName());
+
+                    System.out.println(String.format("[%s] Loaded renderable '%s' for %s.",
+                                                     name,
+                                                     resourceKey,
+                                                     loadable.getClass().getName()));
                 }
             }
 
@@ -374,11 +354,10 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey,
                         loadedSounds.get(resourceKey));
-                    Logger.global()
-                          .printf("[%s] Loaded sound '%s' for %s.",
-                                  name,
-                                  resourceKey,
-                                  loadable.getClass().getName());
+                    System.out.println(String.format("[%s] Loaded sound '%s' for %s.",
+                                                     name,
+                                                     resourceKey,
+                                                     loadable.getClass().getName()));
                 }
             }
 
@@ -391,11 +370,10 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey,
                         loadedFiles.get(resourceKey));
-                    Logger.global()
-                          .printf("[%s] Loaded file '%s' for %s.",
-                                  name,
-                                  resourceKey,
-                                  loadable.getClass().getName());
+                    System.out.println(String.format("[%s] Loaded file '%s' for %s.",
+                                                     name,
+                                                     resourceKey,
+                                                     loadable.getClass().getName()));
                 }
             }
 
@@ -408,11 +386,10 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey,
                         loadedFonts.get(resourceKey));
-                    Logger.global()
-                          .printf("[%s] Loaded font '%s' for %s.",
-                                  name,
-                                  resourceKey,
-                                  loadable.getClass().getName());
+                    System.out.println(String.format("[%s] Loaded font '%s' for %s.",
+                                                     name,
+                                                     resourceKey,
+                                                     loadable.getClass().getName()));
                 }
             }
 
@@ -425,11 +402,10 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey,
                         loadedObjects.get(resourceKey));
-                    Logger.global()
-                          .printf("[%s] Loaded object '%s' for %s.",
-                                  name,
-                                  resourceKey,
-                                  loadable.getClass().getName());
+                    System.out.println(String.format("[%s] Loaded object '%s' for %s.",
+                                                     name,
+                                                     resourceKey,
+                                                     loadable.getClass().getName()));
                 }
             }
 
@@ -442,11 +418,10 @@ public class BaseResourceLoader implements ResourceLoader
                 {
                     add(resourceKey,
                         loadedAnimations.get(resourceKey));
-                    Logger.global()
-                          .printf("[%s] Loaded animation '%s' for %s.",
-                                  name,
-                                  resourceKey,
-                                  loadable.getClass().getName());
+                    System.out.println(String.format("[%s] Loaded animation '%s' for %s.",
+                                                     name,
+                                                     resourceKey,
+                                                     loadable.getClass().getName()));
                 }
             }
         }

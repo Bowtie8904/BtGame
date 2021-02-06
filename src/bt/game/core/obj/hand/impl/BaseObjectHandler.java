@@ -6,7 +6,6 @@ import bt.game.core.obj.intf.Refreshable;
 import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.intf.Scene;
 import bt.game.resource.render.intf.Renderable;
-import bt.log.Logger;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
 import org.dyn4j.collision.CollisionBody;
@@ -119,6 +118,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.constraintColliders = new Hashtable<>();
         this.contacters = new Hashtable<>();
         this.timeOfImpactColliders = new Hashtable<>();
+
         this.zComparator = new Comparator<>() {
             @Override
             public int compare(Renderable o1, Renderable o2)
@@ -217,8 +217,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.broadColliders.put(collider.getBody(),
-                                        collider);
+                this.broadColliders.put(collider.getBody(), collider);
             }
         }
 
@@ -227,8 +226,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             NarrowPhaseCollider collider = NarrowPhaseCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.narrowColliders.put(collider.getBody(),
-                                         collider);
+                this.narrowColliders.put(collider.getBody(), collider);
             }
         }
 
@@ -237,8 +235,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             ManifoldCollider collider = ManifoldCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.manifoldColliders.put(collider.getBody(),
-                                           collider);
+                this.manifoldColliders.put(collider.getBody(), collider);
             }
         }
 
@@ -247,8 +244,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             ConstraintCollider collider = ConstraintCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.constraintColliders.put(collider.getBody(),
-                                             collider);
+                this.constraintColliders.put(collider.getBody(), collider);
             }
         }
 
@@ -257,8 +253,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             Contacter collider = Contacter.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.contacters.put(collider.getBody(),
-                                    collider);
+                this.contacters.put(collider.getBody(), collider);
             }
         }
 
@@ -267,8 +262,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             TimeOfImpactCollider collider = TimeOfImpactCollider.class.cast(object);
             if (collider.getBody() != null)
             {
-                this.timeOfImpactColliders.put(collider.getBody(),
-                                               collider);
+                this.timeOfImpactColliders.put(collider.getBody(), collider);
             }
         }
     }
@@ -389,7 +383,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void kill()
     {
-        Logger.global().print("Killing game object handler.");
+        System.out.println("Killing game object handler.");
 
         for (Killable obj : this.killables)
         {
@@ -415,8 +409,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void init()
     {
-        InstanceKiller.killOnShutdown(this,
-                                      Integer.MIN_VALUE + 2);
+        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
 
         if (this.scene.getWorld() != null)
         {
@@ -521,7 +514,18 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void persist(ContactCollisionData contactCollisionData, Contact contact, Contact contact1)
     {
+        Contacter contacter1 = this.contacters.get(contactCollisionData.getBody1());
+        Contacter contacter2 = this.contacters.get(contactCollisionData.getBody2());
 
+        if (contacter1 != null)
+        {
+            contacter1.persist(contactCollisionData, contact, contact1);
+        }
+
+        if (contacter2 != null)
+        {
+            contacter2.persist(contactCollisionData, contact, contact1);
+        }
     }
 
     @Override

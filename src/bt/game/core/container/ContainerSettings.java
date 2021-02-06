@@ -1,14 +1,12 @@
 package bt.game.core.container;
 
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
-import bt.log.Logger;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * A configuration class for {@link GameContainer}s.
@@ -126,7 +124,7 @@ public class ContainerSettings
         }
         catch (IOException e)
         {
-            Logger.global().print(e);
+            e.printStackTrace();
         }
         return this;
     }

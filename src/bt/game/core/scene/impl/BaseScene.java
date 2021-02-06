@@ -1,10 +1,5 @@
 package bt.game.core.scene.impl;
 
-import java.awt.Graphics2D;
-
-import bt.io.text.impl.BaseTextLoader;
-import bt.io.text.intf.TextLoader;
-
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.obj.hand.impl.BaseObjectHandler;
 import bt.game.core.obj.hand.intf.ObjectHandler;
@@ -13,9 +8,12 @@ import bt.game.core.scene.intf.Scene;
 import bt.game.resource.load.impl.BaseResourceLoader;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.util.unit.Unit;
-import bt.log.Logger;
+import bt.io.text.impl.BaseTextLoader;
+import bt.io.text.intf.TextLoader;
 import bt.runtime.InstanceKiller;
 import org.dyn4j.world.World;
+
+import java.awt.*;
 
 /**
  * @author &#8904
@@ -162,7 +160,7 @@ public abstract class BaseScene implements Scene
     public void kill()
     {
         this.isLoaded = false;
-        Logger.global().print(this.name == null ? "Killing scene." : "Killing scene '" + this.name + "'.");
+        System.out.println(this.name == null ? "Killing scene." : "Killing scene '" + this.name + "'.");
 
         // kill resource loader if instance killer is not already doing it or if the loader is not registered for
         // termination at all

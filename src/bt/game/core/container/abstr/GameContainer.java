@@ -1,29 +1,19 @@
 package bt.game.core.container.abstr;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferStrategy;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-
 import bt.game.core.container.ContainerSettings;
 import bt.game.core.ctrl.spec.key.KeyController;
 import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
-import bt.log.Logger;
 import bt.scheduler.Threads;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferStrategy;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A frame including a canvas to display a game. This class handles the starting and ending of {@link Scene scenes}.
@@ -515,7 +505,7 @@ public abstract class GameContainer extends Canvas
             }
             catch (InterruptedException e)
             {
-                Logger.global().print(e);
+                e.printStackTrace();
             }
         }
 

@@ -1,18 +1,5 @@
 package bt.game.resource.load.impl;
 
-import java.awt.Font;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.resource.render.impl.Animation;
@@ -20,10 +7,16 @@ import bt.game.resource.render.impl.RenderableGif;
 import bt.game.resource.render.impl.RenderableImage;
 import bt.io.json.JSON;
 import bt.io.sound.SoundSupplier;
-import bt.log.Logger;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
 import bt.utils.ImageUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.*;
+import java.util.stream.Collectors;
 
 /**
  * An implementation of {@link ResourceLoader} which offers the same functionalities as {@link BaseResourceLoader} but
@@ -39,66 +32,65 @@ import bt.utils.ImageUtils;
  *
  * <pre>
  * {
-    "resource":
-    {
-        "images":
-        [
-            {
-                "path":"resource/images/test.png",
-                "alias":"test_image"
-            },
-            ...
-        ],
-        "gifs":
-        [
-            {
-                "path":"resource/images/test.gif",
-                "alias":"test_gif"
-            },
-            ...
-        ],
-        "sounds":
-        [
-            {
-                "path":"resource/sounds/test.wav",
-                "alias":"test_sound"
-            },
-            ...
-        ],
-        "files":
-        [
-            {
-                "path":"resource/files/test.txt",
-                "alias":"test_file"
-            },
-            ...
-        ],
-        "fonts":
-        [
-            {
-                "path":"resource/fonts/test.ttf",
-                "alias":"test_font",
-                "type":"truetype" //either 'truetype' or 'type1'
-            },
-            ...
-        ],
-        "animations":
-        [
-            {
-                "interval":1000,
-                "alias":"test_font",
-                "images":
-                [
-                    "test_image",
-                    ...
-                ]
-            },
-            ...
-        ]
-    }
-}
+ * "resource":
+ * {
+ * "images":
+ * [
+ * {
+ * "path":"resource/images/test.png",
+ * "alias":"test_image"
+ * },
+ * ...
+ * ],
+ * "gifs":
+ * [
+ * {
+ * "path":"resource/images/test.gif",
+ * "alias":"test_gif"
+ * },
+ * ...
+ * ],
+ * "sounds":
+ * [
+ * {
+ * "path":"resource/sounds/test.wav",
+ * "alias":"test_sound"
+ * },
+ * ...
+ * ],
+ * "files":
+ * [
+ * {
+ * "path":"resource/files/test.txt",
+ * "alias":"test_file"
+ * },
+ * ...
+ * ],
+ * "fonts":
+ * [
+ * {
+ * "path":"resource/fonts/test.ttf",
+ * "alias":"test_font",
+ * "type":"truetype" //either 'truetype' or 'type1'
+ * },
+ * ...
+ * ],
+ * "animations":
+ * [
+ * {
+ * "interval":1000,
+ * "alias":"test_font",
+ * "images":
+ * [
+ * "test_image",
+ * ...
+ * ]
+ * },
+ * ...
+ * ]
+ * }
+ * }
  * </pre>
- *
  *
  * @author &#8904
  */
@@ -119,9 +111,8 @@ public class JsonResourceLoader extends BaseResourceLoader
      * anymore.
      * </p>
      *
-     * @param resourceDir
-     *            The directory which contains the json (.res) files that define additional resources to load. If the
-     *            directory does not exist it will be created.
+     * @param resourceDir The directory which contains the json (.res) files that define additional resources to load. If the
+     *                    directory does not exist it will be created.
      */
     public JsonResourceLoader(File resourceDir)
     {
@@ -152,64 +143,64 @@ public class JsonResourceLoader extends BaseResourceLoader
      *
      * <pre>
      * {
-        "resource":
-        {
-            "images":
-            [
-                {
-                    "path":"resource/images/test.png",
-                    "alias":"test_image"
-                },
-                ...
-            ],
-            "gifs":
-            [
-                {
-                    "path":"resource/images/test.gif",
-                    "alias":"test_gif"
-                },
-                ...
-            ],
-            "sounds":
-            [
-                {
-                    "path":"resource/sounds/test.wav",
-                    "alias":"test_sound"
-                },
-                ...
-            ],
-            "files":
-            [
-                {
-                    "path":"resource/files/test.txt",
-                    "alias":"test_file"
-                },
-                ...
-            ],
-            "fonts":
-            [
-                {
-                    "path":"resource/fonts/test.ttf",
-                    "alias":"test_font",
-                    "type":"truetype" //either 'truetype' or 'type1'
-                },
-                ...
-            ],
-            "animations":
-            [
-                {
-                    "interval":1000,
-                    "alias":"test_font",
-                    "images":
-                    [
-                        "test_image",
-                        ...
-                    ]
-                },
-                ...
-            ]
-        }
-    }
+     * "resource":
+     * {
+     * "images":
+     * [
+     * {
+     * "path":"resource/images/test.png",
+     * "alias":"test_image"
+     * },
+     * ...
+     * ],
+     * "gifs":
+     * [
+     * {
+     * "path":"resource/images/test.gif",
+     * "alias":"test_gif"
+     * },
+     * ...
+     * ],
+     * "sounds":
+     * [
+     * {
+     * "path":"resource/sounds/test.wav",
+     * "alias":"test_sound"
+     * },
+     * ...
+     * ],
+     * "files":
+     * [
+     * {
+     * "path":"resource/files/test.txt",
+     * "alias":"test_file"
+     * },
+     * ...
+     * ],
+     * "fonts":
+     * [
+     * {
+     * "path":"resource/fonts/test.ttf",
+     * "alias":"test_font",
+     * "type":"truetype" //either 'truetype' or 'type1'
+     * },
+     * ...
+     * ],
+     * "animations":
+     * [
+     * {
+     * "interval":1000,
+     * "alias":"test_font",
+     * "images":
+     * [
+     * "test_image",
+     * ...
+     * ]
+     * },
+     * ...
+     * ]
+     * }
+     * }
      * </pre>
      *
      * @see bt.game.resource.load.intf.ResourceLoader#load(java.lang.String)
@@ -236,19 +227,18 @@ public class JsonResourceLoader extends BaseResourceLoader
         {
             JSONArray soundArray = json.getJSONArray("sounds");
 
-            for (int i = 0; i < soundArray.length(); i ++ )
+            for (int i = 0; i < soundArray.length(); i++)
             {
                 obj = soundArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
                 add(alias,
                     new SoundSupplier(
-                                      new BufferedInputStream(JsonResourceLoader.class.getResourceAsStream(path))));
-                Logger.global()
-                      .printf("[%s] Loaded sound '%s' from path '%s'.",
-                              name,
-                              alias,
-                              path);
+                            new BufferedInputStream(JsonResourceLoader.class.getResourceAsStream(path))));
+                System.out.println(String.format("[%s] Loaded sound '%s' from path '%s'.",
+                                                 name,
+                                                 alias,
+                                                 path));
             }
         }
 
@@ -256,7 +246,7 @@ public class JsonResourceLoader extends BaseResourceLoader
         {
             JSONArray imageArray = json.getJSONArray("images");
 
-            for (int i = 0; i < imageArray.length(); i ++ )
+            for (int i = 0; i < imageArray.length(); i++)
             {
                 obj = imageArray.getJSONObject(i);
                 alias = obj.getString("alias");
@@ -265,15 +255,14 @@ public class JsonResourceLoader extends BaseResourceLoader
                 {
                     add(alias,
                         new RenderableImage(ImageIO.read(JsonResourceLoader.class.getResourceAsStream(path))));
-                    Logger.global()
-                          .printf("[%s] Loaded image '%s' from path '%s'.",
-                                  name,
-                                  alias,
-                                  path);
+                    System.out.println(String.format("[%s] Loaded image '%s' from path '%s'.",
+                                                     name,
+                                                     alias,
+                                                     path));
                 }
                 catch (IOException e)
                 {
-                    Logger.global().print(e);
+                    e.printStackTrace();
                 }
             }
         }
@@ -282,7 +271,7 @@ public class JsonResourceLoader extends BaseResourceLoader
         {
             JSONArray imageArray = json.getJSONArray("gifs");
 
-            for (int i = 0; i < imageArray.length(); i ++ )
+            for (int i = 0; i < imageArray.length(); i++)
             {
                 obj = imageArray.getJSONObject(i);
                 alias = obj.getString("alias");
@@ -291,15 +280,14 @@ public class JsonResourceLoader extends BaseResourceLoader
                 {
                     add(alias,
                         new RenderableGif(ImageUtils.getImageIcon(JsonResourceLoader.class.getResourceAsStream(path))));
-                    Logger.global()
-                          .printf("[%s] Loaded gif '%s' from path '%s'.",
-                                  name,
-                                  alias,
-                                  path);
+                    System.out.println(String.format("[%s] Loaded gif '%s' from path '%s'.",
+                                                     name,
+                                                     alias,
+                                                     path));
                 }
                 catch (IOException e)
                 {
-                    Logger.global().print(e);
+                    e.printStackTrace();
                 }
             }
         }
@@ -308,18 +296,17 @@ public class JsonResourceLoader extends BaseResourceLoader
         {
             JSONArray fileArray = json.getJSONArray("files");
 
-            for (int i = 0; i < fileArray.length(); i ++ )
+            for (int i = 0; i < fileArray.length(); i++)
             {
                 obj = fileArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
                 add(alias,
                     new File(path));
-                Logger.global()
-                      .printf("[%s] Loaded file '%s' from path '%s'.",
-                              name,
-                              alias,
-                              path);
+                System.out.println(String.format("[%s] Loaded file '%s' from path '%s'.",
+                                                 name,
+                                                 alias,
+                                                 path));
             }
         }
 
@@ -328,7 +315,7 @@ public class JsonResourceLoader extends BaseResourceLoader
             JSONArray fontArray = json.getJSONArray("fonts");
             String type;
 
-            for (int i = 0; i < fontArray.length(); i ++ )
+            for (int i = 0; i < fontArray.length(); i++)
             {
                 obj = fontArray.getJSONObject(i);
                 alias = obj.getString("alias");
@@ -339,15 +326,14 @@ public class JsonResourceLoader extends BaseResourceLoader
                     add(alias,
                         Font.createFont(type.equalsIgnoreCase("truetype") ? Font.TRUETYPE_FONT : Font.TYPE1_FONT,
                                         JsonResourceLoader.class.getResourceAsStream(path)));
-                    Logger.global()
-                          .printf("[%s] Loaded font '%s' from path '%s'.",
-                                  name,
-                                  alias,
-                                  path);
+                    System.out.println(String.format("[%s] Loaded font '%s' from path '%s'.",
+                                                     name,
+                                                     alias,
+                                                     path));
                 }
                 catch (Exception e)
                 {
-                    Logger.global().print(e);
+                    e.printStackTrace();
                 }
             }
         }
@@ -361,7 +347,7 @@ public class JsonResourceLoader extends BaseResourceLoader
             int interval = 0;
             String[] images;
 
-            for (int i = 0; i < animationArray.length(); i ++ )
+            for (int i = 0; i < animationArray.length(); i++)
             {
                 obj = animationArray.getJSONObject(i);
                 alias = obj.getString("alias");
@@ -369,7 +355,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 imageArray = obj.getJSONArray("images");
                 images = new String[imageArray.length()];
 
-                for (int j = 0; j < imageArray.length(); j ++ )
+                for (int j = 0; j < imageArray.length(); j++)
                 {
                     images[j] = imageArray.getString(j);
                 }
@@ -380,15 +366,14 @@ public class JsonResourceLoader extends BaseResourceLoader
                         new Animation(this,
                                       interval,
                                       images));
-                    Logger.global()
-                          .printf("[%s] Loaded animation '%s' defined in '%s'.",
-                                  name,
-                                  alias,
-                                  this.lastResourceFile.getAbsolutePath());
+                    System.out.println(String.format("[%s] Loaded animation '%s' defined in '%s'.",
+                                                     name,
+                                                     alias,
+                                                     this.lastResourceFile.getAbsolutePath()));
                 }
                 catch (Exception e)
                 {
-                    Logger.global().print(e);
+                    e.printStackTrace();
                 }
             }
         }
@@ -403,8 +388,7 @@ public class JsonResourceLoader extends BaseResourceLoader
      * The resource filer needs to have the file extension .res.
      * </p>
      *
-     * @param name
-     *            The context name = the name of the file (without file ending) to load from.
+     * @param name The context name = the name of the file (without file ending) to load from.
      * @return The parsed json from the file or null if parsing failed for any reason.
      */
     private JSONObject getJsonForName(String name)
@@ -414,13 +398,12 @@ public class JsonResourceLoader extends BaseResourceLoader
 
         try (var stream = getClass().getClassLoader().getResourceAsStream(path))
         {
-            jsonString = new BufferedReader(new InputStreamReader(stream))
-                                                                          .lines()
+            jsonString = new BufferedReader(new InputStreamReader(stream)).lines()
                                                                           .collect(Collectors.joining("\n"));
         }
         catch (Exception e)
         {
-            Logger.global().print(e);
+            e.printStackTrace();
         }
 
         this.lastResourceFile = new File(path);
