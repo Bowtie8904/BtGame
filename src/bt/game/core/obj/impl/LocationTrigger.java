@@ -1,19 +1,18 @@
 package bt.game.core.obj.impl;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
+import bt.game.core.obj.col.filter.CollisionFilter;
+import bt.game.core.obj.col.intf.Contacter;
+import bt.game.core.scene.intf.Scene;
+import bt.game.util.unit.Unit;
 import org.dyn4j.collision.CollisionBody;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.contact.Contact;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.MassType;
-
-import bt.game.core.obj.col.filter.CollisionFilter;
-import bt.game.core.obj.col.intf.Contacter;
-import bt.game.core.scene.intf.Scene;
-import bt.game.util.unit.Unit;
 import org.dyn4j.world.ContactCollisionData;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A basic implementation of a location based trigger that will execute an action if one of the specified types enters
@@ -56,7 +55,7 @@ public abstract class LocationTrigger extends GameBody implements Contacter
                                          acceptedCollisions));
         bf.setSensor(true);
         addFixture(bf);
-        setMass(MassType.INFINITE);
+        setMass(MassType.FIXED_ANGULAR_VELOCITY);
         translate(x.units(),
                   y.units());
 

@@ -1,24 +1,6 @@
 package bt.game.core.obj.hand.impl;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.dyn4j.collision.CollisionBody;
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.contact.Contact;
-import org.dyn4j.dynamics.contact.SolvedContact;
-import org.dyn4j.dynamics.joint.Joint;
-
-import bt.game.core.obj.col.intf.BroadPhaseCollider;
-import bt.game.core.obj.col.intf.ConstraintCollider;
-import bt.game.core.obj.col.intf.Contacter;
-import bt.game.core.obj.col.intf.ManifoldCollider;
-import bt.game.core.obj.col.intf.NarrowPhaseCollider;
+import bt.game.core.obj.col.intf.*;
 import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.obj.intf.Refreshable;
 import bt.game.core.obj.intf.Tickable;
@@ -27,12 +9,28 @@ import bt.game.resource.render.intf.Renderable;
 import bt.log.Logger;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
+import org.dyn4j.collision.CollisionBody;
+import org.dyn4j.collision.continuous.TimeOfImpact;
+import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.PhysicsBody;
+import org.dyn4j.dynamics.contact.Contact;
+import org.dyn4j.dynamics.contact.SolvedContact;
+import org.dyn4j.dynamics.joint.Joint;
 import org.dyn4j.world.BroadphaseCollisionData;
 import org.dyn4j.world.ContactCollisionData;
 import org.dyn4j.world.ManifoldCollisionData;
 import org.dyn4j.world.NarrowphaseCollisionData;
 import org.dyn4j.world.listener.CollisionListener;
 import org.dyn4j.world.listener.ContactListener;
+import org.dyn4j.world.listener.TimeOfImpactListener;
+
+import java.awt.*;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A base implementation of the {@link ObjectHandler} interface.
@@ -66,7 +64,7 @@ import org.dyn4j.world.listener.ContactListener;
  *
  * @author &#8904
  */
-public class BaseObjectHandler implements ObjectHandler, CollisionListener, ContactListener
+public class BaseObjectHandler implements ObjectHandler, CollisionListener, ContactListener, TimeOfImpactListener
 {
     /** The list of tickable objects. */
     protected List<Tickable> tickables;
@@ -95,6 +93,9 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /** The map of Contacter objects. */
     protected Map<CollisionBody, Contacter> contacters;
 
+    /** The map of TimeOfImpactCollider objects. */
+    protected Map<CollisionBody, TimeOfImpactCollider> timeOfImpactColliders;
+
     /** The comparator to sort renderables after their Z value. */
     protected Comparator<Renderable> zComparator;
 
@@ -116,6 +117,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.manifoldColliders = new Hashtable<>();
         this.constraintColliders = new Hashtable<>();
         this.contacters = new Hashtable<>();
+        this.timeOfImpactColliders = new Hashtable<>();
         this.zComparator = new Comparator<>() {
             @Override
             public int compare(Renderable o1, Renderable o2)
@@ -165,6 +167,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * <li>{@link ManifoldCollider}: onCollision is called when collision events are received.</li>
      * <li>{@link ConstraintCollider}: onCollision is called when collision events are received.</li>
      * <li>{@link Contacter}: onContactBegin and onContactEnd is called when contact events are received.</li>
+     * <li>{@link TimeOfImpactCollider}: onCollision is called when collision events are received.</li>
      * <li>{@link Body}: Added to the world object of the scene.</li>
      * <li>{@link Joint}: Added to the world object of the scene.</li>
      * </ul>
@@ -257,6 +260,16 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
                                     collider);
             }
         }
+
+        if (object instanceof TimeOfImpactCollider)
+        {
+            TimeOfImpactCollider collider = TimeOfImpactCollider.class.cast(object);
+            if (collider.getBody() != null)
+            {
+                this.timeOfImpactColliders.put(collider.getBody(),
+                                               collider);
+            }
+        }
     }
 
     /**
@@ -325,6 +338,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         {
             Contacter collider = Contacter.class.cast(object);
             this.contacters.remove(collider.getBody());
+        }
+
+        if (object instanceof TimeOfImpactCollider)
+        {
+            TimeOfImpactCollider collider = TimeOfImpactCollider.class.cast(object);
+            this.timeOfImpactColliders.remove(collider.getBody());
         }
     }
 
@@ -402,9 +421,9 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         {
             this.scene.getWorld().addCollisionListener(this);
             this.scene.getWorld().addContactListener(this);
+            this.scene.getWorld().addTimeOfImpactListener(this);
         }
     }
-
 
     /**
      * @see bt.game.core.obj.hand.intf.ObjectHandler#refresh()
@@ -554,5 +573,38 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     public void postSolve(ContactCollisionData contactCollisionData, SolvedContact solvedContact)
     {
 
+    }
+
+    @Override
+    public boolean collision(PhysicsBody physicsBody1, PhysicsBody physicsBody2)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean collision(PhysicsBody physicsBody1, BodyFixture bodyFixture1, PhysicsBody physicsBody2, BodyFixture bodyFixture2)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean collision(PhysicsBody physicsBody1, BodyFixture bodyFixture1, PhysicsBody physicsBody2, BodyFixture bodyFixture2, TimeOfImpact timeOfImpact)
+    {
+        TimeOfImpactCollider collider1 = this.timeOfImpactColliders.get(physicsBody1);
+        TimeOfImpactCollider collider2 = this.timeOfImpactColliders.get(physicsBody2);
+
+        boolean proceed = true;
+
+        if (collider1 != null)
+        {
+            proceed = proceed && collider1.onCollision(physicsBody1, bodyFixture1, physicsBody2, bodyFixture2, timeOfImpact);
+        }
+
+        if (collider2 != null)
+        {
+            proceed = proceed && collider2.onCollision(physicsBody1, bodyFixture1, physicsBody2, bodyFixture2, timeOfImpact);
+        }
+
+        return proceed;
     }
 }

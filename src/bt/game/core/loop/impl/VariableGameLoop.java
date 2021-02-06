@@ -1,9 +1,9 @@
 package bt.game.core.loop.impl;
 
-import java.util.function.Consumer;
-
 import bt.game.core.loop.abstr.GameLoop;
 import bt.utils.Exceptions;
+
+import java.util.function.Consumer;
 
 /**
  * @author &#8904
@@ -12,6 +12,7 @@ import bt.utils.Exceptions;
 public class VariableGameLoop extends GameLoop
 {
     protected double delta = 0;
+    protected long tickTimeout = 2;
 
     /**
      * @param tick
@@ -41,7 +42,11 @@ public class VariableGameLoop extends GameLoop
             if (!this.isPaused)
             {
                 runTick(this.delta);
-                Exceptions.uncheck(() -> Thread.sleep(2));
+
+                if (this.tickTimeout > 0)
+                {
+                    Exceptions.uncheck(() -> Thread.sleep(this.tickTimeout));
+                }
             }
         }
     }
@@ -92,5 +97,15 @@ public class VariableGameLoop extends GameLoop
     public double getLastDelta()
     {
         return this.delta;
+    }
+
+    public long getTickTimeout()
+    {
+        return tickTimeout;
+    }
+
+    public void setTickTimeout(long tickTimeout)
+    {
+        this.tickTimeout = tickTimeout;
     }
 }
