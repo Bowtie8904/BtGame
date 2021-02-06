@@ -53,6 +53,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <li>{@link ManifoldCollider}: onCollision is called when collision events are received.</li>
  * <li>{@link ConstraintCollider}: onCollision is called when collision events are received.</li>
  * <li>{@link Contacter}: onContactBegin and onContactEnd is called when contact events are received.</li>
+ * <li>{@link TimeOfImpactCollider}: onCollision is called when collision events are received.</li>
  * <li>{@link Body}: Added to the world object of the scene.</li>
  * <li>{@link Joint}: Added to the world object of the scene.</li>
  * </ul>
