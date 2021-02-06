@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.ctrl.spec.mouse.MouseController;
-import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 
@@ -13,7 +12,7 @@ import bt.game.util.unit.Unit;
  * 
  * @author &#8904
  */
-public class Camera implements Tickable
+public class Camera
 {
     /** The scene that this instance is used for. */
     protected Scene scene;
@@ -124,6 +123,7 @@ public class Camera implements Tickable
      */
     public void render(Graphics2D g)
     {
+        updatePosition();
         g.translate((int)-this.x.pixels(),
                     (int)-this.y.pixels());
     }
@@ -134,11 +134,7 @@ public class Camera implements Tickable
                     (int)this.y.pixels());
     }
 
-    /**
-     * @see bt.game.core.obj.intf.Tickable#tick(double)
-     */
-    @Override
-    public void tick(double delta)
+    public void updatePosition()
     {
         moveTo(this.x,
                this.y);

@@ -203,11 +203,6 @@ public abstract class BaseScene implements Scene
         {
             this.gameObjectHandler.tick(delta);
             this.world.update(delta);
-
-            if (this.camera != null)
-            {
-                this.camera.tick(delta);
-            }
         }
     }
 

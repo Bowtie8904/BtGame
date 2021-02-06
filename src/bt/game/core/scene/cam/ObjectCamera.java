@@ -69,11 +69,9 @@ public class ObjectCamera extends Camera
      * This method calls {@link #moveTo(Unit, Unit) moveTo}, so the {@link #clipToBorders(boolean) clipToBorders}
      * behavior is handled there.
      * </p>
-     * 
-     * @see bt.game.core.obj.intf.Tickable#tick()
      */
     @Override
-    public void tick(double delta)
+    public void updatePosition()
     {
         double objectX = this.object.getCenterX().units();
         double objectY = this.object.getCenterY().units();

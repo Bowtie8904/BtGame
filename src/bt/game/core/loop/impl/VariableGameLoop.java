@@ -41,6 +41,7 @@ public class VariableGameLoop extends GameLoop
             if (!this.isPaused)
             {
                 runTick(this.delta);
+                Exceptions.uncheck(() -> Thread.sleep(2));
             }
         }
     }

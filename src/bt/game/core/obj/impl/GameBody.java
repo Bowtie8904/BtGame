@@ -181,8 +181,8 @@ public class GameBody extends Body implements GameObject
      */
     public void setVelocity(double x, double y)
     {
-        getLinearVelocity().x = x * 10;
-        getLinearVelocity().y = y * 10;
+        getLinearVelocity().x = x;
+        getLinearVelocity().y = y;
         setAtRest(false);
     }
 
@@ -198,8 +198,8 @@ public class GameBody extends Body implements GameObject
      */
     public void setVelocity(Vector2 v)
     {
-        getLinearVelocity().x = v.x * 10;
-        getLinearVelocity().y = v.y * 10;
+        getLinearVelocity().x = v.x;
+        getLinearVelocity().y = v.y;
         setAtRest(false);
     }
 
@@ -215,7 +215,7 @@ public class GameBody extends Body implements GameObject
      */
     public void setVelocityX(double x)
     {
-        getLinearVelocity().x = x * 10;
+        getLinearVelocity().x = x;
         setAtRest(false);
     }
 
@@ -231,7 +231,7 @@ public class GameBody extends Body implements GameObject
      */
     public void setVelocityY(double y)
     {
-        getLinearVelocity().y = y * 10;
+        getLinearVelocity().y = y;
         setAtRest(false);
     }
 
