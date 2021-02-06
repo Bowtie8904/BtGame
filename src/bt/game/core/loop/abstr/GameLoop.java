@@ -12,8 +12,9 @@ import bt.types.Killable;
  *
  * @author &#8904
  */
-public abstract class GameLoop implements Runnable, Killable
+public abstract class GameLoop implements Killable
 {
+    public static final double NANO_TO_BASE = 1.0e9;
     /**
      * Indicates whether this loop is currently running. Setting this to false is the easiest way to terminate the loop.
      */
@@ -94,9 +95,8 @@ public abstract class GameLoop implements Runnable, Killable
         if (!this.running)
         {
             this.running = true;
-            Threads.get()
-                   .execute(this,
-                            "GAME_LOOP");
+            Threads.get().execute(this::tickLoop, "GAME_LOOP_TICK");
+            Threads.get().execute(this::renderLoop, "GAME_LOOP_RENDER");
         }
     }
 
@@ -224,4 +224,8 @@ public abstract class GameLoop implements Runnable, Killable
     {
         return this.isPaused;
     }
+
+    protected abstract void tickLoop();
+
+    protected abstract void renderLoop();
 }

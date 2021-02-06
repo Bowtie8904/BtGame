@@ -45,7 +45,7 @@
         <dependency>
 		    <groupId>org.dyn4j</groupId>
 		    <artifactId>dyn4j</artifactId>
-		    <version>3.3.0</version>
+		    <version>4.1.0</version>
 		</dependency>
 	</dependencies>
 </project>

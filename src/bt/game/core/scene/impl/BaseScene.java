@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 
 import bt.io.text.impl.BaseTextLoader;
 import bt.io.text.intf.TextLoader;
-import org.dyn4j.dynamics.World;
 
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.obj.hand.impl.BaseObjectHandler;
@@ -16,6 +15,7 @@ import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.util.unit.Unit;
 import bt.log.Logger;
 import bt.runtime.InstanceKiller;
+import org.dyn4j.world.World;
 
 /**
  * @author &#8904
@@ -48,7 +48,7 @@ public abstract class BaseScene implements Scene
 
         this.world = new World();
         this.world.setGravity(World.ZERO_GRAVITY);
-        this.world.getSettings().setStepFrequency(1 / 500.0);
+        this.world.getSettings().setStepFrequency(1 / 100.0);
         this.world.getSettings().setPositionConstraintSolverIterations(70);
         this.world.getSettings().setMaximumTranslation(Integer.MAX_VALUE);
 

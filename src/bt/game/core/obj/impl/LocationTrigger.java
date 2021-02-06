@@ -3,11 +3,9 @@ package bt.game.core.obj.impl;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import bt.game.core.obj.col.intf.NarrowPhaseCollider;
-import org.dyn4j.collision.narrowphase.Penetration;
-import org.dyn4j.dynamics.Body;
+import org.dyn4j.collision.CollisionBody;
 import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.dynamics.contact.ContactPoint;
+import org.dyn4j.dynamics.contact.Contact;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.MassType;
 
@@ -15,6 +13,7 @@ import bt.game.core.obj.col.filter.CollisionFilter;
 import bt.game.core.obj.col.intf.Contacter;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
+import org.dyn4j.world.ContactCollisionData;
 
 /**
  * A basic implementation of a location based trigger that will execute an action if one of the specified types enters
@@ -25,7 +24,7 @@ import bt.game.util.unit.Unit;
 public abstract class LocationTrigger extends GameBody implements Contacter
 {
     /** A list containing all objects that should currently not trigger an action. */
-    protected List<Body> inContact;
+    protected List<CollisionBody> inContact;
 
     /** Indicates whether objects that leave the area and enter it again should trigger the action again. */
     protected boolean repeat;
@@ -80,7 +79,7 @@ public abstract class LocationTrigger extends GameBody implements Contacter
      * @see bt.game.core.obj.col.intf.Collider#getBody()
      */
     @Override
-    public Body getBody()
+    public CollisionBody getBody()
     {
         return this;
     }
@@ -89,21 +88,21 @@ public abstract class LocationTrigger extends GameBody implements Contacter
      * @see bt.game.core.obj.col.intf.Contacter#onContactBegin(org.dyn4j.dynamics.contact.ContactPoint)
      */
     @Override
-    public synchronized boolean onContactBegin(ContactPoint point)
+    public synchronized boolean onContactBegin(ContactCollisionData contactCollisionData, Contact contact)
     {
-        if (!point.getBody1().equals(getBody()))
+        if (!contactCollisionData.getBody1().equals(getBody()))
         {
-            contactWithBody(point.getBody1());
+            contactWithBody(contactCollisionData.getBody1());
         }
         else
         {
-            contactWithBody(point.getBody2());
+            contactWithBody(contactCollisionData.getBody2());
         }
 
         return true;
     }
 
-    private void contactWithBody(Body body)
+    private void contactWithBody(CollisionBody body)
     {
         if (!this.inContact.contains(body))
         {
@@ -116,12 +115,12 @@ public abstract class LocationTrigger extends GameBody implements Contacter
      * @see bt.game.core.obj.col.intf.Contacter#onContactEnd(org.dyn4j.dynamics.contact.ContactPoint)
      */
     @Override
-    public synchronized void onContactEnd(ContactPoint point)
+    public synchronized void onContactEnd(ContactCollisionData contactCollisionData, Contact contact)
     {
         if (this.repeat)
         {
-            this.inContact.remove(point.getBody1());
-            this.inContact.remove(point.getBody2());
+            this.inContact.remove(contactCollisionData.getBody1());
+            this.inContact.remove(contactCollisionData.getBody2());
         }
     }
 
@@ -135,5 +134,5 @@ public abstract class LocationTrigger extends GameBody implements Contacter
      * 
      * @param body
      */
-    public abstract void execute(Body body);
+    public abstract void execute(CollisionBody body);
 }

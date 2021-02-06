@@ -1,6 +1,7 @@
 package bt.game.core.obj.impl;
 
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.geometry.Rotation;
 import org.dyn4j.geometry.Vector2;
 
 import bt.game.core.obj.intf.GameObject;
@@ -97,8 +98,7 @@ public class GameBody extends Body implements GameObject
     public void setY(Unit y)
     {
         y = y.subtractUnits(getY());
-        translate(0,
-                  y.units());
+        translate(0, y.units());
     }
 
     /**
@@ -162,7 +162,7 @@ public class GameBody extends Body implements GameObject
      * 
      * @return
      */
-    public double getRotation()
+    public Rotation getRotation()
     {
         return this.transform.getRotation();
     }
@@ -183,7 +183,7 @@ public class GameBody extends Body implements GameObject
     {
         getLinearVelocity().x = x * 10;
         getLinearVelocity().y = y * 10;
-        setAsleep(false);
+        setAtRest(false);
     }
 
     /**
@@ -200,7 +200,7 @@ public class GameBody extends Body implements GameObject
     {
         getLinearVelocity().x = v.x * 10;
         getLinearVelocity().y = v.y * 10;
-        setAsleep(false);
+        setAtRest(false);
     }
 
     /**
@@ -216,7 +216,7 @@ public class GameBody extends Body implements GameObject
     public void setVelocityX(double x)
     {
         getLinearVelocity().x = x * 10;
-        setAsleep(false);
+        setAtRest(false);
     }
 
     /**
@@ -232,7 +232,7 @@ public class GameBody extends Body implements GameObject
     public void setVelocityY(double y)
     {
         getLinearVelocity().y = y * 10;
-        setAsleep(false);
+        setAtRest(false);
     }
 
     /**

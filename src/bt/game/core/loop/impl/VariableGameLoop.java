@@ -3,6 +3,7 @@ package bt.game.core.loop.impl;
 import java.util.function.Consumer;
 
 import bt.game.core.loop.abstr.GameLoop;
+import bt.utils.Exceptions;
 
 /**
  * @author &#8904
@@ -22,38 +23,36 @@ public class VariableGameLoop extends GameLoop
               render);
     }
 
-    public double getLastDelta()
-    {
-        return this.delta;
-    }
-
-    /**
-     * The core of the loop.
-     * 
-     * @see java.lang.Runnable#run()
-     */
     @Override
-    public void run()
+    protected void tickLoop()
     {
-        long lastTime = System.nanoTime();
-        double ns;
-        this.delta = 0;
-        long timer = System.currentTimeMillis();
-        int frames = 0;
-        long now;
+        long last = System.nanoTime();
 
         while (this.running)
         {
-            ns = 1000000000 / this.ticksPerSecond;
-            now = System.nanoTime();
-            delta = (now - lastTime) / ns;
-            lastTime = now;
+            long time = System.nanoTime();
+            // get the elapsed time from the last iteration
+            long diff = time - last;
+            // set the last time
+            last = time;
+            // convert from nanoseconds to seconds
+            this.delta = (double)diff / NANO_TO_BASE;
 
             if (!this.isPaused)
             {
                 runTick(this.delta);
             }
+        }
+    }
 
+    @Override
+    protected void renderLoop()
+    {
+        long timer = System.currentTimeMillis();
+        int frames = 0;
+
+        while (this.running)
+        {
             runRender();
             frames ++ ;
 
@@ -84,13 +83,13 @@ public class VariableGameLoop extends GameLoop
 
             if (this.desiredFramesPerSecond > -1 && this.threadSleepers > 0)
             {
-                try
-                {
-                    Thread.sleep(this.threadSleepers);
-                }
-                catch (InterruptedException e)
-                {}
+                Exceptions.uncheck(() -> Thread.sleep(this.threadSleepers));
             }
         }
+    }
+
+    public double getLastDelta()
+    {
+        return this.delta;
     }
 }

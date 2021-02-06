@@ -43,7 +43,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Shape shape, Color color)
+    public static void render(Graphics2D g, Shape shape, Color color)
     {
         // no-op
         if (shape == null)
@@ -101,13 +101,13 @@ public final class ShapeRenderer
         }
     }
 
-    public static final void render(Graphics2D g, Body body, Color color)
+    public static void render(Graphics2D g, Body body, Color color)
     {
         AffineTransform ot = g.getTransform();
         AffineTransform lt = new AffineTransform();
         lt.translate(body.getTransform().getTranslationX() * Unit.getRatio(),
                      body.getTransform().getTranslationY() * Unit.getRatio());
-        lt.rotate(body.getTransform().getRotation());
+        lt.rotate(body.getTransform().getRotation().toDegrees());
         g.transform(lt);
 
         for (Fixture f : body.getFixtures())
@@ -132,7 +132,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Circle circle, Color color)
+    public static void render(Graphics2D g, Circle circle, Color color)
     {
         double radius = circle.getRadius();
         Vector2 center = circle.getCenter();
@@ -172,7 +172,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Polygon polygon, Color color)
+    public static void render(Graphics2D g, Polygon polygon, Color color)
     {
         Vector2[] vertices = polygon.getVertices();
         int l = vertices.length;
@@ -208,7 +208,7 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Segment segment, Color color)
+    public static void render(Graphics2D g, Segment segment, Color color)
     {
         Vector2[] vertices = segment.getVertices();
 
@@ -235,10 +235,10 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Capsule capsule, Color color)
+    public static void render(Graphics2D g, Capsule capsule, Color color)
     {
         // get the local rotation and translation
-        double rotation = capsule.getRotation();
+        double rotation = capsule.getRotation().toDegrees();
         Vector2 center = capsule.getCenter();
 
         // save the old transform
@@ -307,10 +307,10 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Ellipse ellipse, Color color)
+    public static void render(Graphics2D g, Ellipse ellipse, Color color)
     {
         // get the local rotation and translation
-        double rotation = ellipse.getRotation();
+        double rotation = ellipse.getRotation().toDegrees();
         Vector2 center = ellipse.getCenter();
 
         // save the old transform
@@ -350,13 +350,13 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, Slice slice, Color color)
+    public static void render(Graphics2D g, Slice slice, Color color)
     {
         double radius = slice.getSliceRadius();
         double theta2 = slice.getTheta() * 0.5;
 
         // get the local rotation and translation
-        double rotation = slice.getRotation();
+        double rotation = slice.getRotation().toDegrees();
         Vector2 circleCenter = slice.getCircleCenter();
 
         // save the old transform
@@ -399,13 +399,13 @@ public final class ShapeRenderer
      * @param color
      *            the color
      */
-    public static final void render(Graphics2D g, HalfEllipse halfEllipse, Color color)
+    public static void render(Graphics2D g, HalfEllipse halfEllipse, Color color)
     {
         double width = halfEllipse.getWidth();
         double height = halfEllipse.getHeight();
 
         // get the local rotation and translation
-        double rotation = halfEllipse.getRotation();
+        double rotation = halfEllipse.getRotation().toDegrees();
         Vector2 center = halfEllipse.getEllipseCenter();
 
         // save the old transform
@@ -444,7 +444,7 @@ public final class ShapeRenderer
      *            the fill color
      * @return Color
      */
-    private static final Color getOutlineColor(Color color)
+    private static Color getOutlineColor(Color color)
     {
         Color oc = color.darker();
         return new Color(oc.getRed(),
@@ -458,7 +458,7 @@ public final class ShapeRenderer
      * 
      * @return Color
      */
-    public static final Color getRandomColor()
+    public static Color getRandomColor()
     {
         return new Color(
                          (float)Math.random() * 0.5f + 0.5f,

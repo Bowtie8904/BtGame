@@ -1,6 +1,6 @@
 package bt.game.core.obj.col.intf;
 
-import org.dyn4j.dynamics.Body;
+import org.dyn4j.collision.CollisionBody;
 
 /**
  * The super type of all collision related interfaces.
@@ -14,5 +14,5 @@ public interface Collider
      * 
      * @return
      */
-    public Body getBody();
+    public CollisionBody getBody();
 }

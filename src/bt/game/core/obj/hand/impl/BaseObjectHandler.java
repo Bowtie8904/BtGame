@@ -8,16 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.dyn4j.collision.manifold.Manifold;
-import org.dyn4j.collision.narrowphase.Penetration;
+import org.dyn4j.collision.CollisionBody;
 import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.dynamics.CollisionListener;
-import org.dyn4j.dynamics.contact.ContactConstraint;
-import org.dyn4j.dynamics.contact.ContactListener;
-import org.dyn4j.dynamics.contact.ContactPoint;
-import org.dyn4j.dynamics.contact.PersistedContactPoint;
-import org.dyn4j.dynamics.contact.SolvedContactPoint;
+import org.dyn4j.dynamics.contact.Contact;
+import org.dyn4j.dynamics.contact.SolvedContact;
 import org.dyn4j.dynamics.joint.Joint;
 
 import bt.game.core.obj.col.intf.BroadPhaseCollider;
@@ -33,6 +27,12 @@ import bt.game.resource.render.intf.Renderable;
 import bt.log.Logger;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
+import org.dyn4j.world.BroadphaseCollisionData;
+import org.dyn4j.world.ContactCollisionData;
+import org.dyn4j.world.ManifoldCollisionData;
+import org.dyn4j.world.NarrowphaseCollisionData;
+import org.dyn4j.world.listener.CollisionListener;
+import org.dyn4j.world.listener.ContactListener;
 
 /**
  * A base implementation of the {@link ObjectHandler} interface.
@@ -81,19 +81,19 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     protected List<Killable> killables;
 
     /** The map of BroadPhaseCollider objects. */
-    protected Map<Body, BroadPhaseCollider> broadColliders;
+    protected Map<CollisionBody, BroadPhaseCollider> broadColliders;
 
     /** The map of NarrowPhaseCollider objects. */
-    protected Map<Body, NarrowPhaseCollider> narrowColliders;
+    protected Map<CollisionBody, NarrowPhaseCollider> narrowColliders;
 
     /** The map of ManifoldCollider objects. */
-    protected Map<Body, ManifoldCollider> manifoldColliders;
+    protected Map<CollisionBody, ManifoldCollider> manifoldColliders;
 
     /** The map of ConstraintCollider objects. */
-    protected Map<Body, ConstraintCollider> constraintColliders;
+    protected Map<CollisionBody, ConstraintCollider> constraintColliders;
 
     /** The map of Contacter objects. */
-    protected Map<Body, Contacter> contacters;
+    protected Map<CollisionBody, Contacter> contacters;
 
     /** The comparator to sort renderables after their Z value. */
     protected Comparator<Renderable> zComparator;
@@ -400,209 +400,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (this.scene.getWorld() != null)
         {
-            this.scene.getWorld().addListener(this);
+            this.scene.getWorld().addCollisionListener(this);
+            this.scene.getWorld().addContactListener(this);
         }
     }
 
-    /**
-     * @see org.dyn4j.dynamics.CollisionListener#collision(org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture,
-     *      org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture)
-     */
-    @Override
-    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2)
-    {
-        BroadPhaseCollider collider1 = this.broadColliders.get(body1);
-        BroadPhaseCollider collider2 = this.broadColliders.get(body2);
-
-        boolean proceed = true;
-
-        if (collider1 != null)
-        {
-            proceed = proceed && collider1.onCollision(body1,
-                                                       fixture1,
-                                                       body2,
-                                                       fixture2);
-        }
-
-        if (collider2 != null)
-        {
-            proceed = proceed && collider2.onCollision(body1,
-                                                       fixture1,
-                                                       body2,
-                                                       fixture2);
-        }
-
-        return proceed;
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.CollisionListener#collision(org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture,
-     *      org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture, org.dyn4j.collision.narrowphase.Penetration)
-     */
-    @Override
-    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2,
-                             Penetration penetration)
-    {
-        NarrowPhaseCollider collider1 = this.narrowColliders.get(body1);
-        NarrowPhaseCollider collider2 = this.narrowColliders.get(body2);
-
-        boolean proceed = true;
-
-        if (collider1 != null)
-        {
-            proceed = proceed && collider1.onCollision(body1,
-                                                       fixture1,
-                                                       body2,
-                                                       fixture2,
-                                                       penetration);
-        }
-
-        if (collider2 != null)
-        {
-            proceed = proceed && collider2.onCollision(body1,
-                                                       fixture1,
-                                                       body2,
-                                                       fixture2,
-                                                       penetration);
-        }
-
-        return proceed;
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.CollisionListener#collision(org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture,
-     *      org.dyn4j.dynamics.Body, org.dyn4j.dynamics.BodyFixture, org.dyn4j.collision.manifold.Manifold)
-     */
-    @Override
-    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Manifold manifold)
-    {
-        ManifoldCollider collider1 = this.manifoldColliders.get(body1);
-        ManifoldCollider collider2 = this.manifoldColliders.get(body2);
-
-        boolean proceed = true;
-
-        if (collider1 != null)
-        {
-            proceed = proceed && collider1.onCollision(body1,
-                                                       fixture1,
-                                                       body2,
-                                                       fixture2,
-                                                       manifold);
-        }
-
-        if (collider2 != null)
-        {
-            proceed = proceed && collider2.onCollision(body1,
-                                                       fixture1,
-                                                       body2,
-                                                       fixture2,
-                                                       manifold);
-        }
-
-        return proceed;
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.CollisionListener#collision(org.dyn4j.dynamics.contact.ContactConstraint)
-     */
-    @Override
-    public boolean collision(ContactConstraint contactConstraint)
-    {
-        ConstraintCollider collider1 = this.constraintColliders.get(contactConstraint.getBody1());
-        ConstraintCollider collider2 = this.constraintColliders.get(contactConstraint.getBody2());
-
-        boolean proceed = true;
-
-        if (collider1 != null)
-        {
-            proceed = proceed && collider1.onCollision(contactConstraint);
-        }
-
-        if (collider2 != null)
-        {
-            proceed = proceed && collider2.onCollision(contactConstraint);
-        }
-
-        return proceed;
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.contact.ContactListener#sensed(org.dyn4j.dynamics.contact.ContactPoint)
-     */
-    @Override
-    public void sensed(ContactPoint point)
-    {
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.contact.ContactListener#begin(org.dyn4j.dynamics.contact.ContactPoint)
-     */
-    @Override
-    public boolean begin(ContactPoint point)
-    {
-        Contacter contacter1 = this.contacters.get(point.getBody1());
-        Contacter contacter2 = this.contacters.get(point.getBody2());
-
-        boolean proceed = true;
-
-        if (contacter1 != null)
-        {
-            proceed = proceed && contacter1.onContactBegin(point);
-        }
-
-        if (contacter2 != null)
-        {
-            proceed = proceed && contacter2.onContactBegin(point);
-        }
-
-        return proceed;
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.contact.ContactListener#end(org.dyn4j.dynamics.contact.ContactPoint)
-     */
-    @Override
-    public void end(ContactPoint point)
-    {
-        Contacter contacter1 = this.contacters.get(point.getBody1());
-        Contacter contacter2 = this.contacters.get(point.getBody2());
-
-        if (contacter1 != null)
-        {
-            contacter1.onContactEnd(point);
-        }
-
-        if (contacter2 != null)
-        {
-            contacter2.onContactEnd(point);
-        }
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.contact.ContactListener#persist(org.dyn4j.dynamics.contact.PersistedContactPoint)
-     */
-    @Override
-    public boolean persist(PersistedContactPoint point)
-    {
-        return true;
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.contact.ContactListener#preSolve(org.dyn4j.dynamics.contact.ContactPoint)
-     */
-    @Override
-    public boolean preSolve(ContactPoint point)
-    {
-        return true;
-    }
-
-    /**
-     * @see org.dyn4j.dynamics.contact.ContactListener#postSolve(org.dyn4j.dynamics.contact.SolvedContactPoint)
-     */
-    @Override
-    public void postSolve(SolvedContactPoint point)
-    {
-    }
 
     /**
      * @see bt.game.core.obj.hand.intf.ObjectHandler#refresh()
@@ -614,5 +416,143 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         {
             refr.refresh();
         }
+    }
+
+    @Override
+    public boolean collision(BroadphaseCollisionData broadphaseCollisionData)
+    {
+        BroadPhaseCollider collider1 = this.broadColliders.get(broadphaseCollisionData.getBody1());
+        BroadPhaseCollider collider2 = this.broadColliders.get(broadphaseCollisionData.getBody2());
+
+        boolean proceed = true;
+
+        if (collider1 != null)
+        {
+            proceed = proceed && collider1.onCollision(broadphaseCollisionData);
+        }
+
+        if (collider2 != null)
+        {
+            proceed = proceed && collider2.onCollision(broadphaseCollisionData);
+        }
+
+        return proceed;
+    }
+
+    @Override
+    public boolean collision(NarrowphaseCollisionData narrowphaseCollisionData)
+    {
+        NarrowPhaseCollider collider1 = this.narrowColliders.get(narrowphaseCollisionData.getBody1());
+        NarrowPhaseCollider collider2 = this.narrowColliders.get(narrowphaseCollisionData.getBody2());
+
+        boolean proceed = true;
+
+        if (collider1 != null)
+        {
+            proceed = proceed && collider1.onCollision(narrowphaseCollisionData);
+        }
+
+        if (collider2 != null)
+        {
+            proceed = proceed && collider2.onCollision(narrowphaseCollisionData);
+        }
+
+        return proceed;
+    }
+
+    @Override
+    public boolean collision(ManifoldCollisionData manifoldCollisionData)
+    {
+        ManifoldCollider collider1 = this.manifoldColliders.get(manifoldCollisionData.getBody1());
+        ManifoldCollider collider2 = this.manifoldColliders.get(manifoldCollisionData.getBody2());
+
+        boolean proceed = true;
+
+        if (collider1 != null)
+        {
+            proceed = proceed && collider1.onCollision(manifoldCollisionData);
+        }
+
+        if (collider2 != null)
+        {
+            proceed = proceed && collider2.onCollision(manifoldCollisionData);
+        }
+
+        return proceed;
+    }
+
+    @Override
+    public void begin(ContactCollisionData contactCollisionData, Contact contact)
+    {
+        Contacter contacter1 = this.contacters.get(contactCollisionData.getBody1());
+        Contacter contacter2 = this.contacters.get(contactCollisionData.getBody2());
+
+        if (contacter1 != null)
+        {
+            contacter1.onContactBegin(contactCollisionData, contact);
+        }
+
+        if (contacter2 != null)
+        {
+            contacter2.onContactBegin(contactCollisionData, contact);
+        }
+    }
+
+    @Override
+    public void persist(ContactCollisionData contactCollisionData, Contact contact, Contact contact1)
+    {
+
+    }
+
+    @Override
+    public void end(ContactCollisionData contactCollisionData, Contact contact)
+    {
+        Contacter contacter1 = this.contacters.get(contactCollisionData.getBody1());
+        Contacter contacter2 = this.contacters.get(contactCollisionData.getBody2());
+
+        if (contacter1 != null)
+        {
+            contacter1.onContactEnd(contactCollisionData, contact);
+        }
+
+        if (contacter2 != null)
+        {
+            contacter2.onContactEnd(contactCollisionData, contact);
+        }
+    }
+
+    @Override
+    public void destroyed(ContactCollisionData contactCollisionData, Contact contact)
+    {
+
+    }
+
+    @Override
+    public void collision(ContactCollisionData contactCollisionData)
+    {
+        ConstraintCollider collider1 = this.constraintColliders.get(contactCollisionData.getBody1());
+        ConstraintCollider collider2 = this.constraintColliders.get(contactCollisionData.getBody2());
+
+        if (collider1 != null)
+        {
+            collider1.onCollision(contactCollisionData);
+        }
+
+        if (collider2 != null)
+        {
+            collider2.onCollision(contactCollisionData);
+        }
+    }
+
+    @Override
+    public void preSolve(ContactCollisionData contactCollisionData, Contact contact)
+    {
+
+    }
+
+    @Override
+    public void postSolve(ContactCollisionData contactCollisionData, SolvedContact solvedContact)
+    {
+
     }
 }

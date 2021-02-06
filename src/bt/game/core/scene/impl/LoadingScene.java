@@ -3,12 +3,11 @@ package bt.game.core.scene.impl;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import org.dyn4j.dynamics.World;
-
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
 import bt.log.Logger;
 import bt.runtime.InstanceKiller;
+import org.dyn4j.world.World;
 
 /**
  * A very simple scene displaying a black background with blinking dark grey / white loading bars in the middle.
