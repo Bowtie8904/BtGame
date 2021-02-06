@@ -6,7 +6,7 @@ import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 import bt.io.sound.Sound;
-import bt.utils.num.NumberUtils;
+import bt.utils.NumberUtils;
 
 /**
  * A class that represents a location based sound source whichs volume can be updated depending on the distance to a
@@ -24,6 +24,7 @@ public class SoundSource implements Tickable
     protected Unit x;
     protected Unit y;
     protected GameObject volumeTarget;
+    protected GameObject attachTarget;
     protected Sound sound;
     protected Unit maxDistance;
     protected float maxVolume;
@@ -62,6 +63,33 @@ public class SoundSource implements Tickable
         this.scene.getObjectHandler().addObject(this);
         this.minVolume = 0f;
         this.maxVolume = 1f;
+    }
+
+    /**
+     * Creates a new instance with the given parameters.
+     *
+     * <p>
+     * This will add this instance to the {@link ObjectHandler} of the given scene via
+     * {@link ObjectHandler#addObject(Object)}.
+     * </p>
+     *
+     * @param scene
+     *            The scene that this instance is used for.
+     * @param volumeTarget
+     *            The game object whichs distance to this instance will be used to update the volume.
+     * @param attachTarget
+     *            The game object that this source is attached to. The position of this source will adjust
+     *            to the center position of the attachTarget every tick.
+     * @param sound
+     *            The sound that is played.
+     * @param maxDistance
+     *            The maximum distance to the volumeTarget. If the distance between the objects is larger than this
+     *            parameter, the volume will drop to the {@link #setMinVolume(float) minimum volume}.
+     */
+    public SoundSource(Scene scene, GameObject volumeTarget, GameObject attachTarget, Sound sound, Unit maxDistance)
+    {
+        this(scene, volumeTarget, sound, attachTarget.getCenterX(), attachTarget.getCenterY(), maxDistance);
+        this.attachTarget = attachTarget;
     }
 
     /**
@@ -270,6 +298,12 @@ public class SoundSource implements Tickable
     @Override
     public void tick(double delta)
     {
+        if (this.attachTarget != null)
+        {
+            setX(this.attachTarget.getX());
+            setY(this.attachTarget.getY());
+        }
+
         updateVolume();
     }
 }

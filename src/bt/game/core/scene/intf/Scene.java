@@ -2,6 +2,7 @@ package bt.game.core.scene.intf;
 
 import java.awt.Graphics2D;
 
+import bt.io.text.intf.TextLoader;
 import org.dyn4j.dynamics.World;
 
 import bt.game.core.container.abstr.GameContainer;
@@ -9,7 +10,6 @@ import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.scene.cam.Camera;
 import bt.game.resource.load.intf.Loader;
 import bt.game.resource.load.intf.ResourceLoader;
-import bt.game.resource.load.intf.TextLoader;
 import bt.game.util.unit.Unit;
 import bt.types.Killable;
 

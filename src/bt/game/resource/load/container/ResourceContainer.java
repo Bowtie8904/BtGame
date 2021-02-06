@@ -8,7 +8,6 @@ import java.util.Map;
 import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.intf.Renderable;
-import bt.game.resource.text.Text;
 import bt.io.sound.SoundSupplier;
 
 /**
@@ -28,7 +27,6 @@ public class ResourceContainer
     private Map<String, Font> fonts;
     private Map<String, Object> objects;
     private Map<String, Animation> animations;
-    private Map<String, Map<Integer, Text>> texts;
 
     /**
      * Creates a new instance with empty maps.
@@ -41,7 +39,6 @@ public class ResourceContainer
         this.fonts = new HashMap<>();
         this.objects = new HashMap<>();
         this.animations = new HashMap<>();
-        this.texts = new HashMap<>();
     }
 
     /**
@@ -129,30 +126,6 @@ public class ResourceContainer
     }
 
     /**
-     * Maps the given resource with the given name.
-     *
-     * @param id
-     *            The id of the text.
-     * @param res
-     *            The text to map in the resouce loader.
-     */
-    public void add(int id, Text res)
-    {
-        var textsForLanguage = this.texts.get(res.getLanguage());
-
-        if (textsForLanguage == null)
-        {
-            textsForLanguage = new HashMap<>();
-            this.texts.put(res.getLanguage(),
-                           textsForLanguage);
-        }
-
-        this.texts.get(res.getLanguage())
-                  .put(id,
-                       res);
-    }
-
-    /**
      * Gets all mapped renderable resources.
      *
      * @return
@@ -190,16 +163,6 @@ public class ResourceContainer
     public Map<String, Font> getFonts()
     {
         return this.fonts;
-    }
-
-    /**
-     * Gets all mapped text resources.
-     *
-     * @return
-     */
-    public Map<String, Map<Integer, Text>> getTexts()
-    {
-        return this.texts;
     }
 
     /**

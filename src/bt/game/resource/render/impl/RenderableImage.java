@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import bt.game.resource.render.intf.Renderable;
 import bt.game.util.unit.Unit;
 import bt.types.Killable;
-import bt.utils.num.NumberUtils;
+import bt.utils.NumberUtils;
 
 /**
  *

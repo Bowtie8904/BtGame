@@ -2,6 +2,8 @@ package bt.game.core.scene.impl;
 
 import java.awt.Graphics2D;
 
+import bt.io.text.impl.BaseTextLoader;
+import bt.io.text.intf.TextLoader;
 import org.dyn4j.dynamics.World;
 
 import bt.game.core.container.abstr.GameContainer;
@@ -10,9 +12,7 @@ import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.scene.cam.Camera;
 import bt.game.core.scene.intf.Scene;
 import bt.game.resource.load.impl.BaseResourceLoader;
-import bt.game.resource.load.impl.BaseTextLoader;
 import bt.game.resource.load.intf.ResourceLoader;
-import bt.game.resource.load.intf.TextLoader;
 import bt.game.util.unit.Unit;
 import bt.log.Logger;
 import bt.runtime.InstanceKiller;
@@ -117,6 +117,7 @@ public abstract class BaseScene implements Scene
         loadTextLoader(name);
         load();
         loadResourceLoader(name);
+        setup();
         this.isLoaded = true;
     }
 
@@ -271,7 +272,7 @@ public abstract class BaseScene implements Scene
     public abstract void renderBackground(Graphics2D g);
 
     /**
-     * Supposed to setup/register additional resources.
+     * Supposed to register additional resources.
      *
      * <p>
      * This method is called from inside the {@link #load(String)} method after {@link #loadTextLoader(String)} and
@@ -279,4 +280,13 @@ public abstract class BaseScene implements Scene
      * </p>
      */
     public abstract void load();
+
+    /**
+     * Supposed to setup the scene after all resources were loaded.
+     *
+     * <p>
+     * This method is called from inside the {@link #load(String)} method after all resources were loaded.
+     * </p>
+     */
+    public abstract void setup();
 }

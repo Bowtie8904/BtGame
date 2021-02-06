@@ -3,6 +3,8 @@ package bt.game.core.obj.impl;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import bt.game.core.obj.col.intf.NarrowPhaseCollider;
+import org.dyn4j.collision.narrowphase.Penetration;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.contact.ContactPoint;
@@ -55,7 +57,7 @@ public abstract class LocationTrigger extends GameBody implements Contacter
                                          acceptedCollisions));
         bf.setSensor(true);
         addFixture(bf);
-        setMass(MassType.NORMAL);
+        setMass(MassType.INFINITE);
         translate(x.units(),
                   y.units());
 

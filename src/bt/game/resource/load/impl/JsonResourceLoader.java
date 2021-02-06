@@ -23,7 +23,7 @@ import bt.io.sound.SoundSupplier;
 import bt.log.Logger;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
-import bt.utils.img.ImageUtils;
+import bt.utils.ImageUtils;
 
 /**
  * An implementation of {@link ResourceLoader} which offers the same functionalities as {@link BaseResourceLoader} but
