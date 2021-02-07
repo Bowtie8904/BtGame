@@ -42,7 +42,17 @@ public interface Renderable
      */
     public void setZ(Unit z);
 
+    /**
+     * A hint to the object handler whether this object should be rendered.
+     *
+     * @return true if it should be rendered, false otherwise.
+     */
     public boolean shouldRender();
 
+    /**
+     * Sets a flag to indicate whether this object should be rendered by the object handler.
+     *
+     * @param shouldRender
+     */
     public void shouldRender(boolean shouldRender);
 }
