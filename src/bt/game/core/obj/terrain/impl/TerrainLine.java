@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author &#8904
  */
-public class TerrainLine extends Terrain implements Renderable
+public class TerrainLine extends Terrain
 {
     /**
      * Creates a new instance with the given start position and points. This line can collide with the classes
@@ -84,39 +84,5 @@ public class TerrainLine extends Terrain implements Renderable
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
     {
         render(g, debugRendering);
-    }
-
-    /**
-     * @see Renderable#getZ()
-     */
-    @Override
-    public Unit getZ()
-    {
-        return Unit.zero();
-    }
-
-    /**
-     * @see Renderable#setZ(Unit)
-     */
-    @Override
-    public void setZ(Unit z)
-    {
-    }
-
-    /**
-     * @see Renderable#shouldRender()
-     */
-    @Override
-    public boolean shouldRender()
-    {
-        return true;
-    }
-
-    /**
-     * @see Renderable#shouldRender(boolean)
-     */
-    @Override
-    public void shouldRender(boolean shouldRender)
-    {
     }
 }
