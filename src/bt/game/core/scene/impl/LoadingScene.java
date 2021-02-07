@@ -3,6 +3,7 @@ package bt.game.core.scene.impl;
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
 import bt.runtime.InstanceKiller;
+import bt.utils.Exceptions;
 import org.dyn4j.world.World;
 
 import java.awt.*;
@@ -20,32 +21,56 @@ public class LoadingScene extends BaseScene
 {
     private int highlight;
     private double count;
-    private int ticks;
-
-    /**
-     * Creates a new scene.
-     *
-     * @param ticksPerMove Specifies the interval at which the highlighted bar will move. Default is 5, which means that the bar
-     *                     will be moved every 5 ticks.
-     */
-    public LoadingScene(GameContainer gameContainer, int ticksPerMove)
-    {
-        super(gameContainer);
-        this.ticks = ticksPerMove;
-    }
+    private long timePerMove = 100;
+    private long minLoadingTime = 0;
+    private double currentLoadingTime = 0;
+    private Object lock = new Object();
 
     /**
      * Creates a new scene which moves the bar every 5 ticks.
      */
     public LoadingScene(GameContainer gameContainer)
     {
-        this(gameContainer,
-             5);
+        super(gameContainer);
+    }
+
+    /**
+     * Specifies the interval at which the highlighted bar will move. Default is 100ms.
+     *
+     * @return
+     */
+    public LoadingScene timePerMove(long timePerMoveMs)
+    {
+        this.timePerMove = timePerMoveMs;
+        return this;
+    }
+
+    /**
+     * Specifies a minimum loading time in milliseconds. This scene will not be closed before at least the given time has passed.
+     *
+     * @param minLoadingTimeMs
+     * @return
+     */
+    public LoadingScene minLoadingTime(long minLoadingTimeMs)
+    {
+        this.minLoadingTime = minLoadingTimeMs;
+        return this;
     }
 
     @Override
     public synchronized void kill()
     {
+        // check if we can kill this scene yet if a minimum loading time has been set
+        if (this.currentLoadingTime < this.minLoadingTime)
+        {
+            Exceptions.ignoreThrow(() -> {
+                synchronized (this.lock)
+                {
+                    this.lock.wait();
+                }
+            });
+        }
+
         this.isLoaded = false;
         System.out.println("Killing loading scene.");
 
@@ -74,9 +99,18 @@ public class LoadingScene extends BaseScene
     @Override
     public void tick(double delta)
     {
-        this.count += delta;
+        this.count += delta * 1000;
+        this.currentLoadingTime += delta * 1000;
 
-        if (this.count > this.ticks)
+        if (this.currentLoadingTime >= this.minLoadingTime)
+        {
+            synchronized (this.lock)
+            {
+                this.lock.notifyAll();
+            }
+        }
+
+        if (this.count > this.timePerMove)
         {
             this.highlight++;
             if (this.highlight == 10)
