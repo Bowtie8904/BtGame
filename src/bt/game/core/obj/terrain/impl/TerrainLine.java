@@ -1,19 +1,17 @@
 package bt.game.core.obj.terrain.impl;
 
-import bt.game.core.obj.col.filter.CollisionFilter;
 import bt.game.core.obj.impl.GameBody;
 import bt.game.core.obj.terrain.base.Terrain;
 import bt.game.core.scene.intf.Scene;
 import bt.game.resource.render.intf.Renderable;
-import bt.game.util.shape.ShapeRenderer;
 import bt.game.util.unit.Unit;
 import bt.utils.Array;
-import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Link;
 import org.dyn4j.geometry.Vector2;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +21,8 @@ import java.util.List;
  */
 public class TerrainLine extends Terrain
 {
+    protected List<TerrainLineSegment> segements;
+
     /**
      * Creates a new instance with the given start position and points. This line can collide with the classes
      * that are passed with the collisionFilter array.
@@ -32,22 +32,18 @@ public class TerrainLine extends Terrain
      * @param y
      * @param z
      */
-    public TerrainLine(Scene scene, Class[] collisionFilter, Vector2 start, Vector2... points)
+    public TerrainLine(Scene scene, Class[] collisionFilter, Vector2 first, Vector2 second, Vector2... points)
     {
         super(scene);
-
-        points = Array.concat(new Vector2[] { start }, points, Vector2[]::new);
+        this.segements = new ArrayList<>();
+        points = Array.concat(new Vector2[] { first, second }, points, Vector2[]::new);
 
         List<Link> links = Geometry.createLinks(points, false);
 
         for (Link link : links)
         {
-            BodyFixture bf = new BodyFixture(link);
-            bf.setFilter(new CollisionFilter(this, collisionFilter));
-            addFixture(bf);
+            this.segements.add(new TerrainLineSegment(scene, collisionFilter, link));
         }
-
-        translate(start.x, start.y);
     }
 
     /**
@@ -57,9 +53,9 @@ public class TerrainLine extends Terrain
      * @param start
      * @param points
      */
-    public TerrainLine(Scene scene, Vector2 start, Vector2... points)
+    public TerrainLine(Scene scene, Vector2 first, Vector2 second, Vector2... points)
     {
-        this(scene, new Class[] { GameBody.class }, start, points);
+        this(scene, new Class[] { GameBody.class }, first, second, points);
     }
 
     /**
@@ -68,12 +64,6 @@ public class TerrainLine extends Terrain
     @Override
     public void render(Graphics2D g, boolean debugRendering)
     {
-        if (debugRendering)
-        {
-            ShapeRenderer.render(g,
-                                 this,
-                                 Color.blue);
-        }
     }
 
     /**
@@ -83,6 +73,5 @@ public class TerrainLine extends Terrain
     @Override
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
     {
-        render(g, debugRendering);
     }
 }

@@ -47,6 +47,11 @@ public interface ObjectHandler extends Killable
     public void render(Graphics2D g, boolean debugRendering);
 
     /**
+     * Updates the y velocities of all held gravity affected objects.
+     */
+    public void updateGravityVelocities(double delta);
+
+    /**
      * Indicates that all objects should refresh their data.
      */
     public void refresh();

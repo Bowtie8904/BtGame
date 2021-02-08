@@ -199,6 +199,7 @@ public abstract class BaseScene implements Scene
     {
         if (this.isLoaded)
         {
+            this.gameObjectHandler.updateGravityVelocities(delta);
             this.gameObjectHandler.tick(delta);
             this.world.update(delta);
         }

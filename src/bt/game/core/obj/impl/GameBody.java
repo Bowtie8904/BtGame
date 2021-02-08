@@ -1,32 +1,37 @@
 package bt.game.core.obj.impl;
 
+import bt.game.core.obj.intf.GameObject;
+import bt.game.core.scene.intf.Scene;
+import bt.game.util.unit.Unit;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Rotation;
 import org.dyn4j.geometry.Vector2;
 
-import bt.game.core.obj.intf.GameObject;
-import bt.game.core.scene.intf.Scene;
-import bt.game.util.unit.Unit;
-
 /**
  * Super class to all objects in a game that should be involved in physics.
- * 
+ *
  * @author &#8904
  */
 public class GameBody extends Body implements GameObject
 {
-    /** The unit width of this object. */
+    /**
+     * The unit width of this object.
+     */
     protected Unit w;
 
-    /** The unit height of this object. */
+    /**
+     * The unit height of this object.
+     */
     protected Unit h;
 
-    /** The scene that this object is used in. */
+    /**
+     * The scene that this object is used in.
+     */
     protected Scene scene;
 
     /**
      * Creates a new instance for the given scene.
-     * 
+     *
      * @param scene
      */
     public GameBody(Scene scene)
@@ -139,7 +144,7 @@ public class GameBody extends Body implements GameObject
 
     /**
      * Returns the x coordinate of the center relative to the body.
-     * 
+     *
      * @return
      */
     public Unit getLocalCenterX()
@@ -149,7 +154,7 @@ public class GameBody extends Body implements GameObject
 
     /**
      * Returns the y coordinate of the center relative to the body.
-     * 
+     *
      * @return
      */
     public Unit getLocalCenterY()
@@ -159,7 +164,7 @@ public class GameBody extends Body implements GameObject
 
     /**
      * Gets the current rotation of this body.
-     * 
+     *
      * @return
      */
     public Rotation getRotation()
@@ -169,15 +174,13 @@ public class GameBody extends Body implements GameObject
 
     /**
      * Sets the velocity of this body.
-     * 
+     *
      * <p>
      * This will wake the body up.
      * </p>
-     * 
-     * @param x
-     *            x-axis Velocity in Units per second.
-     * @param y
-     *            y-axis Velocity in Units per second.
+     *
+     * @param x x-axis Velocity in Units per second.
+     * @param y y-axis Velocity in Units per second.
      */
     public void setVelocity(double x, double y)
     {
@@ -188,13 +191,12 @@ public class GameBody extends Body implements GameObject
 
     /**
      * Sets the velocity of this body.
-     * 
+     *
      * <p>
      * This will wake the body up.
      * </p>
-     * 
-     * @param v
-     *            Velocity in Units per second.
+     *
+     * @param v Velocity in Units per second.
      */
     public void setVelocity(Vector2 v)
     {
@@ -205,13 +207,12 @@ public class GameBody extends Body implements GameObject
 
     /**
      * Sets the x velocity of this body.
-     * 
+     *
      * <p>
      * This will wake the body up.
      * </p>
-     * 
-     * @param x
-     *            x-axis Velocity in Units per second.
+     *
+     * @param x x-axis Velocity in Units per second.
      */
     public void setVelocityX(double x)
     {
@@ -221,13 +222,12 @@ public class GameBody extends Body implements GameObject
 
     /**
      * Sets the y velocity of this body.
-     * 
+     *
      * <p>
      * This will wake the body up.
      * </p>
-     * 
-     * @param y
-     *            y-axis Velocity in Units per second.
+     *
+     * @param y y-axis Velocity in Units per second.
      */
     public void setVelocityY(double y)
     {
@@ -235,13 +235,23 @@ public class GameBody extends Body implements GameObject
         setAtRest(false);
     }
 
+    public double getVelocityY()
+    {
+        return getLinearVelocity().y;
+    }
+
+    public double getVelocityX()
+    {
+        return getLinearVelocity().x;
+    }
+
     /**
      * Indictaes whether this body is currently moving.
-     * 
+     *
      * <p>
      * It counts as moving when its linear velocity on either its x or y axis is not equal to 0.
      * </p>
-     * 
+     *
      * @return
      */
     public boolean isMoving()

@@ -1,6 +1,7 @@
 package bt.game.core.obj.hand.impl;
 
 import bt.game.core.obj.col.intf.*;
+import bt.game.core.obj.gravity.GravityAffected;
 import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.obj.intf.Refreshable;
 import bt.game.core.obj.intf.Tickable;
@@ -8,6 +9,7 @@ import bt.game.core.scene.intf.Scene;
 import bt.game.resource.render.intf.Renderable;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
+import bt.utils.NumberUtils;
 import org.dyn4j.collision.CollisionBody;
 import org.dyn4j.collision.continuous.TimeOfImpact;
 import org.dyn4j.dynamics.Body;
@@ -45,6 +47,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
  * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
  * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
+ * <li>{@link GravityAffected}: The y velocity of these objects will be adjusted each tick to simulate gravity.</li>
  * <li>{@link Refreshable}: This handlers {@link #refresh()} method is gonna forward the call to all registered
  * refreshables.</li>
  * <li>{@link BroadPhaseCollider}: onCollision is called when collision events are received.</li>
@@ -85,6 +88,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * The list of killable objects.
      */
     protected List<Killable> killables;
+
+    /**
+     * The list of GravityAffected objects.
+     */
+    protected List<GravityAffected> gravityAffecteds;
 
     /**
      * The map of BroadPhaseCollider objects.
@@ -136,6 +144,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.refreshables = new CopyOnWriteArrayList<>();
         this.renderables = new CopyOnWriteArrayList<>();
         this.killables = new CopyOnWriteArrayList<>();
+        this.gravityAffecteds = new CopyOnWriteArrayList<>();
         this.broadColliders = new Hashtable<>();
         this.narrowColliders = new Hashtable<>();
         this.manifoldColliders = new Hashtable<>();
@@ -186,6 +195,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * <li>{@link Tickable}: The tick method of the object will be called whenever the {@link #tick()} of the handler is
      * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
      * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
+     * <li>{@link GravityAffected}: The y velocity of these objects will be adjusted each tick to simulate gravity.</li>
      * <li>{@link Refreshable}: This handlers {@link #refresh()} method is gonna forward the call to all registered
      * refreshables.</li>
      * <li>{@link BroadPhaseCollider}: onCollision is called when collision events are received.</li>
@@ -235,6 +245,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         if (object instanceof Killable)
         {
             this.killables.add(Killable.class.cast(object));
+        }
+
+        if (object instanceof GravityAffected)
+        {
+            this.gravityAffecteds.add(GravityAffected.class.cast(object));
         }
 
         if (object instanceof BroadPhaseCollider)
@@ -330,6 +345,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             this.killables.remove(object);
         }
 
+        if (object instanceof GravityAffected)
+        {
+            this.gravityAffecteds.remove(object);
+        }
+
         if (object instanceof BroadPhaseCollider)
         {
             BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
@@ -400,6 +420,19 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
                         .forEach(r -> r.render(g, debugRendering));
     }
 
+    @Override
+    public void updateGravityVelocities(double delta)
+    {
+        this.gravityAffecteds.stream()
+                             .parallel()
+                             .filter(g -> g.getGravityVelocityGain() > 0)
+                             .forEach(g -> {
+                                 double gain = g.getGravityVelocityGain() * (delta * 100);
+                                 double newV = NumberUtils.clamp(g.getVelocityY() + gain, Double.MIN_VALUE, g.getMaxGravityVelocity());
+                                 g.setVelocityY(newV);
+                             });
+    }
+
     /**
      * Calls {@link Killable#kill() kill} on every added killable and clears all held lists.
      *
@@ -419,11 +452,13 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.refreshables.clear();
         this.renderables.clear();
         this.killables.clear();
+        this.gravityAffecteds.clear();
         this.broadColliders.clear();
         this.narrowColliders.clear();
         this.manifoldColliders.clear();
         this.constraintColliders.clear();
         this.contacters.clear();
+        this.timeOfImpactColliders.clear();
     }
 
     /**
@@ -466,12 +501,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (collider1 != null)
         {
-            proceed = proceed && collider1.onCollision(broadphaseCollisionData);
+            proceed = proceed && collider1.onCollision(broadphaseCollisionData, broadphaseCollisionData.getBody2());
         }
 
         if (collider2 != null)
         {
-            proceed = proceed && collider2.onCollision(broadphaseCollisionData);
+            proceed = proceed && collider2.onCollision(broadphaseCollisionData, broadphaseCollisionData.getBody1());
         }
 
         return proceed;
@@ -487,12 +522,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (collider1 != null)
         {
-            proceed = proceed && collider1.onCollision(narrowphaseCollisionData);
+            proceed = proceed && collider1.onCollision(narrowphaseCollisionData, narrowphaseCollisionData.getBody2());
         }
 
         if (collider2 != null)
         {
-            proceed = proceed && collider2.onCollision(narrowphaseCollisionData);
+            proceed = proceed && collider2.onCollision(narrowphaseCollisionData, narrowphaseCollisionData.getBody1());
         }
 
         return proceed;
@@ -508,12 +543,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (collider1 != null)
         {
-            proceed = proceed && collider1.onCollision(manifoldCollisionData);
+            proceed = proceed && collider1.onCollision(manifoldCollisionData, manifoldCollisionData.getBody2());
         }
 
         if (collider2 != null)
         {
-            proceed = proceed && collider2.onCollision(manifoldCollisionData);
+            proceed = proceed && collider2.onCollision(manifoldCollisionData, manifoldCollisionData.getBody1());
         }
 
         return proceed;
@@ -527,12 +562,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (contacter1 != null)
         {
-            contacter1.onContactBegin(contactCollisionData, contact);
+            contacter1.onContactBegin(contactCollisionData, contact, contactCollisionData.getBody2());
         }
 
         if (contacter2 != null)
         {
-            contacter2.onContactBegin(contactCollisionData, contact);
+            contacter2.onContactBegin(contactCollisionData, contact, contactCollisionData.getBody1());
         }
     }
 
@@ -544,12 +579,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (contacter1 != null)
         {
-            contacter1.persist(contactCollisionData, contact, contact1);
+            contacter1.persist(contactCollisionData, contact, contact1, contactCollisionData.getBody2());
         }
 
         if (contacter2 != null)
         {
-            contacter2.persist(contactCollisionData, contact, contact1);
+            contacter2.persist(contactCollisionData, contact, contact1, contactCollisionData.getBody1());
         }
     }
 
@@ -561,12 +596,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (contacter1 != null)
         {
-            contacter1.onContactEnd(contactCollisionData, contact);
+            contacter1.onContactEnd(contactCollisionData, contact, contactCollisionData.getBody2());
         }
 
         if (contacter2 != null)
         {
-            contacter2.onContactEnd(contactCollisionData, contact);
+            contacter2.onContactEnd(contactCollisionData, contact, contactCollisionData.getBody1());
         }
     }
 
@@ -584,12 +619,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
 
         if (collider1 != null)
         {
-            collider1.onCollision(contactCollisionData);
+            collider1.onCollision(contactCollisionData, contactCollisionData.getBody2());
         }
 
         if (collider2 != null)
         {
-            collider2.onCollision(contactCollisionData);
+            collider2.onCollision(contactCollisionData, contactCollisionData.getBody1());
         }
     }
 
