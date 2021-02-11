@@ -8,16 +8,17 @@ import java.util.function.Consumer;
 /**
  * @author &#8904
  */
-public class VariableGameLoop extends GameLoop
+public class DefaultGameLoop extends GameLoop
 {
     protected double delta = 0;
     protected long loopTimeout = 0;
+    protected double renderIntervalCorrection = 0.00005;
 
     /**
      * @param tick
      * @param render
      */
-    public VariableGameLoop(Consumer<Double> tick, Runnable render)
+    public DefaultGameLoop(Consumer<Double> tick, Runnable render)
     {
         super(tick, render);
     }
@@ -72,6 +73,18 @@ public class VariableGameLoop extends GameLoop
                 this.framesPerSecond = (int)(frames / frameCounterDeltaSum);
                 frames = 0;
                 frameCounterDeltaSum = 0;
+
+                if (this.desiredFramesPerSecond > 0)
+                {
+                    if (this.framesPerSecond < this.desiredFramesPerSecond)
+                    {
+                        this.renderInterval -= this.renderIntervalCorrection;
+                    }
+                    else if (this.framesPerSecond > this.desiredFramesPerSecond)
+                    {
+                        this.renderInterval += this.renderIntervalCorrection;
+                    }
+                }
             }
 
             if (this.loopTimeout > 0)
@@ -91,8 +104,34 @@ public class VariableGameLoop extends GameLoop
         return this.loopTimeout;
     }
 
+    /**
+     * Sets an amount of milliseconds that the loops wait after each iteration.
+     * This does lower the tickrate but does also lower CPU usage.
+     *
+     * @param loopTimeout The timeout in milliseconds.
+     */
     public void setLoopTimeout(long loopTimeout)
     {
         this.loopTimeout = loopTimeout;
+    }
+
+    public double getRenderIntervalCorrection()
+    {
+        return this.renderIntervalCorrection;
+    }
+
+    /**
+     * Sets the amount of correction that is applied to the render interval to match the desired framerate.
+     * <p>
+     * If the framerate is lower than the desired one, then this value will be subtracted from the render interval.
+     * If the framerate is higher than the desired one, then this value will be added to the render interval.
+     * <p>
+     * The framerate is checked every 100ms, so that is also the interval at which this correction will be applied.
+     *
+     * @param renderIntervalCorrection The correction value in seconds.
+     */
+    public void setRenderIntervalCorrection(double renderIntervalCorrection)
+    {
+        this.renderIntervalCorrection = renderIntervalCorrection;
     }
 }

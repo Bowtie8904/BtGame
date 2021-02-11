@@ -132,6 +132,8 @@ public abstract class GameLoop implements Killable
      */
     public void setFrameRate(int desiredFramesPerSecond)
     {
+        this.desiredFramesPerSecond = desiredFramesPerSecond;
+
         if (desiredFramesPerSecond == 0)
         {
             this.renderInterval = Double.MAX_VALUE;
