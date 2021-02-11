@@ -19,17 +19,20 @@ public abstract class GameLoop implements Killable
      */
     protected volatile boolean running;
 
-    /** Indictaes whether this loop is currently paused. */
+    /**
+     * Indictaes whether this loop is currently paused.
+     */
     protected volatile boolean isPaused;
 
-    /** The current frames per second. */
+    /**
+     * The current frames per second.
+     */
     protected int framesPerSecond = -1;
 
-    /** The number of times the {@link #tick} should be called per second. */
-    protected double ticksPerSecond = 60.0;
-
-    /** The interval (in milliseconds) at which the {@link #framesPerSecond frame rate} is updated. */
-    protected int frameCheckInterval = 200;
+    /**
+     * The interval (in seconds) at which the {@link #framesPerSecond frame rate} is updated.
+     */
+    protected double frameCheckInterval = 0.2;
 
     /**
      * The amount of milliseconds that the loop thread will sleep after each iteration to keep the frame rate stable.
@@ -42,13 +45,24 @@ public abstract class GameLoop implements Killable
      */
     protected int desiredFramesPerSecond = -1;
 
-    /** The set tick consumer that is called {@link #ticksPerSecond n} times per second and is passed the delta. */
+    /**
+     * The interval at which a render call should occur in seconds.
+     */
+    protected double renderInterval = 0;
+
+    /**
+     * The set tick consumer that is called {@link #ticksPerSecond n} times per second and is passed the delta.
+     */
     protected Consumer<Double> tick;
 
-    /** The set render runnable that is called {@link #framesPerSecond n} times per second. */
+    /**
+     * The set render runnable that is called {@link #framesPerSecond n} times per second.
+     */
     protected Runnable render;
 
-    /** The set runnable that is executed whenever the frame rate is updated. See {@link #frameCheckInterval}. */
+    /**
+     * The set runnable that is executed whenever the frame rate is updated. See {@link #frameCheckInterval}.
+     */
     protected Runnable onFpsUpdate;
 
     /**
@@ -65,8 +79,7 @@ public abstract class GameLoop implements Killable
     {
         this.tick = tick;
         this.render = render;
-        InstanceKiller.killOnShutdown(this,
-                                      1);
+        InstanceKiller.killOnShutdown(this, 1);
     }
 
     /**
@@ -94,8 +107,7 @@ public abstract class GameLoop implements Killable
         if (!this.running)
         {
             this.running = true;
-            Threads.get().execute(this::tickLoop, "GAME_LOOP_TICK");
-            Threads.get().execute(this::renderLoop, "GAME_LOOP_RENDER");
+            Threads.get().execute(this::loop, "GAME_LOOP");
         }
     }
 
@@ -115,13 +127,23 @@ public abstract class GameLoop implements Killable
     /**
      * Sets the target frame rate that this loop will try to hold.
      *
-     * @param desiredFramesPerSecond
-     *            The target frame rate. Setting this to -1 causes the loop to try and achieve the highest frame rate
-     *            possible.
+     * @param desiredFramesPerSecond The target frame rate. Setting this to -1 causes the loop to try and achieve the highest frame rate
+     *                               possible.
      */
     public void setFrameRate(int desiredFramesPerSecond)
     {
-        this.desiredFramesPerSecond = desiredFramesPerSecond;
+        if (desiredFramesPerSecond == 0)
+        {
+            this.renderInterval = Double.MAX_VALUE;
+        }
+        else if (desiredFramesPerSecond == -1)
+        {
+            this.renderInterval = 0;
+        }
+        else
+        {
+            this.renderInterval = 1.0 / desiredFramesPerSecond;
+        }
     }
 
     /**
@@ -141,7 +163,7 @@ public abstract class GameLoop implements Killable
      */
     public void setFpsUpdateRate(int updatesPerSecond)
     {
-        this.frameCheckInterval = 1000 / updatesPerSecond;
+        this.frameCheckInterval = 1 / updatesPerSecond;
     }
 
     /**
@@ -152,26 +174,6 @@ public abstract class GameLoop implements Killable
     public int getFramesPerSecond()
     {
         return this.framesPerSecond;
-    }
-
-    /**
-     * Gets how many times the tick method is called per second.
-     *
-     * @return
-     */
-    public double getTicksPerSecond()
-    {
-        return this.ticksPerSecond;
-    }
-
-    /**
-     * Sets how many times per second the given tick method should be called.
-     *
-     * @param ticks
-     */
-    public void setTicksPerSecond(double ticks)
-    {
-        this.ticksPerSecond = ticks;
     }
 
     /**
@@ -224,7 +226,5 @@ public abstract class GameLoop implements Killable
         return this.isPaused;
     }
 
-    protected abstract void tickLoop();
-
-    protected abstract void renderLoop();
+    protected abstract void loop();
 }

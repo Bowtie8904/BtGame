@@ -19,6 +19,8 @@ import java.awt.*;
  */
 public class TerrainBlock extends Terrain
 {
+    private BodyFixture fixture;
+
     /**
      * Creates a new instance with the given dimensions. This block can collide with the classes
      * that are passed with the collisionFilter array.
@@ -34,9 +36,10 @@ public class TerrainBlock extends Terrain
         this.w = w;
         this.h = h;
 
-        BodyFixture bf = new BodyFixture(Geometry.createRectangle(w.units(), h.units()));
-        bf.setFilter(new CollisionFilter(this, collisionFilter));
-        addFixture(bf);
+        this.fixture = new BodyFixture(Geometry.createRectangle(w.units(), h.units()));
+        this.fixture.setFilter(new CollisionFilter(this, collisionFilter));
+        this.fixture.setFriction(0);
+        addFixture(this.fixture);
 
         translate(x.units() + w.units() / 2, y.units() + h.units() / 2);
     }
@@ -53,6 +56,11 @@ public class TerrainBlock extends Terrain
     public TerrainBlock(Scene scene, Unit x, Unit y, Unit w, Unit h)
     {
         this(scene, new Class[] { GameBody.class }, x, y, w, h);
+    }
+
+    public void setFriction(double friction)
+    {
+        this.fixture.setFriction(friction);
     }
 
     /**

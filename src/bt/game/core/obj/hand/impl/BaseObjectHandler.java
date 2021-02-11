@@ -427,8 +427,10 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
                              .parallel()
                              .filter(g -> g.getGravityVelocityGain() > 0)
                              .forEach(g -> {
-                                 double gain = g.getGravityVelocityGain() * (delta * 100);
-                                 double newV = NumberUtils.clamp(g.getVelocityY() + gain, Double.MIN_VALUE, g.getMaxGravityVelocity());
+                                 double newV = NumberUtils.clamp(g.getVelocityY() + g.getGravityVelocityGain() * delta,
+                                                                 Double.MIN_VALUE,
+                                                                 g.getMaxGravityVelocity());
+
                                  g.setVelocityY(newV);
                              });
     }

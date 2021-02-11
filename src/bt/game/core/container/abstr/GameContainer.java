@@ -462,6 +462,14 @@ public abstract class GameContainer extends Canvas
             g.dispose();
             bs.show();
         }
+        else
+        {
+            // notifying to alert the wait call in exit()
+            synchronized (this)
+            {
+                this.notifyAll();
+            }
+        }
 
         // if a new scene was requested switch now
         // to avoid complications during the current render process and the killing of the old scene at the same time
@@ -469,12 +477,6 @@ public abstract class GameContainer extends Canvas
         {
             setScene(this.currentSceneName);
             this.sceneRequested = false;
-        }
-
-        // notifying to alert the wait call in exit()
-        synchronized (this)
-        {
-            this.notifyAll();
         }
     }
 

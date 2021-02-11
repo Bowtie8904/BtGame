@@ -7,12 +7,11 @@ import java.util.function.Consumer;
 
 /**
  * @author &#8904
- *
  */
 public class VariableGameLoop extends GameLoop
 {
     protected double delta = 0;
-    protected long tickTimeout = 2;
+    protected long loopTimeout = 0;
 
     /**
      * @param tick
@@ -20,14 +19,18 @@ public class VariableGameLoop extends GameLoop
      */
     public VariableGameLoop(Consumer<Double> tick, Runnable render)
     {
-        super(tick,
-              render);
+        super(tick, render);
     }
 
     @Override
-    protected void tickLoop()
+    protected void loop()
     {
         long last = System.nanoTime();
+        long timer = System.currentTimeMillis();
+        int frames = 0;
+        double renderIntervalDeltaSum = 0;
+        double frameUpdateDeltaSum = 0;
+        double frameCounterDeltaSum = 0;
 
         while (this.running)
         {
@@ -37,59 +40,43 @@ public class VariableGameLoop extends GameLoop
             // set the last time
             last = time;
             // convert from nanoseconds to seconds
-            this.delta = (double)diff / NANO_TO_BASE;
+            this.delta = (double)diff / GameLoop.NANO_TO_BASE;
+            renderIntervalDeltaSum += this.delta;
+            frameUpdateDeltaSum += this.delta;
+            frameCounterDeltaSum += this.delta;
 
             if (!this.isPaused)
             {
                 runTick(this.delta);
-
-                if (this.tickTimeout > 0)
-                {
-                    Exceptions.uncheck(() -> Thread.sleep(this.tickTimeout));
-                }
             }
-        }
-    }
 
-    @Override
-    protected void renderLoop()
-    {
-        long timer = System.currentTimeMillis();
-        int frames = 0;
-
-        while (this.running)
-        {
-            runRender();
-            frames ++ ;
-
-            if (System.currentTimeMillis() - timer > this.frameCheckInterval)
+            if (this.renderInterval == 0 || renderIntervalDeltaSum >= this.renderInterval)
             {
-                timer += this.frameCheckInterval;
-                frames *= 1000 / this.frameCheckInterval;
-                this.framesPerSecond = frames;
-                frames = 0;
+                runRender();
+                frames++;
+                renderIntervalDeltaSum = 0;
+            }
 
+            if (frameUpdateDeltaSum >= this.frameCheckInterval)
+            {
                 if (this.onFpsUpdate != null)
                 {
                     this.onFpsUpdate.run();
                 }
 
-                if (this.desiredFramesPerSecond > -1)
-                {
-                    if (this.framesPerSecond > this.desiredFramesPerSecond)
-                    {
-                        this.threadSleepers ++ ;
-                    }
-                    else if (this.framesPerSecond < this.desiredFramesPerSecond)
-                    {
-                        this.threadSleepers -- ;
-                    }
-                }
+                frameUpdateDeltaSum = 0;
             }
 
-            if (this.desiredFramesPerSecond > -1 && this.threadSleepers > 0)
+            if (frameCounterDeltaSum >= 0.1)
             {
-                Exceptions.uncheck(() -> Thread.sleep(this.threadSleepers));
+                this.framesPerSecond = (int)(frames / frameCounterDeltaSum);
+                frames = 0;
+                frameCounterDeltaSum = 0;
+            }
+
+            if (this.loopTimeout > 0)
+            {
+                Exceptions.uncheck(() -> Thread.sleep(this.loopTimeout));
             }
         }
     }
@@ -99,13 +86,13 @@ public class VariableGameLoop extends GameLoop
         return this.delta;
     }
 
-    public long getTickTimeout()
+    public long getLoopTimeout()
     {
-        return tickTimeout;
+        return this.loopTimeout;
     }
 
-    public void setTickTimeout(long tickTimeout)
+    public void setLoopTimeout(long loopTimeout)
     {
-        this.tickTimeout = tickTimeout;
+        this.loopTimeout = loopTimeout;
     }
 }
