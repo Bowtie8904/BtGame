@@ -3,6 +3,7 @@ package bt.game.core.container.abstr;
 import bt.game.core.container.ContainerSettings;
 import bt.game.core.ctrl.spec.key.KeyController;
 import bt.game.core.ctrl.spec.mouse.MouseController;
+import bt.game.core.ctrl.spec.mouse.obj.Cursor;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 import bt.scheduler.Threads;
@@ -243,6 +244,11 @@ public abstract class GameContainer extends Canvas
             this.frame.setIconImage(this.settings.getIcon());
         }
 
+        if (this.settings.getCursor() != null)
+        {
+            setCursor(this.settings.getCursor());
+        }
+
         if (!this.settings.isFullscreen())
         {
             this.frame.setSize(this.settings.getFrameWidth(),
@@ -269,6 +275,22 @@ public abstract class GameContainer extends Canvas
         this.createBufferStrategy(4);
         this.requestFocus();
         this.canRender = true;
+    }
+
+    public void setCursor(Cursor cursor)
+    {
+        this.frame.setCursor(Toolkit.getDefaultToolkit()
+                                    .createCustomCursor(cursor.getCursorImage(),
+                                                        cursor.getHotspot(),
+                                                        "game cursor"));
+    }
+
+    public void resetToDefaultCursor()
+    {
+        this.frame.setCursor(Toolkit.getDefaultToolkit()
+                                    .createCustomCursor(this.settings.getCursor().getCursorImage(),
+                                                        this.settings.getCursor().getHotspot(),
+                                                        "game cursor"));
     }
 
     /**

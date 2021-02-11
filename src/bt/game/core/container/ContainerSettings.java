@@ -1,6 +1,7 @@
 package bt.game.core.container;
 
 import bt.game.core.container.abstr.GameContainer;
+import bt.game.core.ctrl.spec.mouse.obj.Cursor;
 import bt.game.util.unit.Unit;
 
 import javax.imageio.ImageIO;
@@ -24,6 +25,7 @@ public class ContainerSettings
     private Image imageIcon;
     private String title;
     private boolean debugRendering;
+    private Cursor cursor;
 
     /**
      * Sets the measurements of the the game canvas in {@link Unit units}. This has no effect on the actual window size,
@@ -121,6 +123,18 @@ public class ContainerSettings
         return this;
     }
 
+    /**
+     * Sets the default cursor of the game.
+     *
+     * @param cursor The cursor.
+     * @return This instance for chaining.
+     */
+    public ContainerSettings cursor(Cursor cursor)
+    {
+        this.cursor = cursor;
+        return this;
+    }
+
     public float getUnitWidth()
     {
         return this.unitWidth;
@@ -159,6 +173,11 @@ public class ContainerSettings
     public Image getIcon()
     {
         return this.imageIcon;
+    }
+
+    public Cursor getCursor()
+    {
+        return this.cursor;
     }
 
     public boolean isDebugRendering()

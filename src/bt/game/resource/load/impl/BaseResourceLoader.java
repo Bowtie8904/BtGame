@@ -1,5 +1,6 @@
 package bt.game.resource.load.impl;
 
+import bt.game.core.ctrl.spec.mouse.obj.Cursor;
 import bt.game.core.obj.intf.Animated;
 import bt.game.resource.load.container.ResourceContainer;
 import bt.game.resource.load.intf.Loadable;
@@ -33,6 +34,7 @@ public class BaseResourceLoader implements ResourceLoader
     private Map<String, SoundSupplier> sounds;
     private Map<String, File> files;
     private Map<String, Font> fonts;
+    private Map<String, Cursor> cursors;
     private Map<String, Object> objects;
     private Map<String, Animation> animations;
     private List<Loadable> loadables;
@@ -56,6 +58,7 @@ public class BaseResourceLoader implements ResourceLoader
         this.sounds = new HashMap<>();
         this.files = new HashMap<>();
         this.fonts = new HashMap<>();
+        this.cursors = new HashMap<>();
         this.objects = new HashMap<>();
         this.animations = new HashMap<>();
         this.loadables = new ArrayList<>();
@@ -116,6 +119,7 @@ public class BaseResourceLoader implements ResourceLoader
         this.sounds.clear();
         this.files.clear();
         this.fonts.clear();
+        this.cursors.clear();
         this.objects.clear();
         this.animations.clear();
         this.loadables.clear();
@@ -169,6 +173,18 @@ public class BaseResourceLoader implements ResourceLoader
     public void add(String resourceName, Font value)
     {
         this.fonts.put(resourceName.toUpperCase(), value);
+    }
+
+    /**
+     * Maps the given cursor by the given (case insensitive) resource name. Once the cursor has been added it becomes
+     * accessible by {@link #getCursor(String)}.
+     *
+     * @param resourceName The unique resource name for the given cursor.
+     * @param value        The cursor to map.
+     */
+    public void add(String resourceName, Cursor value)
+    {
+        this.cursors.put(resourceName.toUpperCase(), value);
     }
 
     /**
@@ -252,6 +268,17 @@ public class BaseResourceLoader implements ResourceLoader
         return this.fonts.get(resourceName.toUpperCase());
     }
 
+    @Override
+    public Cursor getCursor(String resourceName)
+    {
+        if (this.killed)
+        {
+            throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
+        }
+
+        return this.cursors.get(resourceName.toUpperCase());
+    }
+
     /**
      * Creates a new animation with the interval and images of the mapped one.
      *
@@ -306,6 +333,7 @@ public class BaseResourceLoader implements ResourceLoader
         Map<String, SoundSupplier> loadedSounds;
         Map<String, File> loadedFiles;
         Map<String, Font> loadedFonts;
+        Map<String, Cursor> loadedCursors;
         Map<String, Object> loadedObjects;
         Map<String, Animation> loadedAnimations;
 
@@ -387,6 +415,22 @@ public class BaseResourceLoader implements ResourceLoader
                     add(resourceKey,
                         loadedFonts.get(resourceKey));
                     System.out.println(String.format("[%s] Loaded font '%s' for %s.",
+                                                     name,
+                                                     resourceKey,
+                                                     loadable.getClass().getName()));
+                }
+            }
+
+            // cursors
+            loadedCursors = container.getCursors();
+
+            if (loadedCursors != null && !loadedCursors.isEmpty())
+            {
+                for (String resourceKey : loadedCursors.keySet())
+                {
+                    add(resourceKey,
+                        loadedCursors.get(resourceKey));
+                    System.out.println(String.format("[%s] Loaded cursor '%s' for %s.",
                                                      name,
                                                      resourceKey,
                                                      loadable.getClass().getName()));

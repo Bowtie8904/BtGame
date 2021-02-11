@@ -1,14 +1,15 @@
 package bt.game.resource.load.container;
 
-import java.awt.Font;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
+import bt.game.core.ctrl.spec.mouse.obj.Cursor;
 import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.intf.Renderable;
 import bt.io.sound.SoundSupplier;
+
+import java.awt.*;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A class which can hold maps of resources.
@@ -25,6 +26,7 @@ public class ResourceContainer
     private Map<String, SoundSupplier> sounds;
     private Map<String, File> files;
     private Map<String, Font> fonts;
+    private Map<String, Cursor> cursors;
     private Map<String, Object> objects;
     private Map<String, Animation> animations;
 
@@ -37,6 +39,7 @@ public class ResourceContainer
         this.sounds = new HashMap<>();
         this.files = new HashMap<>();
         this.fonts = new HashMap<>();
+        this.cursors = new HashMap<>();
         this.objects = new HashMap<>();
         this.animations = new HashMap<>();
     }
@@ -44,10 +47,8 @@ public class ResourceContainer
     /**
      * Maps the given resource with the given name.
      *
-     * @param name
-     *            The name of the resource.
-     * @param res
-     *            The renderable to map in the resouce loader.
+     * @param name The name of the resource.
+     * @param res  The renderable to map in the resouce loader.
      */
     public void add(String name, Renderable res)
     {
@@ -58,10 +59,8 @@ public class ResourceContainer
     /**
      * Maps the given resource with the given name.
      *
-     * @param name
-     *            The name of the resource.
-     * @param res
-     *            The sound supplier to map in the resouce loader.
+     * @param name The name of the resource.
+     * @param res  The sound supplier to map in the resouce loader.
      */
     public void add(String name, SoundSupplier res)
     {
@@ -72,10 +71,8 @@ public class ResourceContainer
     /**
      * Maps the given resource with the given name.
      *
-     * @param name
-     *            The name of the resource.
-     * @param res
-     *            The file to map in the resouce loader.
+     * @param name The name of the resource.
+     * @param res  The file to map in the resouce loader.
      */
     public void add(String name, File res)
     {
@@ -86,10 +83,8 @@ public class ResourceContainer
     /**
      * Maps the given resource with the given name.
      *
-     * @param name
-     *            The name of the resource.
-     * @param res
-     *            The font to map in the resouce loader.
+     * @param name The name of the resource.
+     * @param res  The font to map in the resouce loader.
      */
     public void add(String name, Font res)
     {
@@ -100,10 +95,20 @@ public class ResourceContainer
     /**
      * Maps the given resource with the given name.
      *
-     * @param name
-     *            The name of the resource.
-     * @param res
-     *            The object to map in the resouce loader.
+     * @param name The name of the resource.
+     * @param res  The font to map in the resouce loader.
+     */
+    public void add(String name, Cursor res)
+    {
+        this.cursors.put(name,
+                         res);
+    }
+
+    /**
+     * Maps the given resource with the given name.
+     *
+     * @param name The name of the resource.
+     * @param res  The object to map in the resouce loader.
      */
     public void add(String name, Object res)
     {
@@ -114,10 +119,8 @@ public class ResourceContainer
     /**
      * Maps the given resource with the given name.
      *
-     * @param name
-     *            The name of the resource.
-     * @param res
-     *            The object to map in the resouce loader.
+     * @param name The name of the resource.
+     * @param res  The object to map in the resouce loader.
      */
     public void add(String name, Animation res)
     {
@@ -163,6 +166,16 @@ public class ResourceContainer
     public Map<String, Font> getFonts()
     {
         return this.fonts;
+    }
+
+    /**
+     * Gets all mapped cursor resources.
+     *
+     * @return
+     */
+    public Map<String, Cursor> getCursors()
+    {
+        return this.cursors;
     }
 
     /**
