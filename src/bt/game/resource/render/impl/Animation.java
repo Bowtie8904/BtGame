@@ -28,6 +28,8 @@ public class Animation extends AdvancedRenderable implements Tickable
     private long interval;
     private long lastTime;
     private long time;
+    private Unit rotationOffsetX = Unit.zero();
+    private Unit rotationOffsetY = Unit.zero();
 
     /**
      * Creates a new animation.
@@ -226,6 +228,8 @@ public class Animation extends AdvancedRenderable implements Tickable
                                                   w,
                                                   h,
                                                   this.rotation,
+                                                  this.rotationOffsetX,
+                                                  this.rotationOffsetY,
                                                   debugRendering);
         }
     }
@@ -258,5 +262,25 @@ public class Animation extends AdvancedRenderable implements Tickable
     public String[] getImageNames()
     {
         return this.imageNames;
+    }
+
+    public Unit getRotationOffsetX()
+    {
+        return this.rotationOffsetX;
+    }
+
+    public void setRotationOffsetX(Unit rotationOffsetX)
+    {
+        this.rotationOffsetX = rotationOffsetX;
+    }
+
+    public Unit getRotationOffsetY()
+    {
+        return this.rotationOffsetY;
+    }
+
+    public void setRotationOffsetY(Unit rotationOffsetY)
+    {
+        this.rotationOffsetY = rotationOffsetY;
     }
 }

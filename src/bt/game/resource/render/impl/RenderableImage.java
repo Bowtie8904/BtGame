@@ -106,6 +106,8 @@ public class RenderableImage implements Renderable, Killable
                Unit.forUnits(this.image.getWidth(null)),
                Unit.forUnits(this.image.getHeight(null)),
                0,
+               Unit.zero(),
+               Unit.zero(),
                debugRendering);
     }
 
@@ -127,6 +129,8 @@ public class RenderableImage implements Renderable, Killable
                Unit.forUnits(this.image.getWidth(null)),
                Unit.forUnits(this.image.getHeight(null)),
                rotation,
+               Unit.zero(),
+               Unit.zero(),
                debugRendering);
     }
 
@@ -145,12 +149,14 @@ public class RenderableImage implements Renderable, Killable
                w,
                h,
                0,
+               Unit.zero(),
+               Unit.zero(),
                debugRendering);
     }
 
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation)
     {
-        render(g, x, y, w, h, rotation, false);
+        render(g, x, y, w, h, rotation, Unit.zero(), Unit.zero(), false);
     }
 
     /**
@@ -165,14 +171,14 @@ public class RenderableImage implements Renderable, Killable
      * @param h
      * @param rotation The rotation of the image in degrees.
      */
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, boolean debugRendering)
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, Unit rotationOffsetX, Unit rotationOffsetY, boolean debugRendering)
     {
         AffineTransform origTransform = g.getTransform();
         Composite origComposite = g.getComposite();
 
         this.transform.setToRotation(Math.toRadians(rotation),
-                                     x.pixels() + w.pixels() / 2,
-                                     y.pixels() + h.pixels() / 2);
+                                     (x.pixels() + w.pixels() / 2) + rotationOffsetX.pixels(),
+                                     (y.pixels() + h.pixels() / 2) + rotationOffsetY.pixels());
 
         g.transform(this.transform);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,

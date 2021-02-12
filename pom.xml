@@ -1,38 +1,38 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>BtGame</groupId>
-	<artifactId>BtGame</artifactId>
-	<version>master-SNAPSHOT</version>
-	<name>BtGame</name>
-	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<source>11</source>
-					<target>11</target>
-					<verbose>true</verbose>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>com.github.Bowtie8904</groupId>
-			<artifactId>BtCommons</artifactId>
-			<version>11ead9cbc6</version>
-		</dependency>
-		<dependency>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>BtGame</groupId>
+    <artifactId>BtGame</artifactId>
+    <version>master-SNAPSHOT</version>
+    <name>BtGame</name>
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.Bowtie8904</groupId>
+            <artifactId>BtCommons</artifactId>
+            <version>11ead9cbc6</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.Bowtie8904</groupId>
             <artifactId>BtUserInterface</artifactId>
             <version>cee5b77cf4</version>
@@ -43,9 +43,9 @@
             <version>805a686c</version>
         </dependency>
         <dependency>
-		    <groupId>org.dyn4j</groupId>
-		    <artifactId>dyn4j</artifactId>
-		    <version>4.1.0</version>
-		</dependency>
-	</dependencies>
+            <groupId>org.dyn4j</groupId>
+            <artifactId>dyn4j</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+    </dependencies>
 </project>

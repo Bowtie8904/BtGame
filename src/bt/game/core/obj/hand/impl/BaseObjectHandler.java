@@ -70,6 +70,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class BaseObjectHandler implements ObjectHandler, CollisionListener, ContactListener, TimeOfImpactListener
 {
     /**
+     * A list of objects that are meant to be removed with the next tick.
+     */
+    protected List<Object> toBeRemoved;
+
+    /**
      * The list of tickable objects.
      */
     protected List<Tickable> tickables;
@@ -145,6 +150,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.renderables = new CopyOnWriteArrayList<>();
         this.killables = new CopyOnWriteArrayList<>();
         this.gravityAffecteds = new CopyOnWriteArrayList<>();
+        this.toBeRemoved = new CopyOnWriteArrayList<>();
         this.broadColliders = new Hashtable<>();
         this.narrowColliders = new Hashtable<>();
         this.manifoldColliders = new Hashtable<>();
@@ -308,83 +314,109 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     }
 
     /**
-     * Removes the given object from all lists that it is a part of based on its interfaces.
+     * Marks the given object for removal from all lists that it is a part of based on its interfaces.
+     * <p>
+     * The removal will happen at the start of the next tick iteration.
      *
      * @see bt.game.core.obj.hand.intf.ObjectHandler#removeObject(java.lang.Object)
      */
     @Override
     public synchronized void removeObject(Object object)
     {
-        if (object instanceof Body)
+        this.toBeRemoved.add(object);
+    }
+
+    protected synchronized void removeMarkedObjects()
+    {
+        for (Object object : this.toBeRemoved)
         {
-            this.scene.getWorld().removeBody(Body.class.cast(object));
+            if (object instanceof Body)
+            {
+                try
+                {
+                    this.scene.getWorld().removeBody(Body.class.cast(object));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            if (object instanceof Joint)
+            {
+                try
+                {
+                    this.scene.getWorld().removeJoint(Joint.class.cast(object));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            if (object instanceof Tickable)
+            {
+                this.tickables.remove(object);
+            }
+
+            if (object instanceof Refreshable)
+            {
+                this.refreshables.remove(object);
+            }
+
+            if (object instanceof Renderable)
+            {
+                this.renderables.remove(object);
+            }
+
+            if (object instanceof Killable)
+            {
+                this.killables.remove(object);
+            }
+
+            if (object instanceof GravityAffected)
+            {
+                this.gravityAffecteds.remove(object);
+            }
+
+            if (object instanceof BroadPhaseCollider)
+            {
+                BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
+                this.broadColliders.remove(collider.getBody());
+            }
+
+            if (object instanceof NarrowPhaseCollider)
+            {
+                NarrowPhaseCollider collider = NarrowPhaseCollider.class.cast(object);
+                this.narrowColliders.remove(collider.getBody());
+            }
+
+            if (object instanceof ManifoldCollider)
+            {
+                ManifoldCollider collider = ManifoldCollider.class.cast(object);
+                this.manifoldColliders.remove(collider.getBody());
+            }
+
+            if (object instanceof ConstraintCollider)
+            {
+                ConstraintCollider collider = ConstraintCollider.class.cast(object);
+                this.constraintColliders.remove(collider.getBody());
+            }
+
+            if (object instanceof Contacter)
+            {
+                Contacter collider = Contacter.class.cast(object);
+                this.contacters.remove(collider.getBody());
+            }
+
+            if (object instanceof TimeOfImpactCollider)
+            {
+                TimeOfImpactCollider collider = TimeOfImpactCollider.class.cast(object);
+                this.timeOfImpactColliders.remove(collider.getBody());
+            }
         }
 
-        if (object instanceof Joint)
-        {
-            this.scene.getWorld().removeJoint(Joint.class.cast(object));
-        }
-
-        if (object instanceof Tickable)
-        {
-            this.tickables.remove(object);
-        }
-
-        if (object instanceof Refreshable)
-        {
-            this.refreshables.remove(object);
-        }
-
-        if (object instanceof Renderable)
-        {
-            this.renderables.remove(object);
-        }
-
-        if (object instanceof Killable)
-        {
-            this.killables.remove(object);
-        }
-
-        if (object instanceof GravityAffected)
-        {
-            this.gravityAffecteds.remove(object);
-        }
-
-        if (object instanceof BroadPhaseCollider)
-        {
-            BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
-            this.broadColliders.remove(collider.getBody());
-        }
-
-        if (object instanceof NarrowPhaseCollider)
-        {
-            NarrowPhaseCollider collider = NarrowPhaseCollider.class.cast(object);
-            this.narrowColliders.remove(collider.getBody());
-        }
-
-        if (object instanceof ManifoldCollider)
-        {
-            ManifoldCollider collider = ManifoldCollider.class.cast(object);
-            this.manifoldColliders.remove(collider.getBody());
-        }
-
-        if (object instanceof ConstraintCollider)
-        {
-            ConstraintCollider collider = ConstraintCollider.class.cast(object);
-            this.constraintColliders.remove(collider.getBody());
-        }
-
-        if (object instanceof Contacter)
-        {
-            Contacter collider = Contacter.class.cast(object);
-            this.contacters.remove(collider.getBody());
-        }
-
-        if (object instanceof TimeOfImpactCollider)
-        {
-            TimeOfImpactCollider collider = TimeOfImpactCollider.class.cast(object);
-            this.timeOfImpactColliders.remove(collider.getBody());
-        }
+        this.toBeRemoved.clear();
     }
 
     /**
@@ -400,6 +432,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void tick(double delta)
     {
+        removeMarkedObjects();
+
         this.tickables.stream()
                       .parallel()
                       .forEach(t -> t.tick(delta));
@@ -428,9 +462,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
                              .filter(g -> g.getGravityVelocityGain() > 0)
                              .forEach(g -> {
                                  double newV = NumberUtils.clamp(g.getVelocityY() + g.getGravityVelocityGain() * delta,
-                                                                 Double.MIN_VALUE,
+                                                                 Long.MIN_VALUE,
                                                                  g.getMaxGravityVelocity());
-
                                  g.setVelocityY(newV);
                              });
     }
