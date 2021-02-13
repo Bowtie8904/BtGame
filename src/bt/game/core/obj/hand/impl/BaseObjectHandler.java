@@ -75,6 +75,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     protected List<Object> toBeRemoved;
 
     /**
+     * A list of objects that are meant to be added with the next tick.
+     */
+    protected List<Object> toBeAdded;
+
+    /**
      * The list of tickable objects.
      */
     protected List<Tickable> tickables;
@@ -151,6 +156,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.killables = new CopyOnWriteArrayList<>();
         this.gravityAffecteds = new CopyOnWriteArrayList<>();
         this.toBeRemoved = new CopyOnWriteArrayList<>();
+        this.toBeAdded = new CopyOnWriteArrayList<>();
         this.broadColliders = new Hashtable<>();
         this.narrowColliders = new Hashtable<>();
         this.manifoldColliders = new Hashtable<>();
@@ -194,6 +200,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     /**
      * Adds the given object to the held lists based on its implemented interfaces.<br>
      * <br>
+     * The actual adding of the object will happen at the start of the next tick iteration.
      *
      * <b>Supported interfaces</b><br>
      * <ul>
@@ -223,94 +230,104 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public synchronized void addObject(Object object)
     {
-        if (object instanceof Body)
-        {
-            this.scene.getWorld().addBody(Body.class.cast(object));
-        }
+        this.toBeAdded.add(object);
+    }
 
-        if (object instanceof Joint)
+    protected void addNewObjects()
+    {
+        for (Object object : this.toBeAdded)
         {
-            this.scene.getWorld().addJoint(Joint.class.cast(object));
-        }
-
-        if (object instanceof Tickable)
-        {
-            this.tickables.add(Tickable.class.cast(object));
-        }
-
-        if (object instanceof Refreshable)
-        {
-            this.refreshables.add(Refreshable.class.cast(object));
-        }
-
-        if (object instanceof Renderable)
-        {
-            this.renderables.add(Renderable.class.cast(object));
-        }
-
-        if (object instanceof Killable)
-        {
-            this.killables.add(Killable.class.cast(object));
-        }
-
-        if (object instanceof GravityAffected)
-        {
-            this.gravityAffecteds.add(GravityAffected.class.cast(object));
-        }
-
-        if (object instanceof BroadPhaseCollider)
-        {
-            BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
-            if (collider.getBody() != null)
+            if (object instanceof Body)
             {
-                this.broadColliders.put(collider.getBody(), collider);
+                this.scene.getWorld().addBody(Body.class.cast(object));
+            }
+
+            if (object instanceof Joint)
+            {
+                this.scene.getWorld().addJoint(Joint.class.cast(object));
+            }
+
+            if (object instanceof Tickable)
+            {
+                this.tickables.add(Tickable.class.cast(object));
+            }
+
+            if (object instanceof Refreshable)
+            {
+                this.refreshables.add(Refreshable.class.cast(object));
+            }
+
+            if (object instanceof Renderable)
+            {
+                this.renderables.add(Renderable.class.cast(object));
+            }
+
+            if (object instanceof Killable)
+            {
+                this.killables.add(Killable.class.cast(object));
+            }
+
+            if (object instanceof GravityAffected)
+            {
+                this.gravityAffecteds.add(GravityAffected.class.cast(object));
+            }
+
+            if (object instanceof BroadPhaseCollider)
+            {
+                BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
+                if (collider.getBody() != null)
+                {
+                    this.broadColliders.put(collider.getBody(), collider);
+                }
+            }
+
+            if (object instanceof NarrowPhaseCollider)
+            {
+                NarrowPhaseCollider collider = NarrowPhaseCollider.class.cast(object);
+                if (collider.getBody() != null)
+                {
+                    this.narrowColliders.put(collider.getBody(), collider);
+                }
+            }
+
+            if (object instanceof ManifoldCollider)
+            {
+                ManifoldCollider collider = ManifoldCollider.class.cast(object);
+                if (collider.getBody() != null)
+                {
+                    this.manifoldColliders.put(collider.getBody(), collider);
+                }
+            }
+
+            if (object instanceof ConstraintCollider)
+            {
+                ConstraintCollider collider = ConstraintCollider.class.cast(object);
+                if (collider.getBody() != null)
+                {
+                    this.constraintColliders.put(collider.getBody(), collider);
+                }
+            }
+
+            if (object instanceof Contacter)
+            {
+                Contacter collider = Contacter.class.cast(object);
+                if (collider.getBody() != null)
+                {
+                    this.contacters.put(collider.getBody(), collider);
+                }
+            }
+
+            if (object instanceof TimeOfImpactCollider)
+            {
+                TimeOfImpactCollider collider = TimeOfImpactCollider.class.cast(object);
+                if (collider.getBody() != null)
+                {
+                    this.timeOfImpactColliders.put(collider.getBody(), collider);
+                }
             }
         }
 
-        if (object instanceof NarrowPhaseCollider)
-        {
-            NarrowPhaseCollider collider = NarrowPhaseCollider.class.cast(object);
-            if (collider.getBody() != null)
-            {
-                this.narrowColliders.put(collider.getBody(), collider);
-            }
-        }
-
-        if (object instanceof ManifoldCollider)
-        {
-            ManifoldCollider collider = ManifoldCollider.class.cast(object);
-            if (collider.getBody() != null)
-            {
-                this.manifoldColliders.put(collider.getBody(), collider);
-            }
-        }
-
-        if (object instanceof ConstraintCollider)
-        {
-            ConstraintCollider collider = ConstraintCollider.class.cast(object);
-            if (collider.getBody() != null)
-            {
-                this.constraintColliders.put(collider.getBody(), collider);
-            }
-        }
-
-        if (object instanceof Contacter)
-        {
-            Contacter collider = Contacter.class.cast(object);
-            if (collider.getBody() != null)
-            {
-                this.contacters.put(collider.getBody(), collider);
-            }
-        }
-
-        if (object instanceof TimeOfImpactCollider)
-        {
-            TimeOfImpactCollider collider = TimeOfImpactCollider.class.cast(object);
-            if (collider.getBody() != null)
-            {
-                this.timeOfImpactColliders.put(collider.getBody(), collider);
-            }
-        }
+        this.toBeAdded.clear();
     }
 
     /**
@@ -419,6 +436,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     public void tick(double delta)
     {
         removeMarkedObjects();
+        addNewObjects();
 
         this.tickables.stream()
                       .parallel()
