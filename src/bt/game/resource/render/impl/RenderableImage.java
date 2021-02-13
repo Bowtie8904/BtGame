@@ -154,6 +154,11 @@ public class RenderableImage implements Renderable, Killable
                debugRendering);
     }
 
+    /**
+     * Renders this instance at the position x|y with a width of w and a height of h. The image is rotated clockwise
+     * around its middle point by the given rotation. The given Graphics object is used to create a {@link Graphics2D}
+     * copy, so that rotation actions can be performed.
+     */
     public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation)
     {
         render(g, x, y, w, h, rotation, Unit.zero(), Unit.zero(), false);
@@ -161,8 +166,27 @@ public class RenderableImage implements Renderable, Killable
 
     /**
      * Renders this instance at the position x|y with a width of w and a height of h. The image is rotated clockwise
-     * around its middle point by the given rotation. The given Graphics object is used to create a {@link Graphics2D}
-     * copy, so that rotation actions can be performed.
+     * around its middle point by the given rotation. The given offset values are applied to that middle point to alter the rotation origin.
+     * The given Graphics object is used to create a {@link Graphics2D} copy, so that rotation actions can be performed.
+     *
+     * @param g
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param rotation
+     * @param rotationOffsetX
+     * @param rotationOffsetY
+     */
+    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, Unit rotationOffsetX, Unit rotationOffsetY)
+    {
+        render(g, x, y, w, h, rotation, rotationOffsetX, rotationOffsetY, false);
+    }
+
+    /**
+     * Renders this instance at the position x|y with a width of w and a height of h. The image is rotated clockwise
+     * around its middle point by the given rotation. The given offset values are applied to that middle point to alter the rotation origin.
+     * The given Graphics object is used to create a {@link Graphics2D} copy, so that rotation actions can be performed.
      *
      * @param g
      * @param x
@@ -181,8 +205,7 @@ public class RenderableImage implements Renderable, Killable
                                      (y.pixels() + h.pixels() / 2) + rotationOffsetY.pixels());
 
         g.transform(this.transform);
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                                                  this.alpha));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, this.alpha));
 
         if (!w.equals(this.lastWidth) || !h.equals(this.lastHeight) || this.lastUnitRatio != Unit.getRatio())
         {
