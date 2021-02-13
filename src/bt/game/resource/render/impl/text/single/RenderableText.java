@@ -1,6 +1,6 @@
 package bt.game.resource.render.impl.text.single;
 
-import bt.game.resource.render.impl.AdvancedRenderable;
+import bt.game.resource.render.impl.BaseRenderable;
 import bt.game.util.shape.ShapeRenderer;
 import bt.game.util.unit.Unit;
 import org.dyn4j.geometry.Geometry;
@@ -25,7 +25,7 @@ import java.awt.geom.AffineTransform;
  *
  * @author &#8904
  */
-public abstract class RenderableText extends AdvancedRenderable
+public abstract class RenderableText extends BaseRenderable
 {
     /**
      * The last used unit to pixel ration. Used to detect when the size of the text should be recalculated.
@@ -41,11 +41,6 @@ public abstract class RenderableText extends AdvancedRenderable
      * The text to display.
      */
     protected String text;
-
-    /**
-     * The angle at which the text is displayed.
-     */
-    protected double rotationAngle;
 
     /**
      * The used font.
@@ -232,27 +227,6 @@ public abstract class RenderableText extends AdvancedRenderable
     }
 
     /**
-     * Sets the angle by which this text will be rotated. The axis point will be in the middle of the the defined
-     * rectangle in {@link #render(Graphics, Unit, Unit, Unit, Unit) render}.
-     *
-     * @param rotationAngle
-     */
-    public void setRotation(double rotationAngle)
-    {
-        this.rotationAngle = rotationAngle;
-    }
-
-    /**
-     * Gets the rotation angle at which the text will be rendered.
-     *
-     * @return
-     */
-    public double getRotation()
-    {
-        return this.rotationAngle;
-    }
-
-    /**
      * @see bt.game.resource.render.intf.Renderable#getZ()
      */
     @Override
@@ -268,7 +242,7 @@ public abstract class RenderableText extends AdvancedRenderable
      * bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
+    public void render(float alpha, Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, Unit rotationOffsetX, Unit rotationOffsetY, boolean debugRendering)
     {
         this.x = x;
         this.y = y;
@@ -285,6 +259,8 @@ public abstract class RenderableText extends AdvancedRenderable
         g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
                            RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+
         // only do this if the scaling really needs to be adjusted
         if (this.shouldRecalculate
                 || !w.equals(this.w)
@@ -298,9 +274,9 @@ public abstract class RenderableText extends AdvancedRenderable
                       h);
         }
 
-        g.rotate(Math.toRadians(this.rotationAngle),
-                 this.x.pixels() + this.w.pixels() / 2,
-                 this.y.pixels() + this.h.pixels() / 2);
+        g.rotate(Math.toRadians(rotation),
+                 (x.pixels() + w.pixels() / 2) + rotationOffsetX.pixels(),
+                 (y.pixels() + h.pixels() / 2) + rotationOffsetY.pixels());
 
         g.setFont(this.font.deriveFont(this.transform));
 
@@ -310,8 +286,8 @@ public abstract class RenderableText extends AdvancedRenderable
         }
 
         g.drawString(this.text,
-                     (int)this.x.pixels(),
-                     (int)this.y.pixels());
+                     (int)x.pixels(),
+                     (int)y.pixels());
 
         if (debugRendering)
         {
@@ -320,8 +296,8 @@ public abstract class RenderableText extends AdvancedRenderable
             AffineTransform ot = g.getTransform();
             AffineTransform lt = new AffineTransform();
 
-            lt.translate(this.x.pixels() + this.w.pixels() / 2,
-                         this.y.pixels() + this.h.pixels() / 2);
+            lt.translate(x.pixels() + w.pixels() / 2,
+                         y.pixels() + h.pixels() / 2);
 
             g.transform(lt);
 
@@ -330,59 +306,9 @@ public abstract class RenderableText extends AdvancedRenderable
             g.setTransform(ot);
         }
 
-        g.rotate(Math.toRadians(-this.rotationAngle),
-                 this.x.pixels() + this.w.pixels() / 2,
-                 this.y.pixels() + this.h.pixels() / 2);
-    }
-
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
-    {
-        render(g, x, y, w, h, false);
-    }
-
-    /**
-     * Renders this instance with a width of w and a height of h.
-     */
-    public void render(Graphics2D g, Unit w, Unit h)
-    {
-        render(g,
-               w,
-               h,
-               false);
-    }
-
-    public void render(Graphics2D g, Unit w, Unit h, boolean debugRendering)
-    {
-        render(g,
-               this.x,
-               this.y,
-               w,
-               h,
-               debugRendering);
-    }
-
-    /**
-     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics)
-     */
-    @Override
-    public void render(Graphics2D g, boolean debugRendering)
-    {
-        render(g,
-               this.x,
-               this.y,
-               this.w,
-               this.h,
-               debugRendering);
-    }
-
-    public void render(Graphics2D g)
-    {
-        render(g,
-               this.x,
-               this.y,
-               this.w,
-               this.h,
-               false);
+        g.rotate(Math.toRadians(-rotation),
+                 x.pixels() + w.pixels() / 2,
+                 y.pixels() + h.pixels() / 2);
     }
 
     /**

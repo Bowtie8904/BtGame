@@ -3,12 +3,7 @@ package bt.game.resource.render.impl;
 import bt.game.resource.render.intf.Renderable;
 import bt.game.util.unit.Unit;
 
-import java.awt.*;
-
-/**
- * @author &#8904
- */
-public abstract class AdvancedRenderable implements Renderable
+public abstract class BaseRenderable implements Renderable
 {
     protected Unit x;
     protected Unit y;
@@ -17,7 +12,7 @@ public abstract class AdvancedRenderable implements Renderable
     protected Unit z;
     protected boolean shouldRender;
 
-    public AdvancedRenderable()
+    public BaseRenderable()
     {
         this.x = Unit.zero();
         this.y = Unit.zero();
@@ -25,20 +20,6 @@ public abstract class AdvancedRenderable implements Renderable
         this.h = Unit.forUnits(64);
         this.z = Unit.zero();
         this.shouldRender = true;
-    }
-
-    /**
-     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics2D)
-     */
-    @Override
-    public void render(Graphics2D g, boolean debugRendering)
-    {
-        render(g,
-               this.x,
-               this.y,
-               this.w,
-               this.h,
-               debugRendering);
     }
 
     /**
@@ -59,21 +40,25 @@ public abstract class AdvancedRenderable implements Renderable
         this.z = z;
     }
 
+    @Override
     public Unit getX()
     {
         return this.x;
     }
 
+    @Override
     public void setX(Unit x)
     {
         this.x = x;
     }
 
+    @Override
     public Unit getY()
     {
         return this.y;
     }
 
+    @Override
     public void setY(Unit y)
     {
         this.y = y;
@@ -97,21 +82,25 @@ public abstract class AdvancedRenderable implements Renderable
         this.shouldRender = shouldRender;
     }
 
+    @Override
     public Unit getW()
     {
         return this.w;
     }
 
+    @Override
     public void setW(Unit w)
     {
         this.w = w;
     }
 
+    @Override
     public Unit getH()
     {
         return this.h;
     }
 
+    @Override
     public void setH(Unit h)
     {
         this.h = h;

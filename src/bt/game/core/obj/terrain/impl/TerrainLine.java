@@ -108,19 +108,11 @@ public class TerrainLine extends Terrain
     }
 
     /**
-     * @see bt.game.core.obj.intf.GameObject#render(Graphics)
-     */
-    @Override
-    public void render(Graphics2D g, boolean debugRendering)
-    {
-    }
-
-    /**
      * @see Renderable#render(Graphics, Unit,
      * Unit, Unit, Unit)
      */
     @Override
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
+    public void render(float alpha, Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, Unit rotationOffsetX, Unit rotationOffsetY, boolean debugRendering)
     {
     }
 

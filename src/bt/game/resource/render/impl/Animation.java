@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author &#8904
  */
-public class Animation extends AdvancedRenderable implements Tickable
+public class Animation extends BaseRenderable implements Tickable
 {
     private ResourceLoader resourceLoader;
     private RenderableImage[] images;
@@ -218,7 +218,7 @@ public class Animation extends AdvancedRenderable implements Tickable
      * bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
+    public void render(float alpha, Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, Unit rotationOffsetX, Unit rotationOffsetY, boolean debugRendering)
     {
         if (this.currentIndex >= 0 && this.currentIndex < this.images.length)
         {
@@ -231,18 +231,6 @@ public class Animation extends AdvancedRenderable implements Tickable
                                                   this.rotationOffsetX,
                                                   this.rotationOffsetY,
                                                   debugRendering);
-        }
-    }
-
-    /**
-     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics)
-     */
-    @Override
-    public void render(Graphics2D g, boolean debugRendering)
-    {
-        if (this.currentIndex >= 0 && this.currentIndex < this.images.length)
-        {
-            this.images[this.currentIndex].render(g, this.rotation, debugRendering);
         }
     }
 

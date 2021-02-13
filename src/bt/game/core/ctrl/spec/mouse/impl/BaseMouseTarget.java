@@ -1,18 +1,16 @@
 package bt.game.core.ctrl.spec.mouse.impl;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-
-import org.dyn4j.geometry.Geometry;
-import org.dyn4j.geometry.Shape;
-
 import bt.game.core.ctrl.spec.mouse.intf.MouseTarget;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
+import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.Shape;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 /**
  * @author &#8904
- *
  */
 public class BaseMouseTarget implements MouseTarget
 {
@@ -95,6 +93,46 @@ public class BaseMouseTarget implements MouseTarget
     public Unit getZ()
     {
         return this.z;
+    }
+
+    public Unit getW()
+    {
+        return this.w;
+    }
+
+    public void setW(Unit w)
+    {
+        this.w = w;
+    }
+
+    public Unit getH()
+    {
+        return this.h;
+    }
+
+    public void setH(Unit h)
+    {
+        this.h = h;
+    }
+
+    public Unit getX()
+    {
+        return this.x;
+    }
+
+    public void setX(Unit x)
+    {
+        this.x = x;
+    }
+
+    public Unit getY()
+    {
+        return this.y;
+    }
+
+    public void setY(Unit y)
+    {
+        this.y = y;
     }
 
     /**

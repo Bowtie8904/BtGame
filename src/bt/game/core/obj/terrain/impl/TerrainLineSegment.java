@@ -97,13 +97,7 @@ public class TerrainLineSegment extends Terrain implements NarrowPhaseCollider
     }
 
     @Override
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
-    {
-        render(g, debugRendering);
-    }
-
-    @Override
-    public void render(Graphics2D g, boolean debugRendering)
+    public void render(float alpha, Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, Unit rotationOffsetX, Unit rotationOffsetY, boolean debugRendering)
     {
         if (debugRendering)
         {

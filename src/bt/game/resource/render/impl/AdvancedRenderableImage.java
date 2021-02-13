@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * @author &#8904
  */
-public class AdvancedRenderableImage extends AdvancedRenderable
+public class AdvancedRenderableImage extends BaseRenderable
 {
     private String imageName;
     private Scene scene;
@@ -19,20 +19,20 @@ public class AdvancedRenderableImage extends AdvancedRenderable
         this.scene = scene;
     }
 
-    /**
-     * @see bt.game.resource.render.intf.Renderable#render(java.awt.Graphics2D, bt.game.util.unit.Unit,
-     * bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
-     */
     @Override
-    public void render(Graphics2D g, Unit x, Unit y, Unit w, Unit h, boolean debugRendering)
+    public void render(float alpha, Graphics2D g, Unit x, Unit y, Unit w, Unit h, double rotation, Unit rotationOffsetX, Unit rotationOffsetY, boolean debugRendering)
     {
         this.scene.getResourceLoader()
                   .getRenderable(this.imageName)
-                  .render(g,
+                  .render(alpha,
+                          g,
                           x,
                           y,
                           w,
                           h,
+                          rotation,
+                          rotationOffsetX,
+                          rotationOffsetY,
                           debugRendering);
     }
 }
