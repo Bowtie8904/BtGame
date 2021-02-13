@@ -332,26 +332,12 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         {
             if (object instanceof Body)
             {
-                try
-                {
-                    this.scene.getWorld().removeBody(Body.class.cast(object));
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                this.scene.getWorld().removeBody(Body.class.cast(object));
             }
 
             if (object instanceof Joint)
             {
-                try
-                {
-                    this.scene.getWorld().removeJoint(Joint.class.cast(object));
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                this.scene.getWorld().removeJoint(Joint.class.cast(object));
             }
 
             if (object instanceof Tickable)
