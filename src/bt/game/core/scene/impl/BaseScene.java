@@ -1,6 +1,7 @@
 package bt.game.core.scene.impl;
 
 import bt.game.core.container.abstr.GameContainer;
+import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.obj.hand.impl.BaseObjectHandler;
 import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.scene.cam.Camera;
@@ -184,6 +185,12 @@ public abstract class BaseScene implements Scene
 
         this.world.removeAllBodiesAndJoints();
         this.world.removeAllListeners();
+
+        if (MouseController.active)
+        {
+            MouseController.get().clearMouseTargets(this);
+            MouseController.get().clearMouseListeners(this);
+        }
 
         if (Camera.currentCamera != null && Camera.currentCamera.equals(this.camera))
         {

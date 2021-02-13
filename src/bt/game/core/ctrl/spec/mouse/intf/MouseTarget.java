@@ -1,40 +1,15 @@
 package bt.game.core.ctrl.spec.mouse.intf;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-
+import bt.game.util.unit.Unit;
 import org.dyn4j.geometry.Shape;
 
-import bt.game.core.scene.intf.Scene;
-import bt.game.util.unit.Unit;
-
 /**
+ * An interface to use for classes that can be targets of mouse actions such as buttons.
+ *
  * @author &#8904
  */
-public interface MouseTarget
+public interface MouseTarget extends MouseListener
 {
-    /**
-     * Called when a click with the right mouse button was performed on this instance.
-     */
-    public void onRightClick(MouseEvent e, Unit x, Unit y);
-
-    /**
-     * Called when a click with the left mouse button was performed on this instance.
-     */
-    public void onLeftClick(MouseEvent e, Unit x, Unit y);
-
-    /**
-     * Called when this instance was dragged with the mouse.
-     * 
-     * @param e
-     *            The event that caused this call.
-     * @param xOffset
-     *            The offset on the x axis from this instances old position to its new one.
-     * @param yOffset
-     *            The offset on the y axis from this instances old position to its new one.
-     */
-    public void onDrag(MouseEvent e, Unit xOffset, Unit yOffset);
-
     /**
      * Called when the mouse is hovering over this instance.
      */
@@ -46,22 +21,13 @@ public interface MouseTarget
     public void afterHover();
 
     /**
-     * Called when the mouse is hovering over this instance and the mouse wheel is moved.
-     * 
-     * @param clicks
-     *            The number of clicks that were performed. Positive value if the wheel was rotated down/towards the
-     *            user and negative value if the wheel was rotated up/away from the user.
-     */
-    public void onMouseWheelMove(MouseWheelEvent e, int clicks);
-
-    /**
      * Gets the Z position of this instance.
-     * 
+     *
      * <p>
      * This value is relevant for when the mouse is hovering over multiple objects at once. Only the onHover method of
      * the object with the highest Z value will be called.
      * </p>
-     * 
+     *
      * @return
      */
     public Unit getZ();
@@ -69,21 +35,14 @@ public interface MouseTarget
     /**
      * Gets the shape of this instance. Used to determine whether a click was performed in this instances area and so
      * on.
-     * 
+     *
      * @return
      */
     public Shape getShape();
 
     /**
-     * Gets the scene object that this target was created for.
-     * 
-     * @return
-     */
-    public Scene getScene();
-
-    /**
      * Indicates whether this target is affected by the camera translation, so that we offset is taken into account.
-     * 
+     *
      * @return
      */
     public boolean affectedByCamera();

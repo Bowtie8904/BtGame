@@ -1,6 +1,7 @@
 package bt.game.core.ctrl.spec.mouse;
 
 import bt.game.core.container.abstr.GameContainer;
+import bt.game.core.ctrl.spec.mouse.intf.MouseListener;
 import bt.game.core.ctrl.spec.mouse.intf.MouseTarget;
 import bt.game.core.scene.cam.Camera;
 import bt.game.core.scene.intf.Scene;
@@ -15,13 +16,13 @@ import java.awt.event.MouseWheelEvent;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
 
 /**
  * @author &#8904
  */
 public class MouseController extends MouseAdapter
 {
+    public static boolean active;
     private static MouseController instance;
 
     public static MouseController get()
@@ -29,10 +30,9 @@ public class MouseController extends MouseAdapter
         return MouseController.instance;
     }
 
-    private Consumer<MouseTarget> onRightClick;
-    private Consumer<MouseTarget> onLeftClick;
     private Comparator<MouseTarget> zComparator;
     private List<MouseTarget> mouseTargets;
+    private List<MouseListener> mouseListeners;
     private GameContainer component;
     private int lastClickMouseX;
     private int lastClickMouseY;
@@ -44,11 +44,13 @@ public class MouseController extends MouseAdapter
     public MouseController(GameContainer component)
     {
         MouseController.instance = this;
+        MouseController.active = true;
         this.component = component;
         this.component.addMouseListener(this);
         this.component.addMouseMotionListener(this);
         this.component.addMouseWheelListener(this);
         this.mouseTargets = new CopyOnWriteArrayList<>();
+        this.mouseListeners = new CopyOnWriteArrayList<>();
 
         this.zComparator = new Comparator<MouseTarget>()
         {
@@ -102,14 +104,9 @@ public class MouseController extends MouseAdapter
         this.mouseTargets.remove(target);
     }
 
-    public void setGlobalOnRightClick(Consumer<MouseTarget> onClick)
+    public void addGlobalListener(MouseListener listener)
     {
-        this.onRightClick = onClick;
-    }
-
-    public void setGlobalOnLeftClick(Consumer<MouseTarget> onClick)
-    {
-        this.onLeftClick = onClick;
+        this.mouseListeners.add(listener);
     }
 
     public void clearMouseTargets()
@@ -117,11 +114,23 @@ public class MouseController extends MouseAdapter
         this.mouseTargets.clear();
     }
 
+    public void clearMouseListeners()
+    {
+        this.mouseListeners.clear();
+    }
+
     public void clearMouseTargets(Scene scene)
     {
         this.mouseTargets.stream()
                          .filter(m -> m.getScene().equals(scene))
                          .forEach(this.mouseTargets::remove);
+    }
+
+    public void clearMouseListeners(Scene scene)
+    {
+        this.mouseListeners.stream()
+                           .filter(m -> m.getScene().equals(scene))
+                           .forEach(this.mouseListeners::remove);
     }
 
     public void checkHover()
@@ -239,6 +248,21 @@ public class MouseController extends MouseAdapter
             camY = Camera.currentCamera.getY().pixels();
         }
 
+        if (e.getButton() == MouseEvent.BUTTON1)
+        {
+            for (MouseListener listener : this.mouseListeners)
+            {
+                listener.onLeftClick(e, Unit.forPixels(pCam.x), Unit.forPixels(pCam.y));
+            }
+        }
+        else if (e.getButton() == MouseEvent.BUTTON3)
+        {
+            for (MouseListener listener : this.mouseListeners)
+            {
+                listener.onRightClick(e, Unit.forPixels(pCam.x), Unit.forPixels(pCam.y));
+            }
+        }
+
         if (e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON3)
         {
             sortTargets();
@@ -263,7 +287,6 @@ public class MouseController extends MouseAdapter
                     if (e.getButton() == MouseEvent.BUTTON1)
                     {
                         this.lastClickedTarget = target; // used for dragging. only used with left mouse button
-                        onLeftClick(target);
 
                         Threads.get().executeCached(() ->
                                                     {
@@ -274,7 +297,6 @@ public class MouseController extends MouseAdapter
                     }
                     else if (e.getButton() == MouseEvent.BUTTON3)
                     {
-                        onRightClick(target);
                         Threads.get().executeCached(() ->
                                                     {
                                                         target.onRightClick(e,
@@ -300,12 +322,16 @@ public class MouseController extends MouseAdapter
     @Override
     public void mouseWheelMoved(MouseWheelEvent e)
     {
+        for (MouseListener listener : this.mouseListeners)
+        {
+            listener.onMouseWheelMove(e, e.getWheelRotation());
+        }
+
         if (this.lastClickedTarget != null)
         {
             // dont switch to another target if we havnt released our last click yet, i.e. are still dragging the
             // target around
-            this.lastClickedTarget.onMouseWheelMove(e,
-                                                    e.getWheelRotation());
+            this.lastClickedTarget.onMouseWheelMove(e, e.getWheelRotation());
         }
         else
         {
@@ -340,6 +366,13 @@ public class MouseController extends MouseAdapter
     @Override
     public void mouseDragged(MouseEvent e)
     {
+        for (MouseListener listener : this.mouseListeners)
+        {
+            listener.onDrag(e,
+                            Unit.forPixels(e.getX() - this.lastClickMouseX),
+                            Unit.forPixels(e.getY() - this.lastClickMouseY));
+        }
+
         if (this.lastClickedTarget != null)
         {
             this.lastClickedTarget.onDrag(e,
@@ -354,22 +387,6 @@ public class MouseController extends MouseAdapter
     private synchronized void sortTargets()
     {
         this.mouseTargets.sort(this.zComparator);
-    }
-
-    private void onRightClick(MouseTarget target)
-    {
-        if (this.onRightClick != null)
-        {
-            this.onRightClick.accept(target);
-        }
-    }
-
-    private void onLeftClick(MouseTarget target)
-    {
-        if (this.onLeftClick != null)
-        {
-            this.onLeftClick.accept(target);
-        }
     }
 
     /**
