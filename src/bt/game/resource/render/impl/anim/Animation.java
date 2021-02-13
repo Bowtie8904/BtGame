@@ -25,6 +25,7 @@ public class Animation extends BaseRenderable implements Tickable
     private String[] imageNames;
     private int currentIndex = -1;
     private double rotation;
+    private double rotationGain = 0;
     private Map<Integer, Runnable> onFrame;
     private boolean loop;
     private Runnable onEnd;
@@ -150,6 +151,20 @@ public class Animation extends BaseRenderable implements Tickable
     }
 
     /**
+     * Sets a rotation gain in degrees. This amount will be added to
+     * the rotation of this animation each second. A negtive amount
+     * can be passed to reverse the rotation.
+     * An amount above 360 or below -360 can be passed to do more
+     * than a full rotation in one second.
+     *
+     * @param rotationGain
+     */
+    public void setRotationGain(double rotationGain)
+    {
+        this.rotationGain = rotationGain;
+    }
+
+    /**
      * Sets the amount of alpha that the images should lose each second.
      * <p>
      * This value can be higher than the maximum amount of alpha (1) to
@@ -213,6 +228,20 @@ public class Animation extends BaseRenderable implements Tickable
         this.onEnd = action;
     }
 
+    protected void calculateNewRotation(double delta)
+    {
+        this.rotation += this.rotationGain * delta;
+
+        if (this.rotation > 360)
+        {
+            this.rotation = 0;
+        }
+        else if (this.rotation < 0)
+        {
+            this.rotation = 360;
+        }
+    }
+
     /**
      * Switches images at the caluclated interval and executes actions based on the frame index.
      *
@@ -229,6 +258,8 @@ public class Animation extends BaseRenderable implements Tickable
         {
             this.imageEmitter.tick(delta);
         }
+
+        calculateNewRotation(delta);
 
         if (this.currentIndex < this.images.length && System.currentTimeMillis() - this.lastTime >= this.interval
                 || this.lastTime == 0)
