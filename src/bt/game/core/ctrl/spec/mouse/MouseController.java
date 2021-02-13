@@ -82,6 +82,16 @@ public class MouseController extends MouseAdapter
         return Unit.forPixels(this.mouseY);
     }
 
+    public Unit getLastClickMouseX()
+    {
+        return Unit.forPixels(this.lastClickMouseX);
+    }
+
+    public Unit getLastClickMouseY()
+    {
+        return Unit.forPixels(this.lastClickMouseY);
+    }
+
     public synchronized void addMouseTarget(MouseTarget target)
     {
         this.mouseTargets.add(target);
