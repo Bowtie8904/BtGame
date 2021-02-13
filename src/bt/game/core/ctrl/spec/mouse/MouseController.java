@@ -1,6 +1,14 @@
 package bt.game.core.ctrl.spec.mouse;
 
-import java.awt.Point;
+import bt.game.core.container.abstr.GameContainer;
+import bt.game.core.ctrl.spec.mouse.intf.MouseTarget;
+import bt.game.core.scene.cam.Camera;
+import bt.game.core.scene.intf.Scene;
+import bt.game.util.unit.Unit;
+import bt.scheduler.Threads;
+import org.dyn4j.geometry.Vector2;
+
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -9,18 +17,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-import org.dyn4j.geometry.Vector2;
-
-import bt.game.core.container.abstr.GameContainer;
-import bt.game.core.ctrl.spec.mouse.intf.MouseTarget;
-import bt.game.core.scene.cam.Camera;
-import bt.game.core.scene.intf.Scene;
-import bt.game.util.unit.Unit;
-import bt.scheduler.Threads;
-
 /**
  * @author &#8904
- *
  */
 public class MouseController extends MouseAdapter
 {
@@ -28,7 +26,7 @@ public class MouseController extends MouseAdapter
 
     public static MouseController get()
     {
-        return instance;
+        return MouseController.instance;
     }
 
     private Consumer<MouseTarget> onRightClick;
@@ -36,21 +34,24 @@ public class MouseController extends MouseAdapter
     private Comparator<MouseTarget> zComparator;
     private List<MouseTarget> mouseTargets;
     private GameContainer component;
-    private int mouseX;
-    private int mouseY;
+    private int lastClickMouseX;
+    private int lastClickMouseY;
+    private double mouseX;
+    private double mouseY;
     private MouseTarget lastClickedTarget;
     private MouseTarget lastHoveredTarget;
 
     public MouseController(GameContainer component)
     {
-        instance = this;
+        MouseController.instance = this;
         this.component = component;
         this.component.addMouseListener(this);
         this.component.addMouseMotionListener(this);
         this.component.addMouseWheelListener(this);
         this.mouseTargets = new CopyOnWriteArrayList<>();
 
-        this.zComparator = new Comparator<MouseTarget>() {
+        this.zComparator = new Comparator<MouseTarget>()
+        {
             @Override
             public int compare(MouseTarget o1, MouseTarget o2)
             {
@@ -71,24 +72,14 @@ public class MouseController extends MouseAdapter
         }.reversed();
     }
 
-    /**
-     * Gets the X position of the cursor during the last click event.
-     *
-     * @return
-     */
-    public int getLastMouseX()
+    public Unit getMouseX()
     {
-        return this.mouseX;
+        return Unit.forPixels(this.mouseX);
     }
 
-    /**
-     * Gets the Y position of the cursor during the last click event.
-     *
-     * @return
-     */
-    public int getLastMouseY()
+    public Unit getMouseY()
     {
-        return this.mouseY;
+        return Unit.forPixels(this.mouseY);
     }
 
     public synchronized void addMouseTarget(MouseTarget target)
@@ -118,8 +109,7 @@ public class MouseController extends MouseAdapter
 
     public void clearMouseTargets(Scene scene)
     {
-        this.mouseTargets
-                         .stream()
+        this.mouseTargets.stream()
                          .filter(m -> m.getScene().equals(scene))
                          .forEach(this.mouseTargets::remove);
     }
@@ -152,6 +142,9 @@ public class MouseController extends MouseAdapter
                     camX = Camera.currentCamera.getX().pixels();
                     camY = Camera.currentCamera.getY().pixels();
                 }
+
+                this.mouseX = mx + camX;
+                this.mouseY = my + camY;
 
                 boolean foundOne = false;
 
@@ -209,18 +202,18 @@ public class MouseController extends MouseAdapter
     @Override
     public void mousePressed(MouseEvent e)
     {
-        this.mouseX = e.getX();
-        this.mouseY = e.getY();
+        this.lastClickMouseX = e.getX();
+        this.lastClickMouseY = e.getY();
 
-        Point pBase = new Point(this.mouseX,
-                                this.mouseY);
+        Point pBase = new Point(this.lastClickMouseX,
+                                this.lastClickMouseY);
         Point p;
         Point pCam = null;
 
         if (Camera.currentCamera != null)
         {
-            pCam = new Point((int)(this.mouseX + Camera.currentCamera.getX().pixels()),
-                             (int)(this.mouseY + Camera.currentCamera.getY().pixels()));
+            pCam = new Point((int)(this.lastClickMouseX + Camera.currentCamera.getX().pixels()),
+                             (int)(this.lastClickMouseY + Camera.currentCamera.getY().pixels()));
         }
         else
         {
@@ -263,21 +256,21 @@ public class MouseController extends MouseAdapter
                         onLeftClick(target);
 
                         Threads.get().executeCached(() ->
-                            {
-                                target.onLeftClick(e,
-                                                   Unit.forPixels(finalPoint.x),
-                                                   Unit.forPixels(finalPoint.y));
-                            });
+                                                    {
+                                                        target.onLeftClick(e,
+                                                                           Unit.forPixels(finalPoint.x),
+                                                                           Unit.forPixels(finalPoint.y));
+                                                    });
                     }
                     else if (e.getButton() == MouseEvent.BUTTON3)
                     {
                         onRightClick(target);
                         Threads.get().executeCached(() ->
-                            {
-                                target.onRightClick(e,
-                                                    Unit.forPixels(finalPoint.x),
-                                                    Unit.forPixels(finalPoint.y));
-                            });
+                                                    {
+                                                        target.onRightClick(e,
+                                                                            Unit.forPixels(finalPoint.x),
+                                                                            Unit.forPixels(finalPoint.y));
+                                                    });
                     }
                     return;
                 }
@@ -306,16 +299,16 @@ public class MouseController extends MouseAdapter
         }
         else
         {
-            this.mouseX = e.getX();
-            this.mouseY = e.getY();
+            this.lastClickMouseX = e.getX();
+            this.lastClickMouseY = e.getY();
 
-            Point p = new Point(this.mouseX,
-                                this.mouseY);
+            Point p = new Point(this.lastClickMouseX,
+                                this.lastClickMouseY);
 
             if (Camera.currentCamera != null)
             {
-                p = new Point((int)(this.mouseX + Camera.currentCamera.getX().pixels()),
-                              (int)(this.mouseY + Camera.currentCamera.getY().pixels()));
+                p = new Point((int)(this.lastClickMouseX + Camera.currentCamera.getX().pixels()),
+                              (int)(this.lastClickMouseY + Camera.currentCamera.getY().pixels()));
             }
 
             sortTargets();
@@ -340,11 +333,11 @@ public class MouseController extends MouseAdapter
         if (this.lastClickedTarget != null)
         {
             this.lastClickedTarget.onDrag(e,
-                                          Unit.forPixels(e.getX() - this.mouseX),
-                                          Unit.forPixels(e.getY() - this.mouseY));
+                                          Unit.forPixels(e.getX() - this.lastClickMouseX),
+                                          Unit.forPixels(e.getY() - this.lastClickMouseY));
 
-            this.mouseX = e.getX();
-            this.mouseY = e.getY();
+            this.lastClickMouseX = e.getX();
+            this.lastClickMouseY = e.getY();
         }
     }
 
