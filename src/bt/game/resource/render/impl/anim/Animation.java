@@ -1,7 +1,10 @@
-package bt.game.resource.render.impl;
+package bt.game.resource.render.impl.anim;
 
 import bt.game.core.obj.intf.Tickable;
+import bt.game.core.scene.intf.Scene;
 import bt.game.resource.load.intf.ResourceLoader;
+import bt.game.resource.render.impl.BaseRenderable;
+import bt.game.resource.render.impl.RenderableImage;
 import bt.game.util.unit.Unit;
 
 import java.awt.*;
@@ -30,6 +33,8 @@ public class Animation extends BaseRenderable implements Tickable
     private long time;
     private Unit rotationOffsetX = Unit.zero();
     private Unit rotationOffsetY = Unit.zero();
+    private boolean imageChanged;
+    private ImageEmitter imageEmitter;
 
     /**
      * Creates a new animation.
@@ -71,8 +76,11 @@ public class Animation extends BaseRenderable implements Tickable
     /**
      * Gathers the images from the recource loader of the set scene, calculates the interval between images based on the
      * number of gathered {@link RenderableImage}s and resets the timer and image index.
+     * <p>
+     * This method needs to be the last call to finish the setup for the animation. No further initial settigns
+     * should be changed after this.
      */
-    public void setup()
+    public void setup(Scene scene)
     {
         this.images = Arrays.stream(this.imageNames)
                             .map(this.resourceLoader::getRenderable)
@@ -89,6 +97,11 @@ public class Animation extends BaseRenderable implements Tickable
         this.interval = this.time / this.images.length;
         this.lastTime = 0;
         this.currentIndex = -1;
+
+        if (this.imageEmitter != null)
+        {
+            this.imageEmitter.registerToScene(scene);
+        }
     }
 
     /**
@@ -134,6 +147,34 @@ public class Animation extends BaseRenderable implements Tickable
     public double getRotation()
     {
         return this.rotation;
+    }
+
+    /**
+     * Sets the amount of alpha that the images should lose each second.
+     * <p>
+     * This value can be higher than the maximum amount of alpha (1) to
+     * indicate that the image should fade completely in less than a second.
+     * For example an alphaLoss value of 5 would mean that an immage would fade out over 200ms.
+     * <p>
+     * Set this value to -1 to disable slow fading. Images will then disappear once the next
+     * image is being rendered (default).
+     * <p>
+     * Set this value to 0 to render images without any fading. Images will be rendered indefinetely.
+     * <p>
+     * Images will keep the rotation that was set to this animation at the time of their first appearence.
+     *
+     * @param alphaLoss
+     */
+    public void setAlphaLoss(double alphaLoss)
+    {
+        if (alphaLoss == -1)
+        {
+            this.imageEmitter = null;
+        }
+        else
+        {
+            this.imageEmitter = new ImageEmitter(alphaLoss, this.z);
+        }
     }
 
     /**
@@ -184,12 +225,18 @@ public class Animation extends BaseRenderable implements Tickable
     @Override
     public void tick(double delta)
     {
+        if (this.imageEmitter != null)
+        {
+            this.imageEmitter.tick(delta);
+        }
+
         if (this.currentIndex < this.images.length && System.currentTimeMillis() - this.lastTime >= this.interval
                 || this.lastTime == 0)
         {
             this.lastTime = System.currentTimeMillis();
 
             this.currentIndex++;
+            this.imageChanged = true;
 
             if (this.currentIndex >= this.images.length)
             {
@@ -231,6 +278,20 @@ public class Animation extends BaseRenderable implements Tickable
                                                   this.rotationOffsetX,
                                                   this.rotationOffsetY,
                                                   debugRendering);
+
+            if (this.imageChanged && this.imageEmitter != null)
+            {
+                this.imageChanged = false;
+                this.imageEmitter.setZ(this.z);
+                this.imageEmitter.emit(new EmitterImage(this.images[this.currentIndex],
+                                                        x,
+                                                        y,
+                                                        w,
+                                                        h,
+                                                        this.rotation,
+                                                        this.rotationOffsetX,
+                                                        this.rotationOffsetY));
+            }
         }
     }
 

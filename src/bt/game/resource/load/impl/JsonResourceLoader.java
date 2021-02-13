@@ -2,9 +2,9 @@ package bt.game.resource.load.impl;
 
 import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.load.intf.ResourceLoader;
-import bt.game.resource.render.impl.Animation;
 import bt.game.resource.render.impl.RenderableGif;
 import bt.game.resource.render.impl.RenderableImage;
+import bt.game.resource.render.impl.anim.Animation;
 import bt.io.json.JSON;
 import bt.io.sound.SoundSupplier;
 import bt.runtime.InstanceKiller;

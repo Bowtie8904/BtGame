@@ -5,7 +5,7 @@ import bt.game.core.obj.intf.Animated;
 import bt.game.resource.load.container.ResourceContainer;
 import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.load.intf.ResourceLoader;
-import bt.game.resource.render.impl.Animation;
+import bt.game.resource.render.impl.anim.Animation;
 import bt.game.resource.render.intf.Renderable;
 import bt.io.sound.Sound;
 import bt.io.sound.SoundSupplier;

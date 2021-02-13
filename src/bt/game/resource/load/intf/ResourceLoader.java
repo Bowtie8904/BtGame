@@ -1,7 +1,7 @@
 package bt.game.resource.load.intf;
 
 import bt.game.core.ctrl.spec.mouse.obj.Cursor;
-import bt.game.resource.render.impl.Animation;
+import bt.game.resource.render.impl.anim.Animation;
 import bt.game.resource.render.intf.Renderable;
 import bt.io.sound.Sound;
 import bt.types.Killable;
