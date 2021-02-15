@@ -408,7 +408,7 @@ public abstract class GameContainer extends Canvas
      * @param name
      * @param scene
      */
-    protected void addScene(String name, Scene scene)
+    public void addScene(String name, Scene scene)
     {
         addScene(name,
                  scene,
@@ -426,7 +426,7 @@ public abstract class GameContainer extends Canvas
      * @param mainScene
      * @param loadingScene
      */
-    protected void addScene(String name, Scene mainScene, Scene loadingScene)
+    public void addScene(String name, Scene mainScene, Scene loadingScene)
     {
         this.scenes.put(name,
                         new SimpleEntry<>(mainScene,
