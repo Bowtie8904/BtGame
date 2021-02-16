@@ -4,6 +4,7 @@ import bt.game.resource.render.intf.Renderable;
 import bt.game.util.shape.ShapeRenderer;
 import bt.game.util.unit.Unit;
 import bt.types.Killable;
+import bt.utils.NumberUtils;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Shape;
 
@@ -90,12 +91,12 @@ public class RenderableImage implements Renderable, Killable
         if (cropStrat == Cropping.MAINTAIN_HEIGHT)
         {
             double singlePixel = height / (double)heightParts;
-            width = (int)(singlePixel * widthParts);
+            width = NumberUtils.clamp((int)(singlePixel * widthParts), 0, width);
         }
         else if (cropStrat == Cropping.MAINTAIN_WIDTH)
         {
             double singlePixel = width / (double)widthParts;
-            height = (int)(singlePixel * heightParts);
+            height = NumberUtils.clamp((int)(singlePixel * heightParts), 0, height);
         }
 
         return crop(0, 0, width, height);
