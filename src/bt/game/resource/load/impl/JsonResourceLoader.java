@@ -2,6 +2,7 @@ package bt.game.resource.load.impl;
 
 import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.load.intf.ResourceLoader;
+import bt.game.resource.render.impl.Cropping;
 import bt.game.resource.render.impl.RenderableGif;
 import bt.game.resource.render.impl.RenderableImage;
 import bt.game.resource.render.impl.anim.Animation;
@@ -39,6 +40,11 @@ import java.util.stream.Collectors;
  * {
  * "path":"resource/images/test.png",
  * "alias":"test_image"
+ * },
+ * {
+ * "path":"resource/images/test.png",
+ * "alias":"test_image",
+ * "ratio":"width:16:9"
  * },
  * ...
  * ],
@@ -151,6 +157,11 @@ public class JsonResourceLoader extends BaseResourceLoader
      * "path":"resource/images/test.png",
      * "alias":"test_image"
      * },
+     * {
+     * "path":"resource/images/test.png",
+     * "alias":"test_image",
+     * "ratio":"width:16:9"
+     * },
      * ...
      * ],
      * "gifs":
@@ -245,16 +256,41 @@ public class JsonResourceLoader extends BaseResourceLoader
         if (json.has("images"))
         {
             JSONArray imageArray = json.getJSONArray("images");
+            String ratio = null;
+            String[] ratioParts = null;
+            RenderableImage image = null;
 
             for (int i = 0; i < imageArray.length(); i++)
             {
                 obj = imageArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
+                ratio = null;
+                ratioParts = null;
+
+                if (obj.has("ratio"))
+                {
+                    ratio = obj.getString("ratio");
+                    ratioParts = ratio.split(":");
+                }
+
                 try
                 {
-                    add(alias,
-                        new RenderableImage(ImageIO.read(JsonResourceLoader.class.getResourceAsStream(path))));
+                    image = new RenderableImage(ImageIO.read(JsonResourceLoader.class.getResourceAsStream(path)));
+
+                    if (ratio != null)
+                    {
+                        if (ratioParts[0].equalsIgnoreCase("height"))
+                        {
+                            image = image.crop(Cropping.MAINTAIN_HEIGHT, Integer.parseInt(ratioParts[1]), Integer.parseInt(ratioParts[2]));
+                        }
+                        else
+                        {
+                            image = image.crop(Cropping.MAINTAIN_WIDTH, Integer.parseInt(ratioParts[1]), Integer.parseInt(ratioParts[2]));
+                        }
+                    }
+
+                    add(alias, image);
                     System.out.println(String.format("[%s] Loaded image '%s' from path '%s'.",
                                                      name,
                                                      alias,
