@@ -252,6 +252,8 @@ public abstract class RenderableText extends BaseRenderable
             this.font = g.getFont();
         }
 
+        Font originalFont = g.getFont();
+
         g.setFont(this.font);
 
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -288,6 +290,8 @@ public abstract class RenderableText extends BaseRenderable
         g.drawString(this.text,
                      (int)x.pixels(),
                      (int)y.pixels());
+
+        g.setFont(originalFont);
 
         if (debugRendering)
         {
