@@ -38,7 +38,7 @@ public class RenderableImage implements Renderable, Killable
      * Returns a cropped version of the underlying image wrapped in a new {@link RenderableImage} instance.
      *
      * <p>
-     * The returned RenderableImage copies the Z, alpha values and the {@link #shouldRender()} settting. It also shares
+     * The returned RenderableImage copies the Z and the {@link #shouldRender()} settting. It also shares
      * the same image data as this instance, which means that changes to the underlying image can affect both
      * RenderabelImages.
      * </p>
@@ -66,6 +66,39 @@ public class RenderableImage implements Renderable, Killable
         {
             throw new UnsupportedOperationException("Only instances of BufferedImage can be cropped.");
         }
+    }
+
+    /**
+     * Returns a cropped version of the underlying image wrapped in a new {@link RenderableImage} instance.
+     * <p>
+     * The returned RenderableImage copies the Z and the {@link #shouldRender()} settting. It also shares
+     * the same image data as this instance, which means that changes to the underlying image can affect both
+     * RenderabelImages.
+     * </p>
+     *
+     * @param cropStrat   The strategy which defines which side of the image will not be cropped off.
+     * @param widthParts  The width parts of the aspect ratio. If you want a 16:9 image then this value needs to be 16.
+     * @param heightParts The height parts of the aspect ratio. If you want a 16:9 image then this value needs to be 9.
+     * @return The cropped RenderableImage if possible.
+     * @throws UnsupportedOperationException if the underlying image is not an instance of {@link BufferedImage}.
+     */
+    public RenderableImage crop(Cropping cropStrat, int widthParts, int heightParts)
+    {
+        int width = this.image.getWidth(null);
+        int height = this.image.getHeight(null);
+
+        if (cropStrat == Cropping.MAINTAIN_HEIGHT)
+        {
+            double singlePixel = height / (double)heightParts;
+            width = (int)(singlePixel * widthParts);
+        }
+        else if (cropStrat == Cropping.MAINTAIN_WIDTH)
+        {
+            double singlePixel = width / (double)widthParts;
+            height = (int)(singlePixel * heightParts);
+        }
+
+        return crop(0, 0, width, height);
     }
 
     /**
