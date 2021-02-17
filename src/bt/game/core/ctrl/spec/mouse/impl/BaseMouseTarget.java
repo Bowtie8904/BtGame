@@ -32,10 +32,15 @@ public class BaseMouseTarget implements MouseTarget
         this.h = h;
         this.z = z;
         this.affectedByCamera = true;
-        this.shape = Geometry.createRectangle(w.pixels(),
-                                              h.pixels());
-        this.shape.translate(x.pixels() + (w.pixels() / 2),
-                             y.pixels() + (h.pixels() / 2));
+        createShape();
+    }
+
+    protected void createShape()
+    {
+        this.shape = Geometry.createRectangle(this.w.pixels(),
+                                              this.h.pixels());
+        this.shape.translate(this.x.pixels() + (this.w.pixels() / 2),
+                             this.y.pixels() + (this.h.pixels() / 2));
     }
 
     /**
@@ -103,6 +108,7 @@ public class BaseMouseTarget implements MouseTarget
     public void setW(Unit w)
     {
         this.w = w;
+        createShape();
     }
 
     public Unit getH()
@@ -113,6 +119,7 @@ public class BaseMouseTarget implements MouseTarget
     public void setH(Unit h)
     {
         this.h = h;
+        createShape();
     }
 
     public Unit getX()
@@ -123,6 +130,7 @@ public class BaseMouseTarget implements MouseTarget
     public void setX(Unit x)
     {
         this.x = x;
+        createShape();
     }
 
     public Unit getY()
@@ -133,6 +141,7 @@ public class BaseMouseTarget implements MouseTarget
     public void setY(Unit y)
     {
         this.y = y;
+        createShape();
     }
 
     /**
