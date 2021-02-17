@@ -269,11 +269,9 @@ public abstract class RenderableText extends BaseRenderable
                 || !h.equals(this.h)
                 || this.lastUnitRatio != Unit.getRatio())
         {
-            doScaling(g,
-                      x,
-                      y,
-                      w,
-                      h);
+            doScaling(g, x, y, w, h);
+
+            this.shouldRecalculate = false;
         }
 
         g.rotate(Math.toRadians(rotation),
