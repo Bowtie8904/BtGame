@@ -130,6 +130,13 @@ public class RenderableImage implements Renderable, Killable
         if (!w.equals(this.lastWidth) || !h.equals(this.lastHeight) || this.lastUnitRatio != Unit.getRatio())
         {
             this.lastUnitRatio = Unit.getRatio();
+
+            if (this.scaledImage != null)
+            {
+                this.scaledImage.flush();
+                this.scaledImage = null;
+            }
+
             this.scaledImage = this.image.getScaledInstance((int)w.pixels(),
                                                             (int)h.pixels(),
                                                             Image.SCALE_SMOOTH);
