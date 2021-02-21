@@ -1,22 +1,21 @@
 package bt.game.resource.render.impl.text.single;
 
-import java.awt.Font;
-import java.awt.Graphics2D;
+import bt.game.util.unit.Unit;
+
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
-
-import bt.game.util.unit.Unit;
 
 /**
  * A text rendering class which will render the text inside a given rectangular shape. The text will either fill out the
  * width or the height of the rectangle while keeping its aspect ratio. The axis that is filled depends on the given
  * parameter. Pass either {@link #FIXED_HEIGHT} or {@link #FIXED_WIDTH}.
- * 
+ *
  * <p>
  * The rendered text will never exceed the bounds of the fixed axis. No guarantee is made for the other axis.
  * </p>
- * 
+ *
  * @author &#8904
  */
 public class FixedText extends RenderableText
@@ -33,14 +32,18 @@ public class FixedText extends RenderableText
      */
     public static final int FIXED_HEIGHT = 2;
 
-    /** Saves the set type. Either {@link #FIXED_HEIGHT} or {@link #FIXED_WIDTH}. */
+    /**
+     * Saves the set type. Either {@link #FIXED_HEIGHT} or {@link #FIXED_WIDTH}.
+     */
     private int fixedType;
+
+    private Unit textWidth = Unit.zero();
+    private Unit textHeight = Unit.zero();
 
     /**
      * Creates a new instance.
-     * 
-     * @param text
-     *            The text to render.
+     *
+     * @param text The text to render.
      */
     public FixedText(String text, int fixedType)
     {
@@ -50,17 +53,12 @@ public class FixedText extends RenderableText
 
     /**
      * Creates a new instance.
-     * 
-     * @param text
-     *            The text to render.
-     * @param x
-     *            The x position of the text.
-     * @param y
-     *            The y position of the text.
-     * @param w
-     *            The width of the area that the text will be rendered in.
-     * @param h
-     *            The height of the area that the text will be rendered in.
+     *
+     * @param text The text to render.
+     * @param x    The x position of the text.
+     * @param y    The y position of the text.
+     * @param w    The width of the area that the text will be rendered in.
+     * @param h    The height of the area that the text will be rendered in.
      */
     public FixedText(String text, int fixedType, Unit x, Unit y, Unit fixedValue)
     {
@@ -74,17 +72,12 @@ public class FixedText extends RenderableText
 
     /**
      * Creates a new instance.
-     * 
-     * @param text
-     *            The text to render.
-     * @param x
-     *            The x position of the text.
-     * @param y
-     *            The y position of the text.
-     * @param w
-     *            The width of the area that the text will be rendered in.
-     * @param h
-     *            The height of the area that the text will be rendered in.
+     *
+     * @param text The text to render.
+     * @param x    The x position of the text.
+     * @param y    The y position of the text.
+     * @param w    The width of the area that the text will be rendered in.
+     * @param h    The height of the area that the text will be rendered in.
      */
     public FixedText(String text, int fixedType, Unit fixedValue)
     {
@@ -94,9 +87,19 @@ public class FixedText extends RenderableText
         this.fixedType = fixedType;
     }
 
+    public Unit getTextWidth()
+    {
+        return this.textWidth;
+    }
+
+    public Unit getTextHeight()
+    {
+        return this.textHeight;
+    }
+
     /**
      * @see bt.game.resource.render.impl.text.single.RenderableText#doScaling(java.awt.Graphics2D,
-     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     protected void doScaling(Graphics2D g, Unit x, Unit y, Unit w, Unit h)
@@ -114,7 +117,7 @@ public class FixedText extends RenderableText
         double xScale = w.pixels() / width;
         double yScale = (double)(h.pixels() / height);
 
-        double trueScale = 1; // yScale < xScale ? yScale : xScale;
+        double trueScale = 1;
 
         if (this.fixedType == FixedText.FIXED_HEIGHT)
         {
@@ -145,5 +148,7 @@ public class FixedText extends RenderableText
 
         this.h = h;
         this.w = w;
+        this.textHeight = Unit.forPixels(height * trueScale);
+        this.textWidth = Unit.forPixels(width * trueScale);
     }
 }
