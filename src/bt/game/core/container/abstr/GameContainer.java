@@ -439,6 +439,18 @@ public abstract class GameContainer extends Canvas
     }
 
     /**
+     * Attempts to return the main scene that is registered with the given name.
+     *
+     * @param name
+     * @return The scene with the given name or null.
+     */
+    public Scene getScene(String name)
+    {
+        var entry = this.scenes.get(name);
+        return entry == null ? null : entry.getKey();
+    }
+
+    /**
      * Calls {@link Scene#tick() tick} of the current scene as soon as {@link Scene#isLoaded() isLoaded} returns true.
      */
     public void tick(double delta)
