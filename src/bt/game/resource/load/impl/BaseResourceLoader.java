@@ -327,7 +327,7 @@ public class BaseResourceLoader implements ResourceLoader
     @Override
     public void load(String name)
     {
-        InstanceKiller.killOnShutdown(this);
+        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 101);
 
         Map<String, Renderable> loadedRenderables;
         Map<String, SoundSupplier> loadedSounds;

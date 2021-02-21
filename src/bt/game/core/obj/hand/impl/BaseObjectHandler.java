@@ -508,7 +508,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void init()
     {
-        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 2);
+        InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 102);
 
         if (this.scene.getWorld() != null)
         {
