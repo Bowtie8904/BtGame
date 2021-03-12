@@ -198,7 +198,10 @@ public abstract class GameContainer extends Canvas
 
         this.frame.setVisible(true);
 
-        calculateRatio(this);
+        if (!this.settings.isUndecorated())
+        {
+            calculateRatio(this);
+        }
 
         Dimension innerSize = this.frame.getContentPane().getSize();
         GameContainer.width = Unit.forPixels(innerSize.getWidth());
