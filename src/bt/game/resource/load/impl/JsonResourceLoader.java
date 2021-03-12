@@ -60,7 +60,8 @@ import java.util.stream.Collectors;
  * [
  * {
  * "path":"resource/sounds/test.wav",
- * "alias":"test_sound"
+ * "alias":"test_sound",
+ * "volume":"0.7"
  * },
  * ...
  * ],
@@ -176,7 +177,8 @@ public class JsonResourceLoader extends BaseResourceLoader
      * [
      * {
      * "path":"resource/sounds/test.wav",
-     * "alias":"test_sound"
+     * "alias":"test_sound",
+     * "volume":"0.7"
      * },
      * ...
      * ],
@@ -233,6 +235,7 @@ public class JsonResourceLoader extends BaseResourceLoader
         JSONObject obj;
         String alias;
         String path;
+        float volume;
 
         if (json.has("sounds"))
         {
@@ -243,9 +246,12 @@ public class JsonResourceLoader extends BaseResourceLoader
                 obj = soundArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
-                add(alias,
-                    new SoundSupplier(
-                            new BufferedInputStream(JsonResourceLoader.class.getResourceAsStream(path))));
+                volume = Float.parseFloat(obj.has("volume") ? obj.getString("volume") : "1.0");
+
+                SoundSupplier supplier = new SoundSupplier(new BufferedInputStream(JsonResourceLoader.class.getResourceAsStream(path)));
+                supplier.setVolume(volume);
+
+                add(alias, supplier);
                 System.out.println(String.format("[%s] Loaded sound '%s' from path '%s'.",
                                                  name,
                                                  alias,

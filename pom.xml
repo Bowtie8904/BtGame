@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.github.Bowtie8904</groupId>
             <artifactId>BtIO</artifactId>
-            <version>6891026f</version>
+            <version>6f61dd3c</version>
         </dependency>
         <dependency>
             <groupId>org.dyn4j</groupId>
