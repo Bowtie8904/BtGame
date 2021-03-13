@@ -163,12 +163,9 @@ public abstract class GameContainer extends Canvas
         GameContainer.width = Unit.forUnits(this.settings.getUnitWidth());
         GameContainer.height = Unit.forUnits(this.settings.getUnitHeight());
 
-        setSize(new Dimension((int)GameContainer.width.pixels(),
-                              (int)GameContainer.height.pixels()));
-        setPreferredSize(new Dimension((int)GameContainer.width.pixels(),
-                                       (int)GameContainer.height.pixels()));
-        setMaximumSize(new Dimension((int)GameContainer.width.pixels(),
-                                     (int)GameContainer.height.pixels()));
+        setSize(this.frame.getSize());
+        setPreferredSize(this.frame.getSize());
+        setMaximumSize(this.frame.getSize());
 
         if (getWidth() < this.frame.getWidth())
         {
@@ -179,7 +176,7 @@ public abstract class GameContainer extends Canvas
             this.frame.getContentPane().add(this);
             this.frame.getContentPane().add(Box.createHorizontalGlue());
         }
-        else if (this.getHeight() < this.frame.getHeight())
+        else if (getHeight() < this.frame.getHeight())
         {
             this.frame.getContentPane()
                       .setLayout(new BoxLayout(this.frame.getContentPane(),
@@ -194,18 +191,12 @@ public abstract class GameContainer extends Canvas
         }
 
         this.frame.revalidate();
+        this.frame.pack();
         this.frame.repaint();
 
         this.frame.setVisible(true);
 
-        if (!this.settings.isUndecorated())
-        {
-            calculateRatio(this);
-        }
-
-        Dimension innerSize = this.frame.getContentPane().getSize();
-        GameContainer.width = Unit.forPixels(innerSize.getWidth());
-        GameContainer.height = Unit.forPixels(innerSize.getHeight());
+        calculateRatio(this.frame.getContentPane());
     }
 
     /**
@@ -279,7 +270,6 @@ public abstract class GameContainer extends Canvas
             this.frame.setLocationRelativeTo(null);
         }
 
-        calculateRatio(this.frame);
         setupFrame();
         this.createBufferStrategy(4);
         this.requestFocus();
