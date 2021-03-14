@@ -115,6 +115,11 @@ public class BaseResourceLoader implements ResourceLoader
             closingOp.run();
         }
 
+        for (SoundSupplier supplier : this.sounds.values())
+        {
+            supplier.kill();
+        }
+
         this.renderables.clear();
         this.sounds.clear();
         this.files.clear();
