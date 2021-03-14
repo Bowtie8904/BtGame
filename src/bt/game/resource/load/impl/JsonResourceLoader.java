@@ -16,7 +16,10 @@ import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +64,8 @@ import java.util.stream.Collectors;
  * {
  * "path":"resource/sounds/test.wav",
  * "alias":"test_sound",
- * "volume":"0.7"
+ * "volume":"0.7",
+ * "volumecategory":"backgroundmusic"
  * },
  * ...
  * ],
@@ -178,7 +182,8 @@ public class JsonResourceLoader extends BaseResourceLoader
      * {
      * "path":"resource/sounds/test.wav",
      * "alias":"test_sound",
-     * "volume":"0.7"
+     * "volume":"0.7",
+     * "volumecategory":"backgroundmusic"
      * },
      * ...
      * ],
@@ -236,6 +241,7 @@ public class JsonResourceLoader extends BaseResourceLoader
         String alias;
         String path;
         float volume;
+        int concurrentPlays;
 
         if (json.has("sounds"))
         {
@@ -247,15 +253,32 @@ public class JsonResourceLoader extends BaseResourceLoader
                 alias = obj.getString("alias");
                 path = obj.getString("path");
                 volume = Float.parseFloat(obj.has("volume") ? obj.getString("volume") : "1.0");
+                concurrentPlays = Integer.parseInt(obj.getString("concurrentplays"));
 
-                SoundSupplier supplier = new SoundSupplier(new BufferedInputStream(JsonResourceLoader.class.getResourceAsStream(path)));
-                supplier.setVolume(volume);
+                try
+                {
+                    SoundSupplier supplier = new SoundSupplier(JsonResourceLoader.class.getResource(path), concurrentPlays);
 
-                add(alias, supplier);
-                System.out.println(String.format("[%s] Loaded sound '%s' from path '%s'.",
-                                                 name,
-                                                 alias,
-                                                 path));
+                    if (obj.has("volumecategory"))
+                    {
+                        supplier.setVolumeCategory(obj.getString("volumecategory"));
+                    }
+
+                    supplier.setVolume(volume);
+
+                    add(alias, supplier);
+                    System.out.println(String.format("[%s] Loaded sound '%s' from path '%s'.",
+                                                     name,
+                                                     alias,
+                                                     path));
+                }
+                catch (Exception e)
+                {
+                    System.out.println(String.format("[%s] Failed to load sound '%s' from path '%s'.",
+                                                     name,
+                                                     alias,
+                                                     path));
+                }
             }
         }
 
