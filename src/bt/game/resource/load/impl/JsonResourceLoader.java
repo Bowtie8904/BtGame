@@ -109,6 +109,7 @@ public class JsonResourceLoader extends BaseResourceLoader
 {
     private String resourceDir;
     private File lastResourceFile;
+    private String globalResName;
 
     /**
      * Creates a new instance and sets the directory that contains the json files for the {@link #load(String)}
@@ -130,9 +131,69 @@ public class JsonResourceLoader extends BaseResourceLoader
         this(resourceDir.getAbsolutePath());
     }
 
+    /**
+     * Creates a new instance and sets the directory that contains the json files for the {@link #load(String)}
+     * implementation.
+     *
+     * <p>
+     * This constructor will add the instance to the {@link InstanceKiller} via
+     * {@link InstanceKiller#killOnShutdown(Killable) killOnShutdown} to close resources on application shutdown. The
+     * one controlling this resource loader should however call {@link #kill()} and
+     * {@link InstanceKiller#unregister(Killable) unregister} the instance as soon as the resources are not needed
+     * anymore.
+     * </p>
+     *
+     * @param resourceDir The directory path which contains the json (.res) files that define additional resources to load. If the
+     *                    directory does not exist it will be created.
+     */
     public JsonResourceLoader(String resourcePath)
     {
         this.resourceDir = resourcePath;
+    }
+
+    /**
+     * Creates a new instance and sets the directory that contains the json files for the {@link #load(String)}
+     * implementation.
+     *
+     * <p>
+     * This constructor will add the instance to the {@link InstanceKiller} via
+     * {@link InstanceKiller#killOnShutdown(Killable) killOnShutdown} to close resources on application shutdown. The
+     * one controlling this resource loader should however call {@link #kill()} and
+     * {@link InstanceKiller#unregister(Killable) unregister} the instance as soon as the resources are not needed
+     * anymore.
+     * </p>
+     *
+     * @param resourceDir   The directory which contains the json (.res) files that define additional resources to load. If the
+     *                      directory does not exist it will be created.
+     * @param globalResName The name of a global resource file that will be loaded as well. This is just avoid having to define
+     *                      global resources in every res file.
+     */
+    public JsonResourceLoader(File resourceDir, String globalResName)
+    {
+        this(resourceDir.getAbsolutePath(), globalResName);
+    }
+
+    /**
+     * Creates a new instance and sets the directory that contains the json files for the {@link #load(String)}
+     * implementation.
+     *
+     * <p>
+     * This constructor will add the instance to the {@link InstanceKiller} via
+     * {@link InstanceKiller#killOnShutdown(Killable) killOnShutdown} to close resources on application shutdown. The
+     * one controlling this resource loader should however call {@link #kill()} and
+     * {@link InstanceKiller#unregister(Killable) unregister} the instance as soon as the resources are not needed
+     * anymore.
+     * </p>
+     *
+     * @param resourceDir   The directory path which contains the json (.res) files that define additional resources to load. If the
+     *                      directory does not exist it will be created.
+     * @param globalResName The name of a global resource file that will be loaded as well. This is just avoid having to define global
+     *                      resources in every res file.
+     */
+    public JsonResourceLoader(String resourcePath, String globalResName)
+    {
+        this.resourceDir = resourcePath;
+        this.globalResName = globalResName;
     }
 
     /**
@@ -228,6 +289,11 @@ public class JsonResourceLoader extends BaseResourceLoader
     {
         super.load(name);
 
+        loadFromJson(name, false);
+    }
+
+    protected void loadFromJson(String name, boolean globalLoading)
+    {
         JSONObject json = getJsonForName(name);
 
         if (json == null)
@@ -441,6 +507,14 @@ public class JsonResourceLoader extends BaseResourceLoader
                     e.printStackTrace();
                 }
             }
+        }
+
+        if (this.globalResName != null && !globalLoading)
+        {
+            System.out.println(String.format("[%s] Loading global resource file '%s'.",
+                                             name,
+                                             this.globalResName));
+            loadFromJson(this.globalResName, true);
         }
     }
 
