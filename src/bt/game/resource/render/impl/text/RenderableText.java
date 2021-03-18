@@ -1,6 +1,9 @@
-package bt.game.resource.render.impl.text.single;
+package bt.game.resource.render.impl.text;
 
 import bt.game.resource.render.impl.BaseRenderable;
+import bt.game.resource.render.impl.text.single.FilledText;
+import bt.game.resource.render.impl.text.single.FixedText;
+import bt.game.resource.render.impl.text.single.FlexibleText;
 import bt.game.util.shape.ShapeRenderer;
 import bt.game.util.unit.Unit;
 import org.dyn4j.geometry.Geometry;

@@ -276,6 +276,11 @@ public abstract class GameContainer extends Canvas
         this.canRender = true;
     }
 
+    /**
+     * Sets the cursor of the game.
+     *
+     * @param cursor
+     */
     public void setCursor(Cursor cursor)
     {
         this.frame.setCursor(Toolkit.getDefaultToolkit()
@@ -284,6 +289,9 @@ public abstract class GameContainer extends Canvas
                                                         "game cursor"));
     }
 
+    /**
+     * Resets the games cursor to the default one that is set in the {@link ContainerSettings settings}.
+     */
     public void resetToDefaultCursor()
     {
         this.frame.setCursor(Toolkit.getDefaultToolkit()
@@ -349,6 +357,8 @@ public abstract class GameContainer extends Canvas
      * Sets the {@link Scene} to be displayed. This will properly {@link Scene#kill() kill} the current scene. The new
      * main scene will be loaded in a different thread. During the loading of the main scene the set loading scene is
      * played (if it exists).
+     * <p>
+     * The given scene can not be the same one as the currently active one.
      *
      * @param name The name of the scene that should be played.
      */

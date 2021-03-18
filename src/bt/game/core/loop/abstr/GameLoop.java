@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  */
 public abstract class GameLoop implements Killable
 {
-    public static final double NANO_TO_BASE = 1.0e9;
+    protected static final double NANO_TO_BASE = 1.0e9;
     /**
      * Indicates whether this loop is currently running. Setting this to false is the easiest way to terminate the loop.
      */

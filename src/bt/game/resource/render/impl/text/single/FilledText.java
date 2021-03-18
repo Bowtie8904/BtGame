@@ -1,30 +1,29 @@
 package bt.game.resource.render.impl.text.single;
 
-import java.awt.Font;
-import java.awt.Graphics2D;
+import bt.game.resource.render.impl.text.RenderableText;
+import bt.game.util.unit.Unit;
+
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
 
-import bt.game.util.unit.Unit;
-
 /**
  * A text rendering class which will render the text inside a given rectangular shape. The text will fill out the entire
  * rectangle without any regards to its aspect ratio.
- * 
+ *
  * <p>
  * The rendered text will never exceed the rectangular shape.
  * </p>
- * 
+ *
  * @author &#8904
  */
 public class FilledText extends RenderableText
 {
     /**
      * Creates a new instance.
-     * 
-     * @param text
-     *            The text to render.
+     *
+     * @param text The text to render.
      */
     public FilledText(String text)
     {
@@ -33,17 +32,12 @@ public class FilledText extends RenderableText
 
     /**
      * Creates a new instance.
-     * 
-     * @param text
-     *            The text to render.
-     * @param x
-     *            The x position of the text.
-     * @param y
-     *            The y position of the text.
-     * @param w
-     *            The width of the area that the text will be rendered in.
-     * @param h
-     *            The height of the area that the text will be rendered in.
+     *
+     * @param text The text to render.
+     * @param x    The x position of the text.
+     * @param y    The y position of the text.
+     * @param w    The width of the area that the text will be rendered in.
+     * @param h    The height of the area that the text will be rendered in.
      */
     public FilledText(String text, Unit x, Unit y, Unit w, Unit h)
     {
@@ -56,17 +50,12 @@ public class FilledText extends RenderableText
 
     /**
      * Creates a new instance.
-     * 
-     * @param text
-     *            The text to render.
-     * @param x
-     *            The x position of the text.
-     * @param y
-     *            The y position of the text.
-     * @param w
-     *            The width of the area that the text will be rendered in.
-     * @param h
-     *            The height of the area that the text will be rendered in.
+     *
+     * @param text The text to render.
+     * @param x    The x position of the text.
+     * @param y    The y position of the text.
+     * @param w    The width of the area that the text will be rendered in.
+     * @param h    The height of the area that the text will be rendered in.
      */
     public FilledText(String text, Unit w, Unit h)
     {
@@ -76,8 +65,8 @@ public class FilledText extends RenderableText
     }
 
     /**
-     * @see bt.game.resource.render.impl.text.single.RenderableText#doScaling(java.awt.Graphics2D,
-     *      bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
+     * @see RenderableText#doScaling(java.awt.Graphics2D,
+     * bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override
     protected void doScaling(Graphics2D g, Unit x, Unit y, Unit w, Unit h)

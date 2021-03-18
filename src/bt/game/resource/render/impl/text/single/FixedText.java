@@ -1,5 +1,6 @@
 package bt.game.resource.render.impl.text.single;
 
+import bt.game.resource.render.impl.text.RenderableText;
 import bt.game.util.unit.Unit;
 
 import java.awt.*;
@@ -98,7 +99,7 @@ public class FixedText extends RenderableText
     }
 
     /**
-     * @see bt.game.resource.render.impl.text.single.RenderableText#doScaling(java.awt.Graphics2D,
+     * @see RenderableText#doScaling(java.awt.Graphics2D,
      * bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit, bt.game.util.unit.Unit)
      */
     @Override

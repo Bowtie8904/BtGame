@@ -10,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 /**
+ * A defualt implementation of the {@link MouseTarget} interface which uses a rectangular shape as the target area.
+ *
  * @author &#8904
  */
 public class BaseMouseTarget implements MouseTarget
@@ -98,6 +100,11 @@ public class BaseMouseTarget implements MouseTarget
     public Unit getZ()
     {
         return this.z;
+    }
+
+    public void setZ(Unit z)
+    {
+        this.z = z;
     }
 
     public Unit getW()
