@@ -5,12 +5,15 @@ import bt.game.util.shape.ShapeRenderer;
 import bt.game.util.unit.Unit;
 import bt.types.Killable;
 import bt.utils.NumberUtils;
+import com.twelvemonkeys.image.ConvolveWithEdgeOp;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Shape;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.Kernel;
 
 /**
  * @author &#8904
@@ -25,6 +28,8 @@ public class RenderableImage implements Renderable, Killable
     protected double lastUnitRatio = Unit.getRatio();
     protected Unit z;
     protected boolean shouldRender;
+    protected RenderableImage blurredImage;
+    protected int blurredRadius = 0;
 
     public RenderableImage(Image image)
     {
@@ -100,6 +105,51 @@ public class RenderableImage implements Renderable, Killable
         }
 
         return crop(0, 0, width, height);
+    }
+
+    /**
+     * Returns a blurred instance of this image. Unless the radius is being changed this method will return the same image instance everytime.
+     * <p>
+     * The returned RenderableImage copies the Z and the {@link #shouldRender()} settting. It also shares
+     * the same image data as this instance, which means that changes to the underlying image can affect both
+     * RenderabelImages.
+     *
+     * @param radius The radius of the blur. The higher the number the stronger the blur.
+     * @return The blurred instance.
+     * @throws UnsupportedOperationException if the underlying image is not an instance of {@link BufferedImage}.
+     */
+    public RenderableImage blurred(int radius)
+    {
+        if (this.blurredImage == null || radius != this.blurredRadius)
+        {
+            if (this.image instanceof BufferedImage)
+            {
+                this.blurredRadius = radius;
+                int size = radius * 2 + 1;
+                float weight = 1.0f / (size * size);
+                float[] data = new float[size * size];
+
+                for (int i = 0; i < data.length; i++)
+                {
+                    data[i] = weight;
+                }
+
+                Kernel kernel = new Kernel(size, size, data);
+
+                BufferedImageOp op = new ConvolveWithEdgeOp(kernel, ConvolveWithEdgeOp.EDGE_REFLECT, null);
+
+                this.blurredImage = new RenderableImage(op.filter((BufferedImage)this.image, null));
+            }
+            else
+            {
+                throw new UnsupportedOperationException("Only instances of BufferedImage can be blurred.");
+            }
+        }
+
+        this.blurredImage.setZ(this.z);
+        this.blurredImage.shouldRender(this.shouldRender);
+
+        return this.blurredImage;
     }
 
     /**

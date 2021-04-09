@@ -11,6 +11,7 @@ import bt.io.sound.Sound;
 import bt.io.sound.SoundSupplier;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
+import bt.utils.Exceptions;
 
 import java.awt.*;
 import java.io.Closeable;
@@ -220,14 +221,14 @@ public class BaseResourceLoader implements ResourceLoader
      * @see bt.game.resource.load.intf.ResourceLoader#getRenderable(java.lang.String)
      */
     @Override
-    public Renderable getRenderable(String resourceName)
+    public <T> T getRenderable(String resourceName, Class<T> castTraget)
     {
         if (this.killed)
         {
             throw new IllegalStateException("Killed ResourceLoader can't supply resources.");
         }
 
-        return this.renderables.get(resourceName.toUpperCase());
+        return Exceptions.logThrowGet(() -> castTraget.cast(this.renderables.get(resourceName.toUpperCase())));
     }
 
     /**

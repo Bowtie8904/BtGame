@@ -43,7 +43,19 @@ public interface ResourceLoader extends Killable, Loader
      * @param resourceName The unique name that the renderable was loaded with.
      * @return The renderable or null if no mapping for the recource name exists.
      */
-    public Renderable getRenderable(String resourceName);
+    public default Renderable getRenderable(String resourceName)
+    {
+        return getRenderable(resourceName, Renderable.class);
+    }
+
+    /**
+     * Gets the renderable for the given resource name if such an renderable has been loaded before.
+     *
+     * @param resourceName The unique name that the renderable was loaded with.
+     * @param castTraget   The target class to cast the returned Renderable to.
+     * @return The renderable or null if no mapping for the recource name exists.
+     */
+    public <T> T getRenderable(String resourceName, Class<T> castTraget);
 
     /**
      * Gets the sound for the given resource name if such a sound has been loaded before.
