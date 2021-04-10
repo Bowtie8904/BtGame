@@ -1,6 +1,7 @@
 package bt.game.resource.render.impl.text;
 
 import bt.game.resource.render.impl.BaseRenderable;
+import bt.game.resource.render.impl.text.multi.TextBox;
 import bt.game.resource.render.impl.text.single.FilledText;
 import bt.game.resource.render.impl.text.single.FixedText;
 import bt.game.resource.render.impl.text.single.FlexibleText;
@@ -23,6 +24,7 @@ import java.awt.geom.AffineTransform;
  * ratio. The axis that will be filled first is chosen.</li>
  * <li>{@link FixedText} to make a text fill out a given rectangle either in width or height while keeping its aspect
  * ratio. The axis that will be filled depends on a given parameter.</li>
+ * <li>{@link TextBox} to make a text stretch over multiple lines if its length exceeds the given width.</li>
  * </ul>
  * </p>
  *

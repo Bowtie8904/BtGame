@@ -19,12 +19,13 @@ import java.awt.*;
  */
 public class LoadingScene extends BaseScene
 {
-    private int highlight;
-    private double count;
-    private long timePerMove = 100;
-    private long minLoadingTime = 0;
-    private double currentLoadingTime = 0;
-    private Object lock = new Object();
+    protected int highlight;
+    protected int maxHighlightable = 10;
+    protected double count;
+    protected long timePerMove = 100;
+    protected long minLoadingTime = 0;
+    protected double currentLoadingTime = 0;
+    protected Object lock = new Object();
 
     /**
      * Creates a new scene which moves the bar every 5 ticks.
@@ -113,7 +114,7 @@ public class LoadingScene extends BaseScene
         if (this.count > this.timePerMove)
         {
             this.highlight++;
-            if (this.highlight == 10)
+            if (this.highlight == this.maxHighlightable)
             {
                 this.highlight = 0;
             }

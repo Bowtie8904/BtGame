@@ -94,7 +94,7 @@ public class TextBox extends RenderableText
     /**
      * Sets the maximum number of displayed rows.
      * <p>
-     * -1 ius the default and indicates an unlimited number of rows.
+     * -1 is the default and indicates an unlimited number of rows.
      *
      * @param maxLines The number of rows.
      * @param center   Indicates whether the displayed rows should be centered within the space for the maximum rows. For example if a maximum
