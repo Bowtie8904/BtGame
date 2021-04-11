@@ -7,6 +7,7 @@ import bt.game.core.ctrl.spec.mouse.obj.Cursor;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 import bt.scheduler.Threads;
+import bt.utils.Exceptions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,6 +79,11 @@ public abstract class GameContainer extends Canvas
      * Indicates whether this container is in a valid state to perfom rendering.
      */
     protected boolean canRender;
+
+    /**
+     * Indictaes whether this game is currently paused.
+     */
+    protected volatile boolean isPaused;
 
     /**
      * The width in units.
@@ -484,7 +490,11 @@ public abstract class GameContainer extends Canvas
     {
         if (this.currentScene != null && this.currentScene.isLoaded())
         {
-            this.currentScene.tick(delta);
+            if (!this.isPaused)
+            {
+                this.currentScene.tick(delta);
+            }
+
             MouseController.get().checkHover();
             KeyController.get().checkKeyChanges();
         }
@@ -498,11 +508,11 @@ public abstract class GameContainer extends Canvas
     {
         if (this.canRender)
         {
-            BufferStrategy bs = this.getBufferStrategy();
+            BufferStrategy bs = getBufferStrategy();
 
             if (bs == null)
             {
-                this.createBufferStrategy(4);
+                createBufferStrategy(4);
                 return;
             }
 
@@ -528,7 +538,7 @@ public abstract class GameContainer extends Canvas
             // notifying to alert the wait call in exit()
             synchronized (this)
             {
-                this.notifyAll();
+                notifyAll();
             }
         }
 
@@ -583,17 +593,36 @@ public abstract class GameContainer extends Canvas
 
         synchronized (this)
         {
-            try
-            {
-                this.wait(500);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
+            Exceptions.ignoreThrow(this::wait, 500);
         }
 
         System.exit(0);
+    }
+
+    /**
+     * Sets the pause state of this GameContainer.
+     * <p>
+     * If a container is paused it will no longer call the tick method of the current scene.
+     * Mouse and key actions are still being registered.
+     *
+     * @param paused
+     */
+    public void setPaused(boolean paused)
+    {
+        this.isPaused = paused;
+    }
+
+    /**
+     * Indictaes whether this GameContainer is currently paused.
+     * <p>
+     * If a container is paused it will no longer call the tick method of the current scene.
+     * Mouse and key actions are still being registered.
+     *
+     * @param paused
+     */
+    public boolean isPaused()
+    {
+        return this.isPaused;
     }
 
     /**

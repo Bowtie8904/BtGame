@@ -217,7 +217,6 @@ public class MouseController extends MouseAdapter
         }
     }
 
-    // TODO replace Points with primitives
     @Override
     public void mousePressed(MouseEvent e)
     {

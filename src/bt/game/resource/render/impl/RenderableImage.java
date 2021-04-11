@@ -233,6 +233,11 @@ public class RenderableImage implements Renderable, Killable
         {
             this.scaledImage.flush();
         }
+
+        if (this.blurredImage != null)
+        {
+            this.blurredImage.kill();
+        }
     }
 
     /**

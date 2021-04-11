@@ -46,10 +46,7 @@ public class DefaultGameLoop extends GameLoop
             frameUpdateDeltaSum += this.delta;
             frameCounterDeltaSum += this.delta;
 
-            if (!this.isPaused)
-            {
-                runTick(this.delta);
-            }
+            runTick(this.delta);
 
             if (this.renderInterval == 0 || renderIntervalDeltaSum >= this.renderInterval)
             {
