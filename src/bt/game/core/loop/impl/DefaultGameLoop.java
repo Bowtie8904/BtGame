@@ -89,7 +89,7 @@ public class DefaultGameLoop extends GameLoop
 
             if (this.loopTimeout > 0)
             {
-                Exceptions.uncheck(() -> Thread.sleep(this.loopTimeout));
+                Exceptions.ignoreThrow(() -> Thread.sleep(this.loopTimeout));
             }
         }
     }

@@ -375,14 +375,32 @@ public abstract class GameContainer extends Canvas
 
         if (loadingScene != null)
         {
-            loadingScene.load(name);
+            try
+            {
+                loadingScene.load(name);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                exit();
+            }
+
             this.currentScene = loadingScene;
             loadingScene.start();
         }
 
         Threads.get().executeCached(() ->
                                     {
-                                        mainScene.load(name);
+                                        try
+                                        {
+                                            mainScene.load(name);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                            exit();
+                                        }
+
                                         setScene(mainScene);
                                         mainScene.start();
                                     });

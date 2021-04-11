@@ -1,5 +1,6 @@
 package bt.game.resource.load.impl;
 
+import bt.game.resource.load.exc.LoadException;
 import bt.game.resource.load.intf.Loadable;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.resource.render.impl.Cropping;
@@ -18,7 +19,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
@@ -298,7 +298,7 @@ public class JsonResourceLoader extends BaseResourceLoader
 
         if (json == null)
         {
-            return;
+            throw new LoadException("Failed to read JSON resource file.");
         }
 
         json = json.getJSONObject("resource");
@@ -340,10 +340,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 }
                 catch (Exception e)
                 {
-                    System.out.println(String.format("[%s] Failed to load sound '%s' from path '%s'.",
-                                                     name,
-                                                     alias,
-                                                     path));
+                    throw new LoadException(String.format("[%s] Failed to load sound '%s' from path '%s'.", name, alias, path), e);
                 }
             }
         }
@@ -391,9 +388,9 @@ public class JsonResourceLoader extends BaseResourceLoader
                                                      alias,
                                                      path));
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
-                    e.printStackTrace();
+                    throw new LoadException(String.format("[%s] Failed to load image '%s' from path '%s'.", name, alias, path), e);
                 }
             }
         }
@@ -407,6 +404,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 obj = imageArray.getJSONObject(i);
                 alias = obj.getString("alias");
                 path = obj.getString("path");
+
                 try
                 {
                     add(alias,
@@ -416,9 +414,9 @@ public class JsonResourceLoader extends BaseResourceLoader
                                                      alias,
                                                      path));
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
-                    e.printStackTrace();
+                    throw new LoadException(String.format("[%s] Failed to load gif '%s' from path '%s'.", name, alias, path), e);
                 }
             }
         }
@@ -452,6 +450,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 alias = obj.getString("alias");
                 path = obj.getString("path");
                 type = obj.getString("type");
+
                 try
                 {
                     add(alias,
@@ -464,7 +463,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();
+                    throw new LoadException(String.format("[%s] Failed to load font '%s' from path '%s'.", name, alias, path), e);
                 }
             }
         }
@@ -504,7 +503,7 @@ public class JsonResourceLoader extends BaseResourceLoader
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();
+                    throw new LoadException(String.format("[%s] Failed to load animation '%s'.", name, alias), e);
                 }
             }
         }
@@ -545,7 +544,7 @@ public class JsonResourceLoader extends BaseResourceLoader
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            throw new LoadException(String.format("[%s] Failed to read JSON file '%s'.", name, path), e);
         }
 
         this.lastResourceFile = new File(path);
