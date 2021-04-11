@@ -109,7 +109,7 @@ public class JsonResourceLoader extends BaseResourceLoader
 {
     private String resourceDir;
     private File lastResourceFile;
-    private String globalResName;
+    private String[] globalResNames;
 
     /**
      * Creates a new instance and sets the directory that contains the json files for the {@link #load(String)}
@@ -163,14 +163,14 @@ public class JsonResourceLoader extends BaseResourceLoader
      * anymore.
      * </p>
      *
-     * @param resourceDir   The directory which contains the json (.res) files that define additional resources to load. If the
-     *                      directory does not exist it will be created.
-     * @param globalResName The name of a global resource file that will be loaded as well. This is just avoid having to define
-     *                      global resources in every res file.
+     * @param resourceDir    The directory which contains the json (.res) files that define additional resources to load. If the
+     *                       directory does not exist it will be created.
+     * @param globalResNames The name of a global resource file that will be loaded as well. This is just avoid having to define
+     *                       global resources in every res file.
      */
-    public JsonResourceLoader(File resourceDir, String globalResName)
+    public JsonResourceLoader(File resourceDir, String... globalResNames)
     {
-        this(resourceDir.getAbsolutePath(), globalResName);
+        this(resourceDir.getAbsolutePath(), globalResNames);
     }
 
     /**
@@ -185,15 +185,15 @@ public class JsonResourceLoader extends BaseResourceLoader
      * anymore.
      * </p>
      *
-     * @param resourceDir   The directory path which contains the json (.res) files that define additional resources to load. If the
-     *                      directory does not exist it will be created.
-     * @param globalResName The name of a global resource file that will be loaded as well. This is just avoid having to define global
-     *                      resources in every res file.
+     * @param resourceDir    The directory path which contains the json (.res) files that define additional resources to load. If the
+     *                       directory does not exist it will be created.
+     * @param globalResNames The name of a global resource file that will be loaded as well. This is just avoid having to define global
+     *                       resources in every res file.
      */
-    public JsonResourceLoader(String resourcePath, String globalResName)
+    public JsonResourceLoader(String resourcePath, String... globalResNames)
     {
         this.resourceDir = resourcePath;
-        this.globalResName = globalResName;
+        this.globalResNames = globalResNames;
     }
 
     /**
@@ -509,12 +509,15 @@ public class JsonResourceLoader extends BaseResourceLoader
             }
         }
 
-        if (this.globalResName != null && !globalLoading)
+        if (this.globalResNames != null && !globalLoading)
         {
-            System.out.println(String.format("[%s] Loading global resource file '%s'.",
-                                             name,
-                                             this.globalResName));
-            loadFromJson(this.globalResName, true);
+            for (String globalRes : this.globalResNames)
+            {
+                System.out.println(String.format("[%s] Loading global resource file '%s'.",
+                                                 name,
+                                                 globalRes));
+                loadFromJson(globalRes, true);
+            }
         }
     }
 
