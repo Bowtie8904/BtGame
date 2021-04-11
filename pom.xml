@@ -47,7 +47,7 @@
         <dependency>
             <groupId>com.github.Bowtie8904</groupId>
             <artifactId>BtUserInterface</artifactId>
-            <version>cee5b77cf4</version>
+            <version>b68b3df7</version>
         </dependency>
         <dependency>
             <groupId>com.github.Bowtie8904</groupId>
