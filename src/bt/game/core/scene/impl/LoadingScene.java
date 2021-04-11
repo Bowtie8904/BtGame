@@ -62,7 +62,7 @@ public class LoadingScene extends BaseScene
     public synchronized void kill()
     {
         // check if we can kill this scene yet if a minimum loading time has been set
-        if (this.currentLoadingTime < this.minLoadingTime)
+        if (this.currentLoadingTime < this.minLoadingTime && !InstanceKiller.isActive())
         {
             Exceptions.ignoreThrow(() -> {
                 synchronized (this.lock)
