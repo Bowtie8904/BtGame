@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.github.Bowtie8904</groupId>
             <artifactId>BtCommons</artifactId>
-            <version>985aa21</version>
+            <version>c373ac55</version>
         </dependency>
         <dependency>
             <groupId>com.github.Bowtie8904</groupId>
