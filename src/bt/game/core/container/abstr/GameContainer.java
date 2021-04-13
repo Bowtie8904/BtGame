@@ -88,12 +88,12 @@ public abstract class GameContainer extends Canvas
     /**
      * The width in units.
      */
-    private static Unit width;
+    protected static Unit width;
 
     /**
      * The height in units.
      */
-    private static Unit height;
+    protected static Unit height;
 
     /**
      * The {@link Unit} that describes the X axis of the game.
@@ -142,7 +142,7 @@ public abstract class GameContainer extends Canvas
      *
      * @param comp The component whichs width and height are used to calculate the ration.
      */
-    private void calculateRatio(Component comp)
+    protected void calculateRatio(Component comp)
     {
         if ((comp.getWidth() / comp.getHeight()) / (this.settings.getUnitWidth() / this.settings.getUnitHeight()) == 1f)
         {
@@ -162,7 +162,7 @@ public abstract class GameContainer extends Canvas
      * Sets up the frame and the canvas. This will set the frame background color to black and position the canvas in
      * the middle of the frame. At the end of this method the frame will be made visible.
      */
-    private void setupFrame()
+    protected void setupFrame()
     {
         this.frame.getContentPane().setBackground(Color.BLACK);
 
@@ -228,7 +228,7 @@ public abstract class GameContainer extends Canvas
     /**
      * Creates a new frame and sets it up correctly corresponding to the held {@link ContainerSettings} object.
      */
-    private synchronized void createFrame()
+    protected synchronized void createFrame()
     {
         if (this.frame != null)
         {
