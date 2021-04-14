@@ -171,6 +171,12 @@ public class MouseController extends MouseAdapter
 
                 for (MouseTarget target : this.mouseTargets)
                 {
+                    if (this.component.isPaused() && !target.enabledDuringPause())
+                    {
+                        // target should be ignored during pause
+                        continue;
+                    }
+
                     if (target.affectedByCamera())
                     {
                         x = mx + camX;
@@ -268,6 +274,12 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
+                if (this.component.isPaused() && !target.enabledDuringPause())
+                {
+                    // target should be ignored during pause
+                    continue;
+                }
+
                 if (target.affectedByCamera())
                 {
                     p = pCam;
@@ -350,6 +362,12 @@ public class MouseController extends MouseAdapter
 
             for (MouseTarget target : this.mouseTargets)
             {
+                if (this.component.isPaused() && !target.enabledDuringPause())
+                {
+                    // target should be ignored during pause
+                    continue;
+                }
+
                 if (target.getShape()
                           .contains(new Vector2(p.x,
                                                 p.y)))
@@ -374,12 +392,15 @@ public class MouseController extends MouseAdapter
 
         if (this.lastClickedTarget != null)
         {
-            this.lastClickedTarget.onDrag(e,
-                                          Unit.forPixels(e.getX() - this.lastClickMouseX),
-                                          Unit.forPixels(e.getY() - this.lastClickMouseY));
+            if (!this.component.isPaused() || this.lastClickedTarget.enabledDuringPause())
+            {
+                this.lastClickedTarget.onDrag(e,
+                                              Unit.forPixels(e.getX() - this.lastClickMouseX),
+                                              Unit.forPixels(e.getY() - this.lastClickMouseY));
 
-            this.lastClickMouseX = e.getX();
-            this.lastClickMouseY = e.getY();
+                this.lastClickMouseX = e.getX();
+                this.lastClickMouseY = e.getY();
+            }
         }
     }
 

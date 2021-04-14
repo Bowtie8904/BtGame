@@ -24,6 +24,7 @@ public class BaseMouseTarget implements MouseTarget
     protected Shape shape;
     protected Scene scene;
     protected boolean affectedByCamera;
+    protected boolean enabledDuringPause;
 
     public BaseMouseTarget(Scene scene, Unit x, Unit y, Unit z, Unit w, Unit h)
     {
@@ -34,6 +35,7 @@ public class BaseMouseTarget implements MouseTarget
         this.h = h;
         this.z = z;
         this.affectedByCamera = true;
+        this.enabledDuringPause = false;
         createShape();
     }
 
@@ -176,5 +178,11 @@ public class BaseMouseTarget implements MouseTarget
     public boolean affectedByCamera()
     {
         return this.affectedByCamera;
+    }
+
+    @Override
+    public boolean enabledDuringPause()
+    {
+        return this.enabledDuringPause;
     }
 }

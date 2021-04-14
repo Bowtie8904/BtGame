@@ -129,6 +129,8 @@ public abstract class GameContainer extends Canvas
         this.unitHeight = settings.getUnitHeight();
         this.scenes = new HashMap<>();
 
+        setIgnoreRepaint(true);
+
         createFrame();
         createScenes();
 
@@ -369,7 +371,7 @@ public abstract class GameContainer extends Canvas
      *
      * @param name The name of the scene that should be played.
      */
-    private void setScene(String name)
+    protected void setScene(String name)
     {
         if (this.currentScene != null)
         {
@@ -418,7 +420,7 @@ public abstract class GameContainer extends Canvas
      *
      * @param scene
      */
-    private void setScene(Scene scene)
+    protected void setScene(Scene scene)
     {
         if (this.currentScene != null && !this.currentScene.equals(scene))
         {

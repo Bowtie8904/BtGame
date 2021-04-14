@@ -46,4 +46,15 @@ public interface MouseTarget extends MouseListener
      * @return
      */
     public boolean affectedByCamera();
+
+    /**
+     * Indicates whether this target is targetable while the game is paused..
+     *
+     * @return
+     */
+    public default boolean enabledDuringPause()
+    {
+        return false;
+    }
+
 }
