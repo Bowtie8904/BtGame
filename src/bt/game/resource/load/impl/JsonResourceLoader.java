@@ -327,7 +327,7 @@ public class JsonResourceLoader extends BaseResourceLoader
 
                     if (obj.has("volumecategory"))
                     {
-                        supplier.setVolumeCategory(obj.getString("volumecategory"));
+                        supplier.setSoundCategory(obj.getString("volumecategory"));
                     }
 
                     supplier.setVolume(volume);

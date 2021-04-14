@@ -6,6 +6,7 @@ import bt.game.core.ctrl.spec.mouse.MouseController;
 import bt.game.core.ctrl.spec.mouse.obj.Cursor;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
+import bt.io.sound.Sound;
 import bt.scheduler.Threads;
 import bt.utils.Exceptions;
 
@@ -610,6 +611,7 @@ public abstract class GameContainer extends Canvas
     public void setPaused(boolean paused)
     {
         this.isPaused = paused;
+        pauseSounds(paused);
     }
 
     /**
@@ -617,12 +619,33 @@ public abstract class GameContainer extends Canvas
      * <p>
      * If a container is paused it will no longer call the tick method of the current scene.
      * Mouse and key actions are still being registered.
+     * <p>
+     * This will call {@link #pauseSounds(boolean)}.
      *
      * @param paused
      */
     public boolean isPaused()
     {
         return this.isPaused;
+    }
+
+    /**
+     * The default implementation will pause/resume all currently playing sounds.
+     * <p>
+     * Subclasses should override this to adjust which categories should be paused/resumed.
+     *
+     * @param paused true to pause, false to resume.
+     */
+    public void pauseSounds(boolean paused)
+    {
+        if (paused)
+        {
+            Sound.pauseAll();
+        }
+        else
+        {
+            Sound.resumeAll();
+        }
     }
 
     /**
