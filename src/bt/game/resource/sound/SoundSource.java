@@ -27,6 +27,7 @@ public class SoundSource implements Tickable
     protected GameObject attachTarget;
     protected Sound sound;
     protected Unit maxDistance;
+    protected Unit unaffectedDistance;
     protected float maxVolume;
     protected float minVolume;
 
@@ -38,19 +39,13 @@ public class SoundSource implements Tickable
      * {@link ObjectHandler#addObject(Object)}.
      * </p>
      *
-     * @param scene
-     *            The scene that this instance is used for.
-     * @param volumeTarget
-     *            The game object whichs distance to this instance will be used to update the volume.
-     * @param sound
-     *            The sound that is played.
-     * @param x
-     *            The x position of this instance used to calculate the distance to the volumeTarget.
-     * @param y
-     *            The y position of this instance used to calculate the distance to the volumeTarget.
-     * @param maxDistance
-     *            The maximum distance to the volumeTarget. If the distance between the objects is larger than this
-     *            parameter, the volume will drop to the {@link #setMinVolume(float) minimum volume}.
+     * @param scene        The scene that this instance is used for.
+     * @param volumeTarget The game object whichs distance to this instance will be used to update the volume.
+     * @param sound        The sound that is played.
+     * @param x            The x position of this instance used to calculate the distance to the volumeTarget.
+     * @param y            The y position of this instance used to calculate the distance to the volumeTarget.
+     * @param maxDistance  The maximum distance to the volumeTarget. If the distance between the objects is larger than this
+     *                     parameter, the volume will drop to the {@link #setMinVolume(float) minimum volume}.
      */
     public SoundSource(Scene scene, GameObject volumeTarget, Sound sound, Unit x, Unit y, Unit maxDistance)
     {
@@ -62,7 +57,8 @@ public class SoundSource implements Tickable
         this.maxDistance = maxDistance;
         this.scene.getObjectHandler().addObject(this);
         this.minVolume = 0f;
-        this.maxVolume = 1f;
+        this.maxVolume = sound.getVolume();
+        this.unaffectedDistance = Unit.zero();
     }
 
     /**
@@ -73,18 +69,13 @@ public class SoundSource implements Tickable
      * {@link ObjectHandler#addObject(Object)}.
      * </p>
      *
-     * @param scene
-     *            The scene that this instance is used for.
-     * @param volumeTarget
-     *            The game object whichs distance to this instance will be used to update the volume.
-     * @param attachTarget
-     *            The game object that this source is attached to. The position of this source will adjust
-     *            to the center position of the attachTarget every tick.
-     * @param sound
-     *            The sound that is played.
-     * @param maxDistance
-     *            The maximum distance to the volumeTarget. If the distance between the objects is larger than this
-     *            parameter, the volume will drop to the {@link #setMinVolume(float) minimum volume}.
+     * @param scene        The scene that this instance is used for.
+     * @param volumeTarget The game object whichs distance to this instance will be used to update the volume.
+     * @param attachTarget The game object that this source is attached to. The position of this source will adjust
+     *                     to the center position of the attachTarget every tick.
+     * @param sound        The sound that is played.
+     * @param maxDistance  The maximum distance to the volumeTarget. If the distance between the objects is larger than this
+     *                     parameter, the volume will drop to the {@link #setMinVolume(float) minimum volume}.
      */
     public SoundSource(Scene scene, GameObject volumeTarget, GameObject attachTarget, Sound sound, Unit maxDistance)
     {
@@ -112,9 +103,12 @@ public class SoundSource implements Tickable
             Unit targetX = this.volumeTarget.getCenterX();
             Unit targetY = this.volumeTarget.getCenterY();
 
-            double distance = Math
-                                  .sqrt((targetX.units() - this.x.units()) * (targetX.units() - this.x.units())
-                                        + (targetY.units() - this.y.units()) * (targetY.units() - this.y.units()));
+            double distance = Math.sqrt((targetX.units() - this.x.units()) * (targetX.units() - this.x.units())
+                                                + (targetY.units() - this.y.units()) * (targetY.units() - this.y.units()));
+
+            // taking unaffected distance into account
+            // essentially moving the center of the volumeTarget closer to the sound
+            distance = NumberUtils.clamp(distance - this.unaffectedDistance.units(), 0, Double.MAX_VALUE);
 
             if (distance > this.maxDistance.units())
             {
@@ -123,9 +117,9 @@ public class SoundSource implements Tickable
             else
             {
                 this.sound.setVolume(NumberUtils.clamp(
-                                                       this.maxVolume - (float)(distance / this.maxDistance.units()),
-                                                       this.minVolume,
-                                                       this.maxVolume));
+                        this.maxVolume - (float)(distance / this.maxDistance.units()),
+                        this.minVolume,
+                        this.maxVolume));
             }
         }
     }
@@ -152,6 +146,8 @@ public class SoundSource implements Tickable
      * <p>
      * The value will be clamped between 0 and 1.
      * </p>
+     * <p>
+     * This value can allow this sound to become louder than the volume set in the given Sound instance.
      *
      * @param maxVolume
      */
@@ -160,6 +156,36 @@ public class SoundSource implements Tickable
         this.maxVolume = NumberUtils.clamp(maxVolume,
                                            0f,
                                            1f);
+    }
+
+    /**
+     * Gets the distance from the volumeTarget that is unaffected by volume changes.
+     * <p>
+     * This essentially moves the center of the volumeTarget closer to the sound.
+     * If the sound is closer than the unaffectedDistance then it will be at max volume.
+     * <p>
+     * This allows having sounds that are on screen to be at max volume while still
+     * scaling them down once they are off screen.
+     */
+    public Unit getUnaffectedDistance()
+    {
+        return this.unaffectedDistance;
+    }
+
+    /**
+     * Sets the distance from the volumeTarget that is unaffected by volume changes.
+     * <p>
+     * This essentially moves the center of the volumeTarget closer to the sound.
+     * If the sound is closer than the unaffectedDistance then it will be at max volume.
+     * <p>
+     * This allows having sounds that are on screen to be at max volume while still
+     * scaling them down once they are off screen.
+     *
+     * @param unaffectedDistance
+     */
+    public void setUnaffectedDistance(Unit unaffectedDistance)
+    {
+        this.unaffectedDistance = unaffectedDistance;
     }
 
     /**
@@ -300,8 +326,8 @@ public class SoundSource implements Tickable
     {
         if (this.attachTarget != null)
         {
-            setX(this.attachTarget.getX());
-            setY(this.attachTarget.getY());
+            setX(this.attachTarget.getCenterX());
+            setY(this.attachTarget.getCenterY());
         }
 
         updateVolume();
