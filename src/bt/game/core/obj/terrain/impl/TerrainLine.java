@@ -4,7 +4,10 @@ import bt.game.core.obj.gravity.GravityAffected;
 import bt.game.core.obj.impl.GameBody;
 import bt.game.core.obj.terrain.base.Terrain;
 import bt.game.core.scene.intf.Scene;
+import bt.game.core.scene.map.intf.LineMapComponent;
+import bt.game.resource.load.exc.LoadException;
 import bt.game.resource.render.intf.Renderable;
+import bt.game.util.unit.Coordinate;
 import bt.game.util.unit.Unit;
 import bt.utils.Array;
 import org.dyn4j.collision.CollisionBody;
@@ -12,9 +15,12 @@ import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.Link;
 import org.dyn4j.geometry.Vector2;
 import org.dyn4j.world.NarrowphaseCollisionData;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,7 +38,7 @@ import java.util.List;
  *
  * @author &#8904
  */
-public class TerrainLine extends Terrain
+public class TerrainLine extends Terrain implements LineMapComponent
 {
     protected List<TerrainLineSegment> segements;
 
@@ -46,36 +52,42 @@ public class TerrainLine extends Terrain
     /**
      * Creates a new instance with the given start position and points. This line can collide with the classes
      * that are passed with the collisionFilter array.
-     *
-     * @param scene
-     * @param x
-     * @param y
-     * @param z
      */
-    public TerrainLine(Scene scene, Class[] collisionFilter, Vector2 first, Vector2 second, Vector2... points)
+    public TerrainLine(Scene scene, Class[] collisionFilter, Coordinate first, Coordinate second, Coordinate... points)
     {
         super(scene);
-        this.segements = new ArrayList<>();
-        points = Array.concat(new Vector2[] { first, second }, points, Vector2[]::new);
-
-        List<Link> links = Geometry.createLinks(points, false);
-
-        for (Link link : links)
-        {
-            this.segements.add(new TerrainLineSegment(scene, collisionFilter, link, this.frictions, this::onCollision));
-        }
+        setup(scene, collisionFilter, first, second, points);
     }
 
     /**
      * Creates a new instacne with the given start position and points that can collide with every GameBody.
-     *
-     * @param scene
-     * @param start
-     * @param points
      */
-    public TerrainLine(Scene scene, Vector2 first, Vector2 second, Vector2... points)
+    public TerrainLine(Scene scene, Coordinate first, Coordinate second, Coordinate... points)
     {
         this(scene, new Class[] { GameBody.class }, first, second, points);
+    }
+
+    public TerrainLine()
+    {
+        super();
+    }
+
+    public void setup(Scene scene, Class[] collisionFilter, Coordinate first, Coordinate second, Coordinate... points)
+    {
+        super.setup(scene);
+        this.segements = new ArrayList<>();
+        points = Array.concat(new Coordinate[] { first, second }, points, Coordinate[]::new);
+
+        Vector2[] vectorCoords = Arrays.stream(points)
+                                       .map(coord -> new Vector2(coord.getX().units(), coord.getY().units()))
+                                       .toArray(Vector2[]::new);
+
+        List<Link> links = Geometry.createLinks(vectorCoords, false);
+
+        for (Link link : links)
+        {
+            this.segements.add(new TerrainLineSegment(this.scene, collisionFilter, link, this.frictions, this::onCollision));
+        }
     }
 
     /**
@@ -119,17 +131,56 @@ public class TerrainLine extends Terrain
     public boolean onCollision(NarrowphaseCollisionData narrowphaseCollisionData, CollisionBody body, TerrainLineSegment segment)
     {
         if (segment.getFixture().getFriction() > 0 && body instanceof GameBody)
-
         {
             ((GameBody)body).setVelocityX(0);
         }
 
         if (segment.getFixture().getFriction() == 0 && body instanceof GravityAffected)
-
         {
             ((GravityAffected)body).setVelocityY(((GravityAffected)body).getMaxGravityVelocity());
         }
 
         return true;
+    }
+
+    @Override
+    public void initMapComponent(Scene scene, Unit z, Coordinate[] coordinates, JSONObject additionalInfo)
+    {
+        if (coordinates == null || coordinates.length < 2)
+        {
+            throw new LoadException("Cant set up TerrainLine with less that two coordinates.");
+        }
+
+        this.z = z;
+
+        Coordinate[] additionalCoords = Arrays.stream(coordinates).skip(2).toArray(Coordinate[]::new);
+
+        setup(scene, new Class[] { GameBody.class }, coordinates[0], coordinates[1], additionalCoords);
+
+        if (additionalInfo != null)
+        {
+            if (additionalInfo.has("frictions"))
+            {
+                JSONArray frictionsArray = additionalInfo.getJSONArray("frictions");
+                JSONObject obj;
+                List<Vector2> frictionVectors = new ArrayList<>();
+
+                for (int i = 0; i < frictionsArray.length(); i++)
+                {
+                    obj = frictionsArray.getJSONObject(i);
+
+                    if (obj.has("angle") && obj.has("friction"))
+                    {
+                        frictionVectors.add(new Vector2(obj.getDouble("angle"), obj.getDouble("friction")));
+                    }
+                    else
+                    {
+                        throw new LoadException("Incomplete frictions configuration. Values 'angle' and 'friction' expected.");
+                    }
+                }
+
+                setFrictions(frictionVectors.stream().toArray(Vector2[]::new));
+            }
+        }
     }
 }

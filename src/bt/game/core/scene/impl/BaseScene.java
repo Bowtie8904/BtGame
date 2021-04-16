@@ -6,6 +6,7 @@ import bt.game.core.obj.hand.impl.BaseObjectHandler;
 import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.scene.cam.Camera;
 import bt.game.core.scene.intf.Scene;
+import bt.game.core.scene.map.MapComponentLoader;
 import bt.game.resource.load.impl.BaseResourceLoader;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.util.unit.Unit;
@@ -24,14 +25,20 @@ public abstract class BaseScene implements Scene
     protected ResourceLoader resourceLoader;
     protected TextLoader textLoader;
     protected ObjectHandler gameObjectHandler;
+    protected MapComponentLoader mapLoader;
     protected GameContainer gameContainer;
     protected boolean isLoaded;
     protected String name;
     protected World world;
     protected Camera camera;
+    protected Unit width;
+    protected Unit height;
 
     public BaseScene(GameContainer gameContainer, ResourceLoader resourceLoader)
     {
+        this.width = GameContainer.width();
+        this.height = GameContainer.height();
+
         this.gameContainer = gameContainer;
 
         if (resourceLoader == null)
@@ -93,6 +100,12 @@ public abstract class BaseScene implements Scene
         return this.textLoader;
     }
 
+    @Override
+    public MapComponentLoader getMapComponentLoader()
+    {
+        return this.mapLoader;
+    }
+
     /**
      * @see bt.game.core.scene.intf.Scene#getGameContainer()
      */
@@ -116,7 +129,16 @@ public abstract class BaseScene implements Scene
         load();
         loadResourceLoader(name);
         setup();
+        loadMapLoader(name);
         this.isLoaded = true;
+    }
+
+    protected void loadMapLoader(String name)
+    {
+        if (this.mapLoader != null)
+        {
+            this.mapLoader.load(name);
+        }
     }
 
     protected void loadTextLoader(String name)
@@ -236,7 +258,13 @@ public abstract class BaseScene implements Scene
     @Override
     public Unit getWidth()
     {
-        return GameContainer.width();
+        return this.width;
+    }
+
+    @Override
+    public void setWidth(Unit width)
+    {
+        this.width = width;
     }
 
     /**
@@ -245,7 +273,13 @@ public abstract class BaseScene implements Scene
     @Override
     public Unit getHeight()
     {
-        return GameContainer.height();
+        return this.height;
+    }
+
+    @Override
+    public void setHeight(Unit height)
+    {
+        this.height = height;
     }
 
     @Override

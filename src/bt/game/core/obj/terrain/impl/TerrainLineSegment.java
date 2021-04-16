@@ -31,6 +31,7 @@ public class TerrainLineSegment extends Terrain implements NarrowPhaseCollider
                               Link link, Vector2[] frictions, TerrainLineCollider collider)
     {
         super(scene);
+        super.setup(scene);
         this.link = link;
         this.collider = collider;
 

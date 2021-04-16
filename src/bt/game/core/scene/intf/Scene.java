@@ -3,6 +3,7 @@ package bt.game.core.scene.intf;
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.obj.hand.intf.ObjectHandler;
 import bt.game.core.scene.cam.Camera;
+import bt.game.core.scene.map.MapComponentLoader;
 import bt.game.resource.load.intf.Loader;
 import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.util.unit.Unit;
@@ -23,6 +24,8 @@ public interface Scene extends Killable, Loader
 
     public TextLoader getTextLoader();
 
+    public MapComponentLoader getMapComponentLoader();
+
     public GameContainer getGameContainer();
 
     public World getWorld();
@@ -30,6 +33,10 @@ public interface Scene extends Killable, Loader
     public Unit getWidth();
 
     public Unit getHeight();
+
+    public void setWidth(Unit width);
+
+    public void setHeight(Unit height);
 
     public boolean isLoaded();
 

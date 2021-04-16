@@ -11,8 +11,13 @@ import org.dyn4j.geometry.MassType;
  */
 public abstract class Terrain extends GameBody implements Renderable
 {
-    private Unit z;
-    private boolean shouldRender;
+    protected Unit z;
+    protected boolean shouldRender;
+
+    public Terrain()
+    {
+        super(null);
+    }
 
     /**
      * Creates a new instance for the given scene.
@@ -22,6 +27,11 @@ public abstract class Terrain extends GameBody implements Renderable
     public Terrain(Scene scene)
     {
         super(scene);
+    }
+
+    protected void setup(Scene scene)
+    {
+        this.scene = scene;
         setMass(MassType.INFINITE);
         scene.getObjectHandler().addObject(this);
         this.z = Unit.zero();

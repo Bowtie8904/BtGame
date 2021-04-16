@@ -4,11 +4,13 @@ import bt.game.core.obj.col.filter.CollisionFilter;
 import bt.game.core.obj.impl.GameBody;
 import bt.game.core.obj.terrain.base.Terrain;
 import bt.game.core.scene.intf.Scene;
+import bt.game.core.scene.map.intf.RectangularMapComponent;
 import bt.game.resource.render.intf.Renderable;
 import bt.game.util.shape.ShapeRenderer;
 import bt.game.util.unit.Unit;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.Geometry;
+import org.json.JSONObject;
 
 import java.awt.*;
 
@@ -17,7 +19,7 @@ import java.awt.*;
  *
  * @author &#8904
  */
-public class TerrainBlock extends Terrain
+public class TerrainBlock extends Terrain implements RectangularMapComponent
 {
     private BodyFixture fixture;
 
@@ -33,15 +35,7 @@ public class TerrainBlock extends Terrain
     public TerrainBlock(Scene scene, Class[] collisionFilter, Unit x, Unit y, Unit w, Unit h)
     {
         super(scene);
-        this.w = w;
-        this.h = h;
-
-        this.fixture = new BodyFixture(Geometry.createRectangle(w.units(), h.units()));
-        this.fixture.setFilter(new CollisionFilter(this, collisionFilter));
-        this.fixture.setFriction(0);
-        addFixture(this.fixture);
-
-        translate(x.units() + w.units() / 2, y.units() + h.units() / 2);
+        setup(scene, collisionFilter, x, y, w, h);
     }
 
     /**
@@ -56,6 +50,25 @@ public class TerrainBlock extends Terrain
     public TerrainBlock(Scene scene, Unit x, Unit y, Unit w, Unit h)
     {
         this(scene, new Class[] { GameBody.class }, x, y, w, h);
+    }
+
+    public TerrainBlock()
+    {
+        super();
+    }
+
+    public void setup(Scene scene, Class[] collisionFilter, Unit x, Unit y, Unit w, Unit h)
+    {
+        super.setup(scene);
+        this.w = w;
+        this.h = h;
+
+        this.fixture = new BodyFixture(Geometry.createRectangle(w.units(), h.units()));
+        this.fixture.setFilter(new CollisionFilter(this, collisionFilter));
+        this.fixture.setFriction(0);
+        addFixture(this.fixture);
+
+        translate(x.units() + w.units() / 2, y.units() + h.units() / 2);
     }
 
     public void setFriction(double friction)
@@ -75,6 +88,21 @@ public class TerrainBlock extends Terrain
             ShapeRenderer.render(g,
                                  this,
                                  Color.blue);
+        }
+    }
+
+    @Override
+    public void initMapComponent(Scene scene, Unit x, Unit y, Unit z, Unit w, Unit h, JSONObject additionalInfo)
+    {
+        setup(scene, new Class[] { GameBody.class }, x, y, w, h);
+        this.z = z;
+
+        if (additionalInfo != null)
+        {
+            if (additionalInfo.has("friction"))
+            {
+                setFriction(additionalInfo.getDouble("friction"));
+            }
         }
     }
 }
