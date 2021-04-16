@@ -10,6 +10,7 @@ import bt.game.util.unit.Coordinate;
 import bt.game.util.unit.Unit;
 import bt.io.json.JSON;
 import bt.reflect.classes.Classes;
+import bt.types.Killable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,11 +18,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MapComponentLoader implements Loader
+public class MapComponentLoader implements Loader, Killable
 {
     protected String resourceDir;
     protected Scene scene;
@@ -48,11 +50,12 @@ public class MapComponentLoader implements Loader
     {
         this.resourceDir = resourcePath;
         this.scene = scene;
+        this.components = new HashMap<>();
     }
 
     public MapComponent getComponent(String name)
     {
-        return this.components.get(name);
+        return this.components.get(name.toUpperCase());
     }
 
     /**
@@ -69,6 +72,8 @@ public class MapComponentLoader implements Loader
      * <p>
      * Each component can have another optional json object "additionInfo" which can be customized to give some additional
      * type specific information to the instance.
+     * <p>
+     * If a name is specified then the component will be retrievable via {@link #getComponent(String)}.
      *
      * <pre>
      * {
@@ -78,6 +83,7 @@ public class MapComponentLoader implements Loader
      *  [
      *  {
      *      "className":"fully.qualified.name.MyClass",
+     *      "name": "Wall01",
      *      "x":"111",
      *      "y":"54",
      *      "z":"-1",
@@ -91,6 +97,7 @@ public class MapComponentLoader implements Loader
      *  [
      *  {
      *      "className":"fully.qualified.name.MyClass2",
+     *      "name": "Wall02",
      *      "coordinates":
      *      [
      *          {
@@ -224,7 +231,7 @@ public class MapComponentLoader implements Loader
 
                     if (obj.has("name"))
                     {
-                        this.components.put(obj.getString("name"), component);
+                        this.components.put(obj.getString("name").toUpperCase(), component);
                     }
 
                     System.out.println(String.format("[%s] Initialized map component '%s' with x=%f, y=%f, z=%f, w=%f, h=%f.",
@@ -321,7 +328,7 @@ public class MapComponentLoader implements Loader
 
                     if (obj.has("name"))
                     {
-                        this.components.put(obj.getString("name"), component);
+                        this.components.put(obj.getString("name").toUpperCase(), component);
                     }
 
                     System.out.println(String.format("[%s] Initialized map component '%s' with z=%f, coords=%s.",
@@ -375,5 +382,12 @@ public class MapComponentLoader implements Loader
         component = (T)Classes.newInstance(cls);
 
         return component;
+    }
+
+    @Override
+    public void kill()
+    {
+        System.out.println("Clearing map components.");
+        this.components.clear();
     }
 }

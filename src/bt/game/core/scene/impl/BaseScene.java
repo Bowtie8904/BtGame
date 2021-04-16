@@ -13,6 +13,7 @@ import bt.game.util.unit.Unit;
 import bt.io.text.impl.BaseTextLoader;
 import bt.io.text.intf.TextLoader;
 import bt.runtime.InstanceKiller;
+import bt.utils.Null;
 import org.dyn4j.world.World;
 
 import java.awt.*;
@@ -203,6 +204,8 @@ public abstract class BaseScene implements Scene
         }
 
         this.textLoader.kill();
+
+        Null.checkKill(this.mapLoader);
 
         this.world.removeAllBodiesAndJoints();
         this.world.removeAllListeners();
