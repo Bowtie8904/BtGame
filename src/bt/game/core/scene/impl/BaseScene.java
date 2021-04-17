@@ -131,6 +131,7 @@ public abstract class BaseScene implements Scene
         loadResourceLoader(name);
         setup();
         loadMapLoader(name);
+        this.resourceLoader.finishLoad();
         this.isLoaded = true;
     }
 
@@ -150,7 +151,6 @@ public abstract class BaseScene implements Scene
     protected void loadResourceLoader(String name)
     {
         this.resourceLoader.load(name);
-        this.resourceLoader.finishLoad();
     }
 
     /**
