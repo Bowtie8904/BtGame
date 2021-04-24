@@ -49,4 +49,8 @@ public interface Scene extends Killable, Loader
     public void refresh();
 
     public void setCamera(Camera camera);
+
+    public void setLit(boolean lit);
+
+    public boolean isLit();
 }

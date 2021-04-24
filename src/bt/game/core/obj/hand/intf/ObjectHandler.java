@@ -47,6 +47,11 @@ public interface ObjectHandler extends Killable
     public void render(Graphics2D g, boolean debugRendering);
 
     /**
+     * Modifies the given Graphics object to represent the help light sources.
+     */
+    public void renderLightSources(Graphics2D g, boolean debugRendering);
+
+    /**
      * Updates the y velocities of all held gravity affected objects.
      */
     public void updateGravityVelocities(double delta);

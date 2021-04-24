@@ -1,5 +1,6 @@
 package bt.game.core.obj.hand.impl;
 
+import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.obj.col.intf.*;
 import bt.game.core.obj.gravity.GravityAffected;
 import bt.game.core.obj.hand.intf.ObjectHandler;
@@ -7,6 +8,8 @@ import bt.game.core.obj.intf.Refreshable;
 import bt.game.core.obj.intf.Tickable;
 import bt.game.core.scene.intf.Scene;
 import bt.game.resource.render.intf.Renderable;
+import bt.game.resource.render.light.intf.LightSource;
+import bt.game.resource.render.light.mask.LightMask;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
 import bt.utils.NumberUtils;
@@ -27,6 +30,7 @@ import org.dyn4j.world.listener.ContactListener;
 import org.dyn4j.world.listener.TimeOfImpactListener;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
@@ -105,6 +109,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     protected List<GravityAffected> gravityAffecteds;
 
     /**
+     * The list of LightSource objects.
+     */
+    protected List<LightSource> lightSources;
+
+    /**
      * The map of BroadPhaseCollider objects.
      */
     protected Map<CollisionBody, BroadPhaseCollider> broadColliders;
@@ -155,6 +164,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.renderables = new CopyOnWriteArrayList<>();
         this.killables = new CopyOnWriteArrayList<>();
         this.gravityAffecteds = new CopyOnWriteArrayList<>();
+        this.lightSources = new CopyOnWriteArrayList<>();
         this.toBeRemoved = new CopyOnWriteArrayList<>();
         this.toBeAdded = new CopyOnWriteArrayList<>();
         this.broadColliders = new Hashtable<>();
@@ -209,6 +219,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
      * called. Tick methods are invoked in a parallel stream so the calls might be out of order.</li>
      * <li>{@link Killable}: The kill method will be called during this handlers {@link #kill()} invokation.</li>
      * <li>{@link GravityAffected}: The y velocity of these objects will be adjusted each tick to simulate gravity.</li>
+     * <li>{@link LightSource}: THeir light area will be drawn during rendering..</li>
      * <li>{@link Refreshable}: This handlers {@link #refresh()} method is gonna forward the call to all registered
      * refreshables.</li>
      * <li>{@link BroadPhaseCollider}: onCollision is called when collision events are received.</li>
@@ -270,6 +281,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             if (object instanceof GravityAffected)
             {
                 this.gravityAffecteds.add(GravityAffected.class.cast(object));
+            }
+
+            if (object instanceof LightSource)
+            {
+                this.lightSources.add(LightSource.class.cast(object));
             }
 
             if (object instanceof BroadPhaseCollider)
@@ -382,6 +398,11 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
                 this.gravityAffecteds.remove(object);
             }
 
+            if (object instanceof LightSource)
+            {
+                this.lightSources.remove(object);
+            }
+
             if (object instanceof BroadPhaseCollider)
             {
                 BroadPhaseCollider collider = BroadPhaseCollider.class.cast(object);
@@ -456,6 +477,52 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
         this.renderables.stream()
                         .filter(Renderable::shouldRender)
                         .forEach(r -> r.render(g, debugRendering));
+    }
+
+    @Override
+    public void renderLightSources(Graphics2D g, boolean debugRendering)
+    {
+        BufferedImage mask = new BufferedImage((int)GameContainer.width().pixels(),
+                                               (int)GameContainer.height().pixels(),
+                                               BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D maskG = mask.createGraphics();
+
+        for (LightSource light : this.lightSources)
+        {
+            light.getLightMask().apply(maskG, light.getLightX(), light.getLightY());
+        }
+
+        mask.getAlphaRaster();
+
+        int[] maskPixels = (int[])mask.getRaster().getDataElements(0, 0, mask.getWidth(), mask.getHeight(), null);
+
+        int R = LightMask.DARKNESS.getRed();
+        int G = LightMask.DARKNESS.getGreen();
+        int B = LightMask.DARKNESS.getBlue();
+
+        for (int i = 0; i < maskPixels.length; i++)
+        {
+            int A = (maskPixels[i] >> 24) & 255;
+
+            if (A != 0)
+            {
+                A = Math.max(LightMask.DARKNESS.getAlpha() - A, 0);
+
+                maskPixels[i] = (A) << 24 |
+                        0x00FF0000 & (B) << 16 |
+                        0x0000FF00 & (G) << 8 |
+                        0x000000FF & (R);
+            }
+            else
+            {
+                maskPixels[i] = LightMask.DARKNESS.getRGB();
+            }
+        }
+
+        mask.getRaster().setDataElements(0, 0, mask.getWidth(), mask.getHeight(), maskPixels);
+
+        g.drawImage(mask, 0, 0, null);
     }
 
     @Override

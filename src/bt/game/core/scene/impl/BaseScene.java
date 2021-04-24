@@ -34,6 +34,7 @@ public abstract class BaseScene implements Scene
     protected Camera camera;
     protected Unit width;
     protected Unit height;
+    protected boolean sceneLit;
 
     public BaseScene(GameContainer gameContainer, ResourceLoader resourceLoader)
     {
@@ -252,6 +253,13 @@ public abstract class BaseScene implements Scene
             renderBackground(g, debugRendering);
 
             this.gameObjectHandler.render(g, debugRendering);
+
+            if (!this.sceneLit)
+            {
+                this.gameObjectHandler.renderLightSources(g, debugRendering);
+            }
+
+            renderForeground(g, debugRendering);
         }
     }
 
@@ -297,6 +305,18 @@ public abstract class BaseScene implements Scene
         Camera.currentCamera = this.camera;
     }
 
+    @Override
+    public void setLit(boolean lit)
+    {
+        this.sceneLit = lit;
+    }
+
+    @Override
+    public boolean isLit()
+    {
+        return this.sceneLit;
+    }
+
     /**
      * Supposed to render the background.
      *
@@ -307,6 +327,17 @@ public abstract class BaseScene implements Scene
      * @param g
      */
     public abstract void renderBackground(Graphics2D g, boolean debugRendering);
+
+    /**
+     * Supposed to render the foreground.
+     *
+     * <p>
+     * Called from inside the {@link #render(Graphics2D)} after the camera is translated.
+     * </p>
+     *
+     * @param g
+     */
+    public abstract void renderForeground(Graphics2D g, boolean debugRendering);
 
     /**
      * Supposed to register additional resources.

@@ -183,6 +183,12 @@ public class LoadingScene extends BaseScene
     }
 
     @Override
+    public void renderForeground(Graphics2D g, boolean debugRendering)
+    {
+
+    }
+
+    @Override
     public void load()
     {
 
