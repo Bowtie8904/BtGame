@@ -23,7 +23,7 @@ public class ContainerSettings
     private boolean undecorated;
     private boolean fullscreen;
     private Image imageIcon;
-    private String title;
+    private String title = "";
     private boolean debugRendering;
     private Cursor cursor;
 

@@ -23,6 +23,11 @@ public class DefaultGameLoop extends GameLoop
         super(tick, render);
     }
 
+    public DefaultGameLoop(Consumer<Double> tick, Runnable render, Runnable init)
+    {
+        super(tick, render, init);
+    }
+
     @Override
     protected void loop()
     {

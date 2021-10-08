@@ -56,6 +56,11 @@ public abstract class GameLoop implements Killable
     protected Runnable render;
 
     /**
+     * A callback to initialize stuff before the rendering starts. Can be used to setup the window on the same thread as the rendering.
+     */
+    protected Runnable init;
+
+    /**
      * The set runnable that is executed whenever the frame rate is updated. See {@link #frameCheckInterval}.
      */
     protected Runnable onFpsUpdate;
@@ -75,6 +80,23 @@ public abstract class GameLoop implements Killable
         this.tick = tick;
         this.render = render;
         InstanceKiller.killOnShutdown(this, 1);
+    }
+
+    /**
+     * Creates a new instance and sets the runnables for tick, render and init methods.
+     *
+     * <p>
+     * This constructor registers the loop to the {@link InstanceKiller} with a priority of 1.
+     * </p>
+     *
+     * @param tick
+     * @param render
+     * @param init
+     */
+    public GameLoop(Consumer<Double> tick, Runnable render, Runnable init)
+    {
+        this(tick, render);
+        this.init = init;
     }
 
     /**
@@ -102,7 +124,14 @@ public abstract class GameLoop implements Killable
         if (!this.running)
         {
             this.running = true;
-            Threads.get().execute(this::loop, "GAME_LOOP");
+            Threads.get().execute(() -> {
+                if (this.init != null)
+                {
+                    this.init.run();
+                }
+
+                loop();
+            }, "GAME_LOOP");
         }
     }
 
