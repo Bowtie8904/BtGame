@@ -12,6 +12,7 @@ import bt.game.resource.load.intf.ResourceLoader;
 import bt.game.util.unit.Unit;
 import bt.io.text.impl.BaseTextLoader;
 import bt.io.text.intf.TextLoader;
+import bt.log.Log;
 import bt.runtime.InstanceKiller;
 import bt.utils.Null;
 import org.dyn4j.world.World;
@@ -123,6 +124,7 @@ public abstract class BaseScene implements Scene
     @Override
     public void load(String name)
     {
+        Log.entry(name);
         this.isLoaded = false;
         this.gameObjectHandler.init();
         InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 100);
@@ -134,6 +136,7 @@ public abstract class BaseScene implements Scene
         loadMapLoader(name);
         this.resourceLoader.finishLoad();
         this.isLoaded = true;
+        Log.exit();
     }
 
     protected void loadMapLoader(String name)
@@ -184,7 +187,7 @@ public abstract class BaseScene implements Scene
     public void kill()
     {
         this.isLoaded = false;
-        System.out.println(this.name == null ? "Killing scene." : "Killing scene '" + this.name + "'.");
+        Log.debug(this.name == null ? "Killing scene." : "Killing scene '" + this.name + "'.");
 
         // kill resource loader if instance killer is not already doing it or if the loader is not registered for
         // termination at all

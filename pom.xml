@@ -18,18 +18,6 @@
                     <verbose>true</verbose>
                 </configuration>
             </plugin>
-            <plugin>  <!-- Create sources.jar -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
     <repositories>
@@ -42,17 +30,17 @@
         <dependency>
             <groupId>com.github.Bowtie8904</groupId>
             <artifactId>BtCommons</artifactId>
-            <version>c373ac55</version>
+            <version>b3b2b81</version>
         </dependency>
         <dependency>
             <groupId>com.github.Bowtie8904</groupId>
             <artifactId>BtUserInterface</artifactId>
-            <version>b68b3df7</version>
+            <version>964ac8d</version>
         </dependency>
         <dependency>
             <groupId>com.github.Bowtie8904</groupId>
             <artifactId>BtIO</artifactId>
-            <version>5cbf9bfa</version>
+            <version>d3e5790</version>
         </dependency>
         <dependency>
             <groupId>org.dyn4j</groupId>

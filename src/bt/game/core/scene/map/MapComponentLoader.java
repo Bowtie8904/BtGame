@@ -9,6 +9,7 @@ import bt.game.resource.load.intf.Loader;
 import bt.game.util.unit.Coordinate;
 import bt.game.util.unit.Unit;
 import bt.io.json.JSON;
+import bt.log.Log;
 import bt.reflect.classes.Classes;
 import bt.types.Killable;
 import org.json.JSONArray;
@@ -122,6 +123,8 @@ public class MapComponentLoader implements Loader, Killable
     @Override
     public void load(String name)
     {
+        Log.entry(name);
+
         JSONObject json = getJsonForName(name);
 
         if (json == null)
@@ -143,10 +146,14 @@ public class MapComponentLoader implements Loader, Killable
 
         loadRectangularComponents(name, json);
         loadLineComponents(name, json);
+
+        Log.exit();
     }
 
     protected void loadRectangularComponents(String name, JSONObject json)
     {
+        Log.entry(name, json);
+
         if (json.has("rectangularComponents"))
         {
             JSONObject obj;
@@ -234,14 +241,14 @@ public class MapComponentLoader implements Loader, Killable
                         this.components.put(obj.getString("name").toUpperCase(), component);
                     }
 
-                    System.out.println(String.format("[%s] Initialized map component '%s' with x=%f, y=%f, z=%f, w=%f, h=%f.",
-                                                     name,
-                                                     className,
-                                                     x.units(),
-                                                     y.units(),
-                                                     z.units(),
-                                                     w.units(),
-                                                     h.units()));
+                    Log.info(String.format("[%s] Initialized map component '%s' with x=%f, y=%f, z=%f, w=%f, h=%f.",
+                                           name,
+                                           className,
+                                           x.units(),
+                                           y.units(),
+                                           z.units(),
+                                           w.units(),
+                                           h.units()));
                 }
                 catch (Exception e)
                 {
@@ -249,10 +256,14 @@ public class MapComponentLoader implements Loader, Killable
                 }
             }
         }
+
+        Log.exit();
     }
 
     protected void loadLineComponents(String name, JSONObject json)
     {
+        Log.entry(name, json);
+
         if (json.has("lineComponents"))
         {
             JSONObject obj;
@@ -331,11 +342,11 @@ public class MapComponentLoader implements Loader, Killable
                         this.components.put(obj.getString("name").toUpperCase(), component);
                     }
 
-                    System.out.println(String.format("[%s] Initialized map component '%s' with z=%f, coords=%s.",
-                                                     name,
-                                                     className,
-                                                     z.units(),
-                                                     coordinates));
+                    Log.info(String.format("[%s] Initialized map component '%s' with z=%f, coords=%s.",
+                                           name,
+                                           className,
+                                           z.units(),
+                                           coordinates));
                 }
                 catch (Exception e)
                 {
@@ -343,6 +354,8 @@ public class MapComponentLoader implements Loader, Killable
                 }
             }
         }
+
+        Log.exit();
     }
 
     /**
@@ -355,6 +368,7 @@ public class MapComponentLoader implements Loader, Killable
      * </p>
      *
      * @param name The context name = the name of the file (without file ending) to load from.
+     *
      * @return The parsed json from the file or null if parsing failed for any reason.
      */
     protected JSONObject getJsonForName(String name)
@@ -377,17 +391,19 @@ public class MapComponentLoader implements Loader, Killable
 
     protected <T extends MapComponent> T createMapComponentInstance(String className) throws ClassNotFoundException
     {
+        Log.entry(className);
         T component = null;
         Class<?> cls = ClassLoader.getSystemClassLoader().loadClass(className);
         component = (T)Classes.newInstance(cls);
 
+        Log.exit(component);
         return component;
     }
 
     @Override
     public void kill()
     {
-        System.out.println("Clearing map components.");
+        Log.debug("Clearing map components.");
         this.components.clear();
     }
 }

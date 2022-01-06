@@ -6,6 +6,7 @@ import bt.game.core.ctrl.spec.mouse.intf.MouseTarget;
 import bt.game.core.scene.cam.Camera;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
+import bt.log.Log;
 import bt.scheduler.Threads;
 import org.dyn4j.geometry.Vector2;
 
@@ -96,41 +97,57 @@ public class MouseController extends MouseAdapter
 
     public synchronized void addMouseTarget(MouseTarget target)
     {
+        Log.entry(target);
         this.mouseTargets.add(target);
+        Log.exit();
     }
 
     public synchronized void removeMouseTarget(MouseTarget target)
     {
+        Log.entry(target);
         this.mouseTargets.remove(target);
+        Log.exit();
     }
 
     public void addGlobalListener(MouseListener listener)
     {
+        Log.entry(listener);
         this.mouseListeners.add(listener);
+        Log.exit();
     }
 
     public void clearMouseTargets()
     {
+        Log.entry();
         this.mouseTargets.clear();
+        Log.exit();
     }
 
     public void clearMouseListeners()
     {
+        Log.entry();
         this.mouseListeners.clear();
+        Log.exit();
     }
 
     public void clearMouseTargets(Scene scene)
     {
+        Log.entry(scene);
         this.mouseTargets.stream()
                          .filter(m -> m.getScene().equals(scene))
                          .forEach(this.mouseTargets::remove);
+
+        Log.exit();
     }
 
     public void clearMouseListeners(Scene scene)
     {
+        Log.entry(scene);
         this.mouseListeners.stream()
                            .filter(m -> m.getScene().equals(scene))
                            .forEach(this.mouseListeners::remove);
+
+        Log.exit();
     }
 
     public void checkHover()

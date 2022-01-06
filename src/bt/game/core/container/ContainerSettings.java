@@ -3,6 +3,7 @@ package bt.game.core.container;
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.core.ctrl.spec.mouse.obj.Cursor;
 import bt.game.util.unit.Unit;
+import bt.log.Log;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -33,6 +34,7 @@ public class ContainerSettings
      *
      * @param unitWidth  The units of the X axis.
      * @param unitHeight The units of the Y axis.
+     *
      * @return This instance for chaining.
      */
     public ContainerSettings gameUnits(float unitWidth, float unitHeight)
@@ -47,6 +49,7 @@ public class ContainerSettings
      *
      * @param width  The width of the window.
      * @param height The height of the window.
+     *
      * @return This instance for chaining.
      */
     public ContainerSettings frameSize(int width, int height)
@@ -60,6 +63,7 @@ public class ContainerSettings
      * Sets whether the window will be decorated.
      *
      * @param undecorated true to remove window decorations.
+     *
      * @return This instance for chaining.
      */
     public ContainerSettings undecorated(boolean undecorated)
@@ -72,6 +76,7 @@ public class ContainerSettings
      * Indicates whether the game should be in fullscreen mode.
      *
      * @param fullscreen true if the game shuld be in fullscreen.
+     *
      * @return This instance for chaining.
      */
     public ContainerSettings fullscreen(boolean fullscreen)
@@ -84,6 +89,7 @@ public class ContainerSettings
      * Sets the title of the game shown in the taskbar.
      *
      * @param title The title.
+     *
      * @return This instance for chaining.
      */
     public ContainerSettings title(String title)
@@ -96,6 +102,7 @@ public class ContainerSettings
      * Sets the icon of the game shown in the taskbar.
      *
      * @param icon The icon.
+     *
      * @return This instance for chaining.
      */
     public ContainerSettings icon(Image icon)
@@ -108,6 +115,7 @@ public class ContainerSettings
      * Sets the icon of the game shown in the taskbar.
      *
      * @param icon The image file.
+     *
      * @return This instance for chaining.
      */
     public ContainerSettings icon(File icon)
@@ -118,7 +126,7 @@ public class ContainerSettings
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            Log.error("Error", e);
         }
         return this;
     }
@@ -127,6 +135,7 @@ public class ContainerSettings
      * Sets the default cursor of the game.
      *
      * @param cursor The cursor.
+     *
      * @return This instance for chaining.
      */
     public ContainerSettings cursor(Cursor cursor)

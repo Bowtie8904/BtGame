@@ -9,6 +9,7 @@ import bt.game.resource.render.impl.RenderableImage;
 import bt.game.resource.render.impl.anim.Animation;
 import bt.io.json.JSON;
 import bt.io.sound.SoundSupplier;
+import bt.log.Log;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
 import bt.utils.ImageUtils;
@@ -287,13 +288,17 @@ public class JsonResourceLoader extends BaseResourceLoader
     @Override
     public void load(String name)
     {
+        Log.entry(name);
         super.load(name);
 
         loadFromJson(name, false);
+
+        Log.exit();
     }
 
     protected void loadFromJson(String name, boolean globalLoading)
     {
+        Log.entry(name, globalLoading);
         JSONObject json = getJsonForName(name);
 
         if (json == null)
@@ -333,10 +338,10 @@ public class JsonResourceLoader extends BaseResourceLoader
                     supplier.setVolume(volume);
 
                     add(alias, supplier);
-                    System.out.println(String.format("[%s] Loaded sound '%s' from path '%s'.",
-                                                     name,
-                                                     alias,
-                                                     path));
+                    Log.info(String.format("[%s] Loaded sound '%s' from path '%s'.",
+                                           name,
+                                           alias,
+                                           path));
                 }
                 catch (Exception e)
                 {
@@ -383,10 +388,10 @@ public class JsonResourceLoader extends BaseResourceLoader
                     }
 
                     add(alias, image);
-                    System.out.println(String.format("[%s] Loaded image '%s' from path '%s'.",
-                                                     name,
-                                                     alias,
-                                                     path));
+                    Log.info(String.format("[%s] Loaded image '%s' from path '%s'.",
+                                           name,
+                                           alias,
+                                           path));
                 }
                 catch (Exception e)
                 {
@@ -409,10 +414,10 @@ public class JsonResourceLoader extends BaseResourceLoader
                 {
                     add(alias,
                         new RenderableGif(ImageUtils.getImageIcon(JsonResourceLoader.class.getResourceAsStream(path))));
-                    System.out.println(String.format("[%s] Loaded gif '%s' from path '%s'.",
-                                                     name,
-                                                     alias,
-                                                     path));
+                    Log.info(String.format("[%s] Loaded gif '%s' from path '%s'.",
+                                           name,
+                                           alias,
+                                           path));
                 }
                 catch (Exception e)
                 {
@@ -432,10 +437,10 @@ public class JsonResourceLoader extends BaseResourceLoader
                 path = obj.getString("path");
                 add(alias,
                     new File(path));
-                System.out.println(String.format("[%s] Loaded file '%s' from path '%s'.",
-                                                 name,
-                                                 alias,
-                                                 path));
+                Log.info(String.format("[%s] Loaded file '%s' from path '%s'.",
+                                       name,
+                                       alias,
+                                       path));
             }
         }
 
@@ -456,10 +461,10 @@ public class JsonResourceLoader extends BaseResourceLoader
                     add(alias,
                         Font.createFont(type.equalsIgnoreCase("truetype") ? Font.TRUETYPE_FONT : Font.TYPE1_FONT,
                                         JsonResourceLoader.class.getResourceAsStream(path)));
-                    System.out.println(String.format("[%s] Loaded font '%s' from path '%s'.",
-                                                     name,
-                                                     alias,
-                                                     path));
+                    Log.info(String.format("[%s] Loaded font '%s' from path '%s'.",
+                                           name,
+                                           alias,
+                                           path));
                 }
                 catch (Exception e)
                 {
@@ -496,10 +501,10 @@ public class JsonResourceLoader extends BaseResourceLoader
                         new Animation(this,
                                       interval,
                                       images));
-                    System.out.println(String.format("[%s] Loaded animation '%s' defined in '%s'.",
-                                                     name,
-                                                     alias,
-                                                     this.lastResourceFile.getAbsolutePath()));
+                    Log.info(String.format("[%s] Loaded animation '%s' defined in '%s'.",
+                                           name,
+                                           alias,
+                                           this.lastResourceFile.getAbsolutePath()));
                 }
                 catch (Exception e)
                 {
@@ -512,12 +517,14 @@ public class JsonResourceLoader extends BaseResourceLoader
         {
             for (String globalRes : this.globalResNames)
             {
-                System.out.println(String.format("[%s] Loading global resource file '%s'.",
-                                                 name,
-                                                 globalRes));
+                Log.info(String.format("[%s] Loading global resource file '%s'.",
+                                       name,
+                                       globalRes));
                 loadFromJson(globalRes, true);
             }
         }
+
+        Log.exit();
     }
 
     /**
@@ -530,6 +537,7 @@ public class JsonResourceLoader extends BaseResourceLoader
      * </p>
      *
      * @param name The context name = the name of the file (without file ending) to load from.
+     *
      * @return The parsed json from the file or null if parsing failed for any reason.
      */
     private JSONObject getJsonForName(String name)

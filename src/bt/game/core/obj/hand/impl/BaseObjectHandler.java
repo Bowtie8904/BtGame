@@ -10,6 +10,7 @@ import bt.game.core.scene.intf.Scene;
 import bt.game.resource.render.intf.Renderable;
 import bt.game.resource.render.light.intf.LightSource;
 import bt.game.resource.render.light.mask.LightMask;
+import bt.log.Log;
 import bt.runtime.InstanceKiller;
 import bt.types.Killable;
 import bt.utils.NumberUtils;
@@ -241,7 +242,9 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public synchronized void addObject(Object object)
     {
+        Log.entry(object);
         this.toBeAdded.add(object);
+        Log.exit();
     }
 
     protected void addNewObjects()
@@ -343,6 +346,24 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             }
         }
 
+        if (!this.toBeAdded.isEmpty())
+        {
+            Log.debug("Added {} objects", this.toBeAdded.size());
+
+            Log.debug("tickables: {}", this.tickables.size());
+            Log.debug("refreshables: {}", this.refreshables.size());
+            Log.debug("renderables: {}", this.renderables.size());
+            Log.debug("killables: {}", this.killables.size());
+            Log.debug("gravityAffecteds: {}", this.gravityAffecteds.size());
+            Log.debug("lightSources: {}", this.lightSources.size());
+            Log.debug("broadColliders: {}", this.broadColliders.size());
+            Log.debug("narrowColliders: {}", this.narrowColliders.size());
+            Log.debug("manifoldColliders: {}", this.manifoldColliders.size());
+            Log.debug("constraintColliders: {}", this.constraintColliders.size());
+            Log.debug("contacters: {}", this.contacters.size());
+            Log.debug("timeOfImpactColliders: {}", this.timeOfImpactColliders.size());
+        }
+
         this.toBeAdded.clear();
     }
 
@@ -356,7 +377,9 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public synchronized void removeObject(Object object)
     {
+        Log.entry(object);
         this.toBeRemoved.add(object);
+        Log.exit();
     }
 
     protected synchronized void removeMarkedObjects()
@@ -438,6 +461,24 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
                 TimeOfImpactCollider collider = TimeOfImpactCollider.class.cast(object);
                 this.timeOfImpactColliders.remove(collider.getBody());
             }
+        }
+
+        if (!this.toBeRemoved.isEmpty())
+        {
+            Log.debug("Removed {} objects", this.toBeRemoved.size());
+
+            Log.debug("tickables: {}", this.tickables.size());
+            Log.debug("refreshables: {}", this.refreshables.size());
+            Log.debug("renderables: {}", this.renderables.size());
+            Log.debug("killables: {}", this.killables.size());
+            Log.debug("gravityAffecteds: {}", this.gravityAffecteds.size());
+            Log.debug("lightSources: {}", this.lightSources.size());
+            Log.debug("broadColliders: {}", this.broadColliders.size());
+            Log.debug("narrowColliders: {}", this.narrowColliders.size());
+            Log.debug("manifoldColliders: {}", this.manifoldColliders.size());
+            Log.debug("constraintColliders: {}", this.constraintColliders.size());
+            Log.debug("contacters: {}", this.contacters.size());
+            Log.debug("timeOfImpactColliders: {}", this.timeOfImpactColliders.size());
         }
 
         this.toBeRemoved.clear();
@@ -547,7 +588,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void kill()
     {
-        System.out.println("Killing game object handler.");
+        Log.debug("Killing game object handler.");
 
         for (Killable obj : this.killables)
         {
@@ -575,6 +616,7 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void init()
     {
+        Log.entry();
         InstanceKiller.killOnShutdown(this, Integer.MIN_VALUE + 102);
 
         if (this.scene.getWorld() != null)
@@ -583,6 +625,8 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
             this.scene.getWorld().addContactListener(this);
             this.scene.getWorld().addTimeOfImpactListener(this);
         }
+
+        Log.exit();
     }
 
     /**
@@ -591,10 +635,14 @@ public class BaseObjectHandler implements ObjectHandler, CollisionListener, Cont
     @Override
     public void refresh()
     {
+        Log.entry();
+
         for (Refreshable refr : this.refreshables)
         {
             refr.refresh();
         }
+
+        Log.exit();
     }
 
     @Override

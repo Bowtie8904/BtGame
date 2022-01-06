@@ -2,6 +2,7 @@ package bt.game.core.scene.impl;
 
 import bt.game.core.container.abstr.GameContainer;
 import bt.game.util.unit.Unit;
+import bt.log.Log;
 import bt.runtime.InstanceKiller;
 import bt.utils.Exceptions;
 import org.dyn4j.world.World;
@@ -50,6 +51,7 @@ public class LoadingScene extends BaseScene
      * Specifies a minimum loading time in milliseconds. This scene will not be closed before at least the given time has passed.
      *
      * @param minLoadingTimeMs
+     *
      * @return
      */
     public LoadingScene minLoadingTime(long minLoadingTimeMs)
@@ -73,7 +75,7 @@ public class LoadingScene extends BaseScene
         }
 
         this.isLoaded = false;
-        System.out.println("Killing loading scene.");
+        Log.debug("Killing loading scene.");
 
         // kill resource loader if instance killer is not already doing it or if the loader is not registered for
         // termination at all

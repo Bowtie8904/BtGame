@@ -7,6 +7,7 @@ import bt.game.core.ctrl.spec.mouse.obj.Cursor;
 import bt.game.core.scene.intf.Scene;
 import bt.game.util.unit.Unit;
 import bt.io.sound.Sound;
+import bt.log.Log;
 import bt.scheduler.Threads;
 import bt.utils.Exceptions;
 
@@ -147,6 +148,8 @@ public abstract class GameContainer extends Canvas
      */
     protected void calculateRatio(Component comp)
     {
+        Log.entry(comp);
+
         if ((comp.getWidth() / comp.getHeight()) / (this.settings.getUnitWidth() / this.settings.getUnitHeight()) == 1f)
         {
             this.ratio = comp.getWidth() / this.settings.getUnitWidth();
@@ -159,6 +162,8 @@ public abstract class GameContainer extends Canvas
         }
 
         Unit.setRatio(this.ratio);
+
+        Log.exit();
     }
 
     /**
@@ -167,6 +172,8 @@ public abstract class GameContainer extends Canvas
      */
     protected void setupFrame()
     {
+        Log.entry();
+
         this.frame.getContentPane().setBackground(Color.BLACK);
 
         GameContainer.width = Unit.forUnits(this.settings.getUnitWidth());
@@ -206,6 +213,8 @@ public abstract class GameContainer extends Canvas
         this.frame.setVisible(true);
 
         calculateRatio(this.frame.getContentPane());
+
+        Log.exit();
     }
 
     /**
@@ -233,6 +242,7 @@ public abstract class GameContainer extends Canvas
      */
     protected synchronized void createFrame()
     {
+        Log.entry();
         if (this.frame != null)
         {
             this.frame.dispose();
@@ -283,6 +293,8 @@ public abstract class GameContainer extends Canvas
         this.createBufferStrategy(4);
         this.requestFocus();
         this.canRender = true;
+
+        Log.exit();
     }
 
     /**
@@ -358,8 +370,10 @@ public abstract class GameContainer extends Canvas
      */
     public void requestScene(String name)
     {
+        Log.entry(name);
         this.currentSceneName = name;
         this.sceneRequested = true;
+        Log.exit();
     }
 
     /**
@@ -373,6 +387,7 @@ public abstract class GameContainer extends Canvas
      */
     protected void setScene(String name)
     {
+        Log.entry(name);
         if (this.currentScene != null)
         {
             this.currentScene.kill();
@@ -390,7 +405,7 @@ public abstract class GameContainer extends Canvas
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                Log.error("Error", e);
                 exit();
             }
 
@@ -406,13 +421,15 @@ public abstract class GameContainer extends Canvas
                                         }
                                         catch (Exception e)
                                         {
-                                            e.printStackTrace();
+                                            Log.error("Error", e);
                                             exit();
                                         }
 
                                         setScene(mainScene);
                                         mainScene.start();
-                                    });
+                                    }, "Load-" + name);
+
+        Log.exit();
     }
 
     /**
@@ -422,12 +439,16 @@ public abstract class GameContainer extends Canvas
      */
     protected void setScene(Scene scene)
     {
+        Log.entry(scene);
+
         if (this.currentScene != null && !this.currentScene.equals(scene))
         {
             this.currentScene.kill();
         }
 
         this.currentScene = scene;
+
+        Log.exit();
     }
 
     /**
@@ -464,9 +485,12 @@ public abstract class GameContainer extends Canvas
      */
     public void addScene(String name, Scene mainScene, Scene loadingScene)
     {
+        Log.entry(name, mainScene, loadingScene);
         this.scenes.put(name,
                         new SimpleEntry<>(mainScene,
                                           loadingScene));
+
+        Log.exit();
     }
 
     public Scene getCurrentScene()
@@ -478,6 +502,7 @@ public abstract class GameContainer extends Canvas
      * Attempts to return the main scene that is registered with the given name.
      *
      * @param name
+     *
      * @return The scene with the given name or null.
      */
     public Scene getScene(String name)
@@ -581,10 +606,14 @@ public abstract class GameContainer extends Canvas
      */
     protected void refresh()
     {
+        Log.entry();
+
         if (this.currentScene != null)
         {
             this.currentScene.refresh();
         }
+
+        Log.exit();
     }
 
     /**
@@ -592,12 +621,15 @@ public abstract class GameContainer extends Canvas
      */
     public void exit()
     {
+        Log.entry();
         this.canRender = false;
 
         synchronized (this)
         {
             Exceptions.ignoreThrow(this::wait, 500);
         }
+
+        Log.exit();
 
         System.exit(0);
     }
@@ -612,8 +644,10 @@ public abstract class GameContainer extends Canvas
      */
     public void setPaused(boolean paused)
     {
+        Log.entry(paused);
         this.isPaused = paused;
         pauseSounds(paused);
+        Log.exit();
     }
 
     /**
@@ -640,6 +674,7 @@ public abstract class GameContainer extends Canvas
      */
     public void pauseSounds(boolean paused)
     {
+        Log.entry(paused);
         if (paused)
         {
             Sound.pauseAll();
@@ -648,6 +683,7 @@ public abstract class GameContainer extends Canvas
         {
             Sound.resumeAll();
         }
+        Log.exit();
     }
 
     /**
